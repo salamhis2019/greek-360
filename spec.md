@@ -727,7 +727,7 @@ Goal:
 - Establish stable delivery baseline and environment scaffolding.
 
 Backend work:
-- Create Supabase project and environments (`dev`, `staging`, `prod`).
+- Create Supabase project environments (`dev`, `prod`).
 - Configure auth settings for phone OTP.
 - Set up base migrations framework.
 - Implement core extension setup and timestamp defaults.
@@ -755,7 +755,7 @@ Deliverables:
 - TDD tooling baseline operational in local and CI environments.
 
 Exit criteria:
-- Team can run app + backend locally and in staging.
+- Team can run app + backend locally and in dev.
 - Migration pipeline proven with rollback tested once.
 - Test pipeline enforces fail-fast behavior for failing unit/integration tests.
 - A documented TDD workflow exists in repository docs and is required for PRs.
@@ -889,7 +889,7 @@ Deliverables:
 - Admin can process full queue without leaving recruitment screens.
 
 Exit criteria:
-- p95 decision action response <= 300ms in staging data set.
+- p95 decision action response <= 300ms in dev data set.
 - Stage transition and authorization test suites are green in CI.
 - Regression tests exist for any race-condition bugs found during phase execution.
 
@@ -1029,7 +1029,7 @@ Deliverables:
 
 Exit criteria:
 - Security, privacy, and functional acceptance checks all pass.
-- All critical E2E tests are green in staging on mobile and desktop profiles.
+- All critical E2E tests are green in dev on mobile and desktop profiles.
 - Full TDD gate suite (unit, integration, E2E, security, RLS) is green with required coverage thresholds.
 
 ## 23. Risks and Mitigations

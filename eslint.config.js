@@ -51,4 +51,18 @@ export default defineConfig([
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // Route definitions and auth context export non-component objects by design.
+    files: ['src/app/router/**/*.{ts,tsx}', 'src/features/auth/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Build and test config files run in Node.
+    files: ['*.config.{js,ts}', 'scripts/**/*.{js,mjs,ts}', 'playwright.config.ts'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])

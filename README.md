@@ -1,16 +1,90 @@
-# React + Vite
+# Greek 360
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mobile-optimized web MVP for fraternity and sorority recruitment and membership management.
 
-Currently, two official plugins are available:
+This repository is implemented phase-by-phase from `spec.md` with strict TDD gates.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Phase 0 Status
 
-## React Compiler
+Phase 0 foundation is scaffolded:
+- React app shell with provider architecture.
+- Route skeletons for public, student, chapter-admin, and super-admin zones.
+- Environment separation (`dev`, `prod`).
+- Supabase migration framework with up/down verification.
+- Vitest + Testing Library + Playwright baselines.
+- CI split into fast checks and full checks.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Prerequisites
 
-## Expanding the ESLint configuration
+- Node `22.12.0`
+- npm `>=10`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Setup
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Configure frontend environment:
+```bash
+cp .env.example .env.local
+```
+
+3. Fill environment values in:
+- `.env.local` for local app runtime.
+- `supabase/environments/dev.env`
+- `supabase/environments/prod.env`
+
+## Local Development
+
+Start the app:
+```bash
+npm run dev
+```
+
+Run fast local checks:
+```bash
+npm run lint
+npm run typecheck
+npm run test:ci
+```
+
+Run full local checks:
+```bash
+npm run migration:verify
+npm run test:coverage
+npm run build
+npm run test:e2e
+npm run test:security
+```
+
+## Supabase Baseline
+
+Phase 0 includes:
+- `supabase/config.toml` with phone OTP auth baseline.
+- `supabase/migrations/000001_phase0_core_extensions.up.sql`
+- `supabase/migrations/000001_phase0_core_extensions.down.sql`
+- `supabase/seeds/test_seed.sql`
+
+Migration rollback verification:
+```bash
+MIGRATION_VERIFY_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/greek360_verify npm run migration:verify
+```
+
+## CI
+
+GitHub Actions workflows:
+- `.github/workflows/ci.yml`
+  - `fast-checks`: lint, typecheck, fail-fast unit/integration tests.
+  - `full-checks`: migration rollback verification, seed, coverage, build, e2e, security.
+- `.github/workflows/nightly-full.yml`
+  - Nightly full E2E + security run.
+
+## TDD Workflow
+
+PRs must include explicit Red -> Green -> Refactor evidence.
+
+Reference:
+- `docs/tdd-workflow.md`
+- `.github/pull_request_template.md`
