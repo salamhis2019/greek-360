@@ -52,7 +52,7 @@ jobs:
       MIGRATION_VERIFY_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/greek360_verify
       VITE_APP_ENV: dev
       VITE_SUPABASE_URL: https://placeholder-project-ref.supabase.co
-      VITE_SUPABASE_ANON_KEY: placeholder-anon-key
+      VITE_SUPABASE_PUBLISHABLE_KEY: placeholder-publishable-key
     steps:
       - name: Checkout
         uses: actions/checkout@v4

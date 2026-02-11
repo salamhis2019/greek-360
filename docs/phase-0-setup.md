@@ -12,7 +12,7 @@ Populate:
 - `supabase/environments/dev.env`
 - `supabase/environments/prod.env`
 
-with each project's `URL`, `anon key`, `service role key`, and project ref.
+with each project's `URL`, `publishable key`, `secret key`, and project ref.
 
 ## 2. Phone OTP Auth Baseline
 
