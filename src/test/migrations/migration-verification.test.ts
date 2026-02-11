@@ -63,4 +63,27 @@ describe('Phase 0 migration verification', () => {
     expect(upSql.toLowerCase()).toContain('create or replace function public.set_updated_at')
     expect(downSql.toLowerCase()).toContain('drop function if exists public.set_updated_at')
   })
+
+  it('includes the phase 1 identity migration pair and users table constraints', () => {
+    const phaseOneUpPath = path.join(
+      upMigrationsDirectory,
+      '000002_phase1_identity_onboarding.up.sql'
+    )
+    const phaseOneDownPath = path.join(
+      downMigrationsDirectory,
+      '000002_phase1_identity_onboarding.down.sql'
+    )
+
+    expect(fs.existsSync(phaseOneUpPath)).toBe(true)
+    expect(fs.existsSync(phaseOneDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseOneUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseOneDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.users')
+    expect(upSql).toContain('phone_e164 text not null unique')
+    expect(upSql).toContain('enable row level security')
+    expect(upSql).toContain('normalize_phone_e164')
+    expect(downSql).toContain('drop table if exists public.users')
+  })
 })

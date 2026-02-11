@@ -14,6 +14,9 @@ const AuthSessionProbe = () => {
           setSession({
             isAuthenticated: true,
             userId: 'user-1',
+            phoneE164: '+14155550123',
+            displayName: null,
+            needsOnboarding: true,
             roles: ['chapter_admin'],
           })
         }
@@ -44,7 +47,14 @@ describe('AuthSessionProvider', () => {
   it('hydrates from initial session and persists updates', async () => {
     render(
       <AuthSessionProvider
-        initialSession={{ isAuthenticated: true, userId: 'user-2', roles: ['student'] }}
+        initialSession={{
+          isAuthenticated: true,
+          userId: 'user-2',
+          phoneE164: '+14155550124',
+          displayName: 'Existing User',
+          needsOnboarding: false,
+          roles: ['student'],
+        }}
       >
         <AuthSessionProbe />
       </AuthSessionProvider>

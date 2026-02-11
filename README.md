@@ -4,13 +4,14 @@ Mobile-optimized web MVP for fraternity and sorority recruitment and membership 
 
 This repository is implemented phase-by-phase from `spec.md` with strict TDD gates.
 
-## Phase 0 Status
+## Phase 1 Status
 
-Phase 0 foundation is scaffolded:
+Phase 1 identity and onboarding is implemented on top of Phase 0:
 - React app shell with provider architecture.
-- Route skeletons for public, student, chapter-admin, and super-admin zones.
+- Auth onboarding flow (`/auth`) with phone entry, OTP verification, and first-time name capture.
+- Session-aware route guards that enforce onboarding completion before authenticated routes.
 - Environment separation (`dev`, `prod`).
-- Supabase migration framework with up/down verification.
+- Supabase migration framework with up/down verification and Phase 1 identity migration pair.
 - Vitest + Testing Library + Playwright baselines.
 - CI split into fast checks and full checks.
 

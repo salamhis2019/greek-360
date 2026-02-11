@@ -1,7 +1,8 @@
 import { Link, type RouteObject } from 'react-router-dom'
 import { AppShellLayout } from '@/app/layouts/AppShellLayout'
 import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
-import { RequireAuth, RequireRole } from './guards'
+import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
+import { RequireAuth, RequireAuthFlow, RequireRole } from './guards'
 import { ROUTE_PATHS } from './routePaths'
 
 const landingLinks = [
@@ -28,13 +29,6 @@ const LandingPage = () => (
         ))}
       </div>
     }
-  />
-)
-
-const AuthPage = () => (
-  <RouteSkeletonPage
-    title="Sign in"
-    description="Phone OTP auth flow scaffolded for Phase 1 implementation."
   />
 )
 
@@ -140,7 +134,10 @@ export const appRouteObjects: RouteObject[] = [
     element: <AppShellLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      { path: ROUTE_PATHS.auth.slice(1), element: <AuthPage /> },
+      {
+        element: <RequireAuthFlow />,
+        children: [{ path: ROUTE_PATHS.auth.slice(1), element: <AuthOnboardingPage /> }],
+      },
       { path: ROUTE_PATHS.joinWithCode.slice(1), element: <JoinByCodePage /> },
       { path: ROUTE_PATHS.manualCodeEntry.slice(1), element: <JoinByCodePage /> },
       {
