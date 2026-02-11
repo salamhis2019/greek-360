@@ -33,8 +33,14 @@ cp .env.example .env.local
 
 3. Fill environment values in:
 - `.env.local` for local app runtime.
-- `supabase/environments/dev.env`
-- `supabase/environments/prod.env`
+- `supabase/environments/dev.env` (copy from `supabase/environments/dev.env.example`)
+- `supabase/environments/prod.env` (copy from `supabase/environments/prod.env.example`)
+
+Create local Supabase environment files once:
+```bash
+cp supabase/environments/dev.env.example supabase/environments/dev.env
+cp supabase/environments/prod.env.example supabase/environments/prod.env
+```
 
 ## Local Development
 

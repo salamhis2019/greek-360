@@ -9,10 +9,16 @@ Create Supabase projects:
 - `greek360-prod`
 
 Populate:
-- `supabase/environments/dev.env`
-- `supabase/environments/prod.env`
+- `supabase/environments/dev.env` (from `supabase/environments/dev.env.example`)
+- `supabase/environments/prod.env` (from `supabase/environments/prod.env.example`)
 
 with each project's `URL`, `publishable key`, `secret key`, and project ref.
+
+Create local files:
+```bash
+cp supabase/environments/dev.env.example supabase/environments/dev.env
+cp supabase/environments/prod.env.example supabase/environments/prod.env
+```
 
 ## 2. Phone OTP Auth Baseline
 
