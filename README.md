@@ -70,7 +70,7 @@ npm run test:security
 Phase 0 includes:
 - `supabase/config.toml` with phone OTP auth baseline.
 - `supabase/migrations/000001_phase0_core_extensions.up.sql`
-- `supabase/migrations/000001_phase0_core_extensions.down.sql`
+- `supabase/migrations_down/000001_phase0_core_extensions.down.sql`
 - `supabase/seeds/test_seed.sql`
 
 Migration rollback verification:

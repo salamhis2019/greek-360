@@ -6,17 +6,18 @@ import pg from 'pg'
 const { Client } = pg
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url))
-const migrationsDirectory = path.resolve(currentDirectory, '../supabase/migrations')
+const upMigrationsDirectory = path.resolve(currentDirectory, '../supabase/migrations')
+const downMigrationsDirectory = path.resolve(currentDirectory, '../supabase/migrations_down')
 
-const readMigrationFiles = (suffix) =>
+const readMigrationFiles = (directory, suffix) =>
   fs
-    .readdirSync(migrationsDirectory)
+    .readdirSync(directory)
     .filter((fileName) => fileName.endsWith(suffix))
     .sort((first, second) => first.localeCompare(second))
 
 const ensureMigrationPairs = () => {
-  const upFiles = readMigrationFiles('.up.sql')
-  const downFiles = readMigrationFiles('.down.sql')
+  const upFiles = readMigrationFiles(upMigrationsDirectory, '.up.sql')
+  const downFiles = readMigrationFiles(downMigrationsDirectory, '.down.sql')
 
   if (upFiles.length === 0) {
     throw new Error('No migration files found in supabase/migrations.')
@@ -53,13 +54,13 @@ const run = async () => {
 
   try {
     for (const upFile of upFiles) {
-      const upSql = fs.readFileSync(path.join(migrationsDirectory, upFile), 'utf8')
+      const upSql = fs.readFileSync(path.join(upMigrationsDirectory, upFile), 'utf8')
       await client.query(upSql)
       console.log(`Applied: ${upFile}`)
     }
 
     for (const downFile of downFiles) {
-      const downSql = fs.readFileSync(path.join(migrationsDirectory, downFile), 'utf8')
+      const downSql = fs.readFileSync(path.join(downMigrationsDirectory, downFile), 'utf8')
       await client.query(downSql)
       console.log(`Rolled back: ${downFile}`)
     }

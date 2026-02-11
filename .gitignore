@@ -17,6 +17,7 @@ playwright-report
 *.local
 supabase/environments/*.env
 !supabase/environments/*.env.example
+supabase/.temp/
 
 # Editor directories and files
 .vscode/*

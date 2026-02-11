@@ -34,7 +34,7 @@ Local baseline config is captured in `supabase/config.toml`.
 
 Phase 0 migration pair:
 - `supabase/migrations/000001_phase0_core_extensions.up.sql`
-- `supabase/migrations/000001_phase0_core_extensions.down.sql`
+- `supabase/migrations_down/000001_phase0_core_extensions.down.sql`
 
 Verification command:
 ```bash

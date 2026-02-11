@@ -4,23 +4,38 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url))
-const migrationsDirectory = path.resolve(currentDirectory, '../../../supabase/migrations')
+const upMigrationsDirectory = path.resolve(currentDirectory, '../../../supabase/migrations')
+const downMigrationsDirectory = path.resolve(
+  currentDirectory,
+  '../../../supabase/migrations_down'
+)
 
-const readMigrations = (suffix: '.up.sql' | '.down.sql') => {
-  if (!fs.existsSync(migrationsDirectory)) {
+const readUpMigrations = () => {
+  if (!fs.existsSync(upMigrationsDirectory)) {
     return []
   }
 
   return fs
-    .readdirSync(migrationsDirectory)
-    .filter((fileName) => fileName.endsWith(suffix))
+    .readdirSync(upMigrationsDirectory)
+    .filter((fileName) => fileName.endsWith('.up.sql'))
+    .sort((first, second) => first.localeCompare(second))
+}
+
+const readDownMigrations = () => {
+  if (!fs.existsSync(downMigrationsDirectory)) {
+    return []
+  }
+
+  return fs
+    .readdirSync(downMigrationsDirectory)
+    .filter((fileName) => fileName.endsWith('.down.sql'))
     .sort((first, second) => first.localeCompare(second))
 }
 
 describe('Phase 0 migration verification', () => {
   it('has at least one migration pair with up and down files', () => {
-    const upFiles = readMigrations('.up.sql')
-    const downFiles = readMigrations('.down.sql')
+    const upFiles = readUpMigrations()
+    const downFiles = readDownMigrations()
 
     expect(upFiles.length).toBeGreaterThan(0)
     expect(downFiles.length).toBe(upFiles.length)
@@ -32,12 +47,9 @@ describe('Phase 0 migration verification', () => {
   })
 
   it('includes the core extension and timestamp helper migration', () => {
-    const coreUpPath = path.join(
-      migrationsDirectory,
-      '000001_phase0_core_extensions.up.sql'
-    )
+    const coreUpPath = path.join(upMigrationsDirectory, '000001_phase0_core_extensions.up.sql')
     const coreDownPath = path.join(
-      migrationsDirectory,
+      downMigrationsDirectory,
       '000001_phase0_core_extensions.down.sql'
     )
 
