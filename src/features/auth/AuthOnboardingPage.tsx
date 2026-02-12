@@ -47,6 +47,8 @@ export const AuthOnboardingPage = () => {
   const [profileName, setProfileName] = useState(displayName ?? '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const authFontStack =
+    "'SF Pro Display', 'SF Pro Text', 'Avenir Next', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
   const submitPhone = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -132,28 +134,68 @@ export const AuthOnboardingPage = () => {
     }
   }
 
+  const stepContent =
+    step === 'otp'
+      ? {
+          eyebrow: 'Step 2 of 3',
+          title: 'Verify your code',
+          description: 'Enter the 6-digit code sent to your phone.',
+          helper: 'For local development, use code 123456.',
+        }
+      : step === 'profile'
+        ? {
+            eyebrow: 'Step 3 of 3',
+            title: 'Complete your profile',
+            description: 'Add your display name so chapters can identify you.',
+            helper: null,
+          }
+        : {
+            eyebrow: 'Step 1 of 3',
+            title: 'Sign in',
+            description: 'Enter your phone number to get a verification code.',
+            helper: null,
+          }
+
   if (step === 'otp') {
     return (
-      <section className="mx-auto w-full max-w-md rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h1 className="text-2xl font-semibold text-ui-heading">Verify your code</h1>
-        <p className="mt-2 text-sm text-ui-muted">Enter the 6-digit code sent to your phone.</p>
-        <p className="mt-1 text-xs text-ui-muted">For local development, use code 123456.</p>
-        <form className="mt-4 space-y-4" onSubmit={submitOtp}>
-          <label className="block text-sm font-medium text-ui-body" htmlFor="otp-code">
+      <section
+        className="mx-auto w-full max-w-[30rem] px-1 py-8 sm:py-12"
+        style={{ fontFamily: authFontStack }}
+      >
+        <div className="mb-7 border-b border-black/10 pb-5">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black/35">Greek 360</p>
+          <p className="text-[0.69rem] font-semibold uppercase tracking-[0.2em] text-black/45">
+            {stepContent.eyebrow}
+          </p>
+          <h1 className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black">
+            {stepContent.title}
+          </h1>
+          <p className="mt-2 text-[0.97rem] leading-relaxed text-black/65">{stepContent.description}</p>
+          {stepContent.helper ? (
+            <p className="mt-2 text-[0.78rem] font-medium uppercase tracking-[0.08em] text-black/45">
+              {stepContent.helper}
+            </p>
+          ) : null}
+        </div>
+        <form className="space-y-5" onSubmit={submitOtp}>
+          <label
+            className="block text-[0.78rem] font-semibold uppercase tracking-[0.09em] text-black/50"
+            htmlFor="otp-code"
+          >
             Verification code
           </label>
           <input
             autoComplete="one-time-code"
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="h-14 w-full rounded-2xl border border-black/10 bg-white px-4 text-[1.08rem] font-medium text-black outline-none transition focus:border-black/25 focus:ring-4 focus:ring-black/10"
             id="otp-code"
             inputMode="numeric"
             maxLength={6}
             onChange={(event) => setVerificationCode(event.target.value)}
             value={verificationCode}
           />
-          {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+          {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
           <button
-            className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+            className="h-12 w-full rounded-full bg-black px-4 text-[0.95rem] font-semibold tracking-[0.01em] text-white transition hover:bg-black/90 disabled:opacity-50"
             disabled={isSubmitting}
             type="submit"
           >
@@ -166,23 +208,37 @@ export const AuthOnboardingPage = () => {
 
   if (step === 'profile') {
     return (
-      <section className="mx-auto w-full max-w-md rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h1 className="text-2xl font-semibold text-ui-heading">Complete your profile</h1>
-        <p className="mt-2 text-sm text-ui-muted">Add your display name so chapters can identify you.</p>
-        <form className="mt-4 space-y-4" onSubmit={submitProfile}>
-          <label className="block text-sm font-medium text-ui-body" htmlFor="display-name">
+      <section
+        className="mx-auto w-full max-w-[30rem] px-1 py-8 sm:py-12"
+        style={{ fontFamily: authFontStack }}
+      >
+        <div className="mb-7 border-b border-black/10 pb-5">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black/35">Greek 360</p>
+          <p className="text-[0.69rem] font-semibold uppercase tracking-[0.2em] text-black/45">
+            {stepContent.eyebrow}
+          </p>
+          <h1 className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black">
+            {stepContent.title}
+          </h1>
+          <p className="mt-2 text-[0.97rem] leading-relaxed text-black/65">{stepContent.description}</p>
+        </div>
+        <form className="space-y-5" onSubmit={submitProfile}>
+          <label
+            className="block text-[0.78rem] font-semibold uppercase tracking-[0.09em] text-black/50"
+            htmlFor="display-name"
+          >
             Display name
           </label>
           <input
             autoComplete="name"
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="h-14 w-full rounded-2xl border border-black/10 bg-white px-4 text-[1.08rem] font-medium text-black outline-none transition focus:border-black/25 focus:ring-4 focus:ring-black/10"
             id="display-name"
             onChange={(event) => setProfileName(event.target.value)}
             value={profileName}
           />
-          {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+          {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
           <button
-            className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+            className="h-12 w-full rounded-full bg-black px-4 text-[0.95rem] font-semibold tracking-[0.01em] text-white transition hover:bg-black/90 disabled:opacity-50"
             disabled={isSubmitting}
             type="submit"
           >
@@ -194,25 +250,39 @@ export const AuthOnboardingPage = () => {
   }
 
   return (
-    <section className="mx-auto w-full max-w-md rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Sign in</h1>
-      <p className="mt-2 text-sm text-ui-muted">Enter your phone number to get a verification code.</p>
-      <form className="mt-4 space-y-4" onSubmit={submitPhone}>
-        <label className="block text-sm font-medium text-ui-body" htmlFor="phone-number">
+    <section
+      className="mx-auto w-full max-w-[30rem] px-1 py-8 sm:py-12"
+      style={{ fontFamily: authFontStack }}
+    >
+      <div className="mb-7 border-b border-black/10 pb-5">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-black/35">Greek 360</p>
+        <p className="text-[0.69rem] font-semibold uppercase tracking-[0.2em] text-black/45">
+          {stepContent.eyebrow}
+        </p>
+        <h1 className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black">
+          {stepContent.title}
+        </h1>
+        <p className="mt-2 text-[0.97rem] leading-relaxed text-black/65">{stepContent.description}</p>
+      </div>
+      <form className="space-y-5" onSubmit={submitPhone}>
+        <label
+          className="block text-[0.78rem] font-semibold uppercase tracking-[0.09em] text-black/50"
+          htmlFor="phone-number"
+        >
           Phone number
         </label>
         <input
           autoComplete="tel"
-          className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+          className="h-14 w-full rounded-2xl border border-black/10 bg-white px-4 text-[1.08rem] font-medium text-black outline-none transition focus:border-black/25 focus:ring-4 focus:ring-black/10"
           id="phone-number"
           inputMode="tel"
           onChange={(event) => setPhoneNumber(event.target.value)}
           placeholder="(555) 123-4567"
           value={phoneNumber}
         />
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="h-12 w-full rounded-full bg-black px-4 text-[0.95rem] font-semibold tracking-[0.01em] text-white transition hover:bg-black/90 disabled:opacity-50"
           disabled={isSubmitting}
           type="submit"
         >

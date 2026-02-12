@@ -72,36 +72,40 @@ export const OffersInboxPage = () => {
   const offers = offersQuery.data ?? []
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Offers inbox</h1>
-      <p className="text-sm text-ui-muted">
-        Review your pending offers and confirm accept or decline.
-      </p>
+    <section className="ui-page">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Offers</p>
+        <h1 className="ui-page-title">Offers inbox</h1>
+        <p className="ui-page-description">Review your pending offers and confirm accept or decline.</p>
+      </header>
 
       {offersQuery.isLoading ? <p className="text-sm text-ui-muted">Loading offers...</p> : null}
       {offersQuery.isError ? (
-        <p className="text-sm text-red-700">{resolveErrorMessage(offersQuery.error)}</p>
+        <p className="text-sm font-medium text-red-700">{resolveErrorMessage(offersQuery.error)}</p>
       ) : null}
-      {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+      {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
 
       {offers.length === 0 && !offersQuery.isLoading ? (
         <p className="text-sm text-ui-muted">No offers yet.</p>
       ) : null}
 
-      <ul className="space-y-2">
+      <ul className="space-y-3">
         {offers.map((offer) => {
           const isConfirming = pendingConfirmation?.offerId === offer.id
           const canRespond = offer.status === 'pending' && !respondMutation.isPending
 
           return (
-            <li className="space-y-3 rounded-lg border border-ui-border p-3" key={offer.id}>
+            <li className="ui-panel space-y-3" key={offer.id}>
               <div>
-                <p className="text-sm font-semibold text-ui-heading">Organization: {offer.organizationId}</p>
-                <p className="text-xs text-ui-muted">Status: {offer.status}</p>
-                <p className="text-xs text-ui-muted">Offered: {formatTimestamp(offer.offeredAt)}</p>
-                <p className="text-xs text-ui-muted">Responded: {formatTimestamp(offer.respondedAt)}</p>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">
+                  Organization: {offer.organizationId}
+                </p>
+                <p className="ui-meta">Status: {offer.status}</p>
+                <p className="ui-meta">Offered: {formatTimestamp(offer.offeredAt)}</p>
+                <p className="ui-meta">Responded: {formatTimestamp(offer.respondedAt)}</p>
                 {offer.status === 'accepted' ? (
-                  <p className="mt-1 text-xs font-medium text-green-700">Membership active</p>
+                  <p className="mt-1 text-xs font-semibold text-green-700">Membership active</p>
                 ) : null}
               </div>
 
@@ -109,7 +113,7 @@ export const OffersInboxPage = () => {
                 <div className="space-y-2">
                   <div className="grid grid-cols-2 gap-2">
                     <button
-                      className="rounded-lg bg-ui-heading px-3 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+                      className="ui-btn-primary min-h-[2.85rem] rounded-full text-sm"
                       disabled={!canRespond}
                       onClick={() => setPendingConfirmation({ offerId: offer.id, response: 'accept' })}
                       type="button"
@@ -117,7 +121,7 @@ export const OffersInboxPage = () => {
                       Accept
                     </button>
                     <button
-                      className="rounded-lg border border-ui-border px-3 py-2 text-sm font-medium text-ui-heading disabled:opacity-60"
+                      className="ui-btn-secondary min-h-[2.85rem] rounded-full text-sm"
                       disabled={!canRespond}
                       onClick={() => setPendingConfirmation({ offerId: offer.id, response: 'decline' })}
                       type="button"
@@ -127,15 +131,15 @@ export const OffersInboxPage = () => {
                   </div>
 
                   {isConfirming ? (
-                    <div className="space-y-2 rounded-lg border border-ui-border bg-ui-canvas p-3">
-                      <p className="text-xs text-ui-body">
+                    <div className="ui-panel-soft space-y-3">
+                      <p className="text-xs font-medium text-ui-body">
                         {pendingConfirmation?.response === 'accept'
                           ? 'Confirm accepting this offer?'
                           : 'Confirm declining this offer?'}
                       </p>
                       <div className="grid grid-cols-2 gap-2">
                         <button
-                          className="rounded-lg bg-ui-heading px-3 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+                          className="ui-btn-primary min-h-[2.7rem] rounded-full text-sm"
                           disabled={respondMutation.isPending}
                           onClick={() => {
                             if (!pendingConfirmation) {
@@ -153,7 +157,7 @@ export const OffersInboxPage = () => {
                           {pendingConfirmation.response === 'accept' ? 'Confirm accept' : 'Confirm decline'}
                         </button>
                         <button
-                          className="rounded-lg border border-ui-border px-3 py-2 text-sm font-medium text-ui-heading"
+                          className="ui-btn-secondary min-h-[2.7rem] rounded-full text-sm"
                           onClick={() => setPendingConfirmation(null)}
                           type="button"
                         >

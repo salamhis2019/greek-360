@@ -142,15 +142,29 @@ export const JoinInterestPage = ({ mode }: JoinInterestPageProps) => {
 
   if (isSubmitted) {
     return (
-      <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h1 className="text-2xl font-semibold text-ui-heading">Interest submitted</h1>
-        <p className="text-sm text-ui-muted">
+      <section className="ui-page">
+        <header className="ui-page-header">
+          <p className="ui-page-brand">Greek 360</p>
+          <p className="ui-page-eyebrow">Completed</p>
+          <h1 className="ui-page-title">Interest submitted</h1>
+          <p className="ui-page-description">
+            We shared your interest with the chapter and saved your place in the current cycle.
+          </p>
+        </header>
+        <div className="ui-panel-soft space-y-2">
+          <p className="ui-meta">Organization</p>
+          <p className="ui-data">{resolvedJoinCode?.organizationName}</p>
+          <p className="ui-meta">Cycle: {formatCycleLabel(resolvedJoinCode)}</p>
+        </div>
+        <p className="mt-4 text-sm text-ui-muted">
           You shared interest in {resolvedJoinCode?.organizationName} for{' '}
           {formatCycleLabel(resolvedJoinCode)}.
         </p>
-        <p className="text-sm text-ui-muted">We&apos;ll notify you in app when this chapter updates your status.</p>
+        <p className="text-sm text-ui-muted">
+          We&apos;ll notify you in app when this chapter updates your status.
+        </p>
         <Link
-          className="inline-flex rounded-lg border border-ui-border px-4 py-2 text-sm font-medium text-ui-heading"
+          className="ui-btn-secondary mt-2 w-auto px-5"
           to={ROUTE_PATHS.home}
         >
           Go to student home
@@ -160,21 +174,25 @@ export const JoinInterestPage = ({ mode }: JoinInterestPageProps) => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Join a chapter</h1>
-      <p className="text-sm text-ui-muted">
-        Confirm your join code and submit interest. You can join multiple chapters across cycles.
-      </p>
+    <section className="ui-page">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Join flow</p>
+        <h1 className="ui-page-title">Join a chapter</h1>
+        <p className="ui-page-description">
+          Confirm your join code and submit interest. You can join multiple chapters across cycles.
+        </p>
+      </header>
 
-      <form className="space-y-3" onSubmit={submit}>
+      <form className="space-y-5" onSubmit={submit}>
         {mode === 'manual' ? (
-          <div>
-            <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="manual-join-code">
+          <div className="space-y-2">
+            <label className="ui-label" htmlFor="manual-join-code">
               Join code
             </label>
             <input
               autoCapitalize="characters"
-              className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+              className="ui-input uppercase"
               id="manual-join-code"
               onChange={(event) => setManualCode(event.target.value)}
               placeholder="Enter chapter code"
@@ -182,24 +200,24 @@ export const JoinInterestPage = ({ mode }: JoinInterestPageProps) => {
             />
           </div>
         ) : (
-          <div className="rounded-lg border border-ui-border p-3">
-            <p className="text-xs uppercase tracking-wide text-ui-muted">Join code</p>
-            <p className="text-sm font-semibold text-ui-heading">{joinCodeFromRoute || 'Invalid code'}</p>
+          <div className="ui-panel-soft">
+            <p className="ui-meta uppercase tracking-[0.08em]">Join code</p>
+            <p className="ui-data">{joinCodeFromRoute || 'Invalid code'}</p>
           </div>
         )}
 
         {resolvedJoinCode ? (
-          <div className="rounded-lg border border-ui-border p-3">
-            <p className="text-xs uppercase tracking-wide text-ui-muted">Chapter</p>
-            <p className="text-sm font-semibold text-ui-heading">{resolvedJoinCode.organizationName}</p>
-            <p className="text-xs text-ui-muted">Cycle: {formatCycleLabel(resolvedJoinCode)}</p>
+          <div className="ui-panel-soft">
+            <p className="ui-meta uppercase tracking-[0.08em]">Chapter</p>
+            <p className="ui-data">{resolvedJoinCode.organizationName}</p>
+            <p className="ui-meta">Cycle: {formatCycleLabel(resolvedJoinCode)}</p>
           </div>
         ) : null}
 
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
 
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={isSubmitting || isResolving}
           type="submit"
         >
@@ -210,7 +228,7 @@ export const JoinInterestPage = ({ mode }: JoinInterestPageProps) => {
       {mode === 'deep-link' ? (
         <p className="text-xs text-ui-muted">
           If this code is wrong, use{' '}
-          <Link className="text-ui-heading underline" to={ROUTE_PATHS.manualCodeEntry}>
+          <Link className="font-semibold text-ui-heading underline underline-offset-4" to={ROUTE_PATHS.manualCodeEntry}>
             manual code entry
           </Link>
           .

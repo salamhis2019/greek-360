@@ -8,10 +8,13 @@ interface RouteSkeletonPageProps {
 
 export const RouteSkeletonPage = ({ title, description, actions }: RouteSkeletonPageProps) => {
   return (
-    <section className="rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">{title}</h1>
-      <p className="mt-2 text-sm text-ui-muted">{description}</p>
-      {actions ? <div className="mt-4">{actions}</div> : null}
+    <section className="ui-page">
+      <div className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <h1 className="ui-page-title">{title}</h1>
+        <p className="ui-page-description">{description}</p>
+      </div>
+      {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
     </section>
   )
 }

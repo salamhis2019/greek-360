@@ -31,15 +31,19 @@ export const ProfilePage = () => {
   const activeMembership = memberships.find((membership) => membership.status === 'active') ?? null
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Profile</h1>
-      <p className="text-sm text-ui-muted">Display name: {displayName ?? 'Unknown user'}</p>
+    <section className="ui-page">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Account</p>
+        <h1 className="ui-page-title">Profile</h1>
+        <p className="ui-page-description">Display name: {displayName ?? 'Unknown user'}</p>
+      </header>
 
-      <div className="space-y-2 rounded-lg border border-ui-border p-4">
-        <h2 className="text-sm font-semibold text-ui-heading">Membership status</h2>
+      <div className="ui-panel space-y-2">
+        <h2 className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">Membership status</h2>
         {membershipsQuery.isLoading ? <p className="text-sm text-ui-muted">Loading memberships...</p> : null}
         {membershipsQuery.isError ? (
-          <p className="text-sm text-red-700">{resolveErrorMessage(membershipsQuery.error)}</p>
+          <p className="text-sm font-medium text-red-700">{resolveErrorMessage(membershipsQuery.error)}</p>
         ) : null}
 
         {activeMembership ? (

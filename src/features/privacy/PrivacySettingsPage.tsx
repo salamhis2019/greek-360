@@ -83,22 +83,24 @@ export const PrivacySettingsPage = () => {
     : null
 
   return (
-    <section className="space-y-4">
-      <header className="rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h1 className="text-2xl font-semibold text-ui-heading">Privacy settings</h1>
-        <p className="mt-2 text-sm text-ui-muted">
+    <section className="ui-page space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Privacy</p>
+        <h1 className="ui-page-title">Privacy settings</h1>
+        <p className="ui-page-description">
           Export your personal data package or request account deletion with OTP re-auth.
         </p>
       </header>
 
-      <section className="space-y-3 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h2 className="text-base font-semibold text-ui-heading">Data export</h2>
+      <section className="ui-panel space-y-3">
+        <h2 className="text-base font-semibold tracking-[-0.01em] text-ui-heading">Data export</h2>
         <p className="text-sm text-ui-muted">
           Generates a complete JSON data bundle with profile, recruitment, offers, memberships, and
           communication metadata.
         </p>
         <button
-          className="rounded-lg border border-ui-border px-3 py-2 text-sm font-medium text-ui-heading"
+          className="ui-btn-secondary px-5"
           disabled={exportMutation.isPending}
           onClick={() => exportMutation.mutate()}
           type="button"
@@ -106,10 +108,10 @@ export const PrivacySettingsPage = () => {
           {exportMutation.isPending ? 'Generating export...' : 'Generate export package'}
         </button>
         {exportMutation.isError ? (
-          <p className="text-sm text-red-700">{resolveErrorMessage(exportMutation.error)}</p>
+          <p className="text-sm font-medium text-red-700">{resolveErrorMessage(exportMutation.error)}</p>
         ) : null}
         {latestExport ? (
-          <div className="space-y-1 rounded-lg border border-ui-border p-3">
+          <div className="ui-panel-soft space-y-1">
             <p className="text-sm font-medium text-ui-heading">Export package generated</p>
             <p className="text-xs text-ui-muted">Generated: {formatTimestamp(latestExport.generatedAt)}</p>
             {exportSummary ? <p className="text-xs text-ui-muted">{exportSummary}</p> : null}
@@ -117,18 +119,18 @@ export const PrivacySettingsPage = () => {
         ) : null}
       </section>
 
-      <section className="space-y-3 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h2 className="text-base font-semibold text-ui-heading">Delete account</h2>
+      <section className="ui-panel space-y-3">
+        <h2 className="text-base font-semibold tracking-[-0.01em] text-ui-heading">Delete account</h2>
         <p className="text-sm text-ui-muted">
           Re-enter your OTP code to create a deletion request. Processing is handled asynchronously.
         </p>
         <form className="space-y-3" onSubmit={onRequestDeletion}>
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-ui-heading" htmlFor="deletion-otp-code">
+          <div className="space-y-2">
+            <label className="ui-label" htmlFor="deletion-otp-code">
               One-time passcode
             </label>
             <input
-              className="w-full rounded-lg border border-ui-border bg-white px-3 py-2 text-sm text-ui-heading"
+              className="ui-input"
               id="deletion-otp-code"
               inputMode="numeric"
               maxLength={6}
@@ -138,7 +140,7 @@ export const PrivacySettingsPage = () => {
             />
           </div>
           <button
-            className="rounded-lg border border-ui-border px-3 py-2 text-sm font-medium text-ui-heading"
+            className="ui-btn-secondary px-5"
             disabled={deletionMutation.isPending}
             type="submit"
           >
@@ -147,14 +149,14 @@ export const PrivacySettingsPage = () => {
         </form>
 
         {deletionMutation.isError ? (
-          <p className="text-sm text-red-700">{resolveErrorMessage(deletionMutation.error)}</p>
+          <p className="text-sm font-medium text-red-700">{resolveErrorMessage(deletionMutation.error)}</p>
         ) : null}
         {deletionSuccessMessage ? (
-          <p className="text-sm text-green-700">{deletionSuccessMessage}</p>
+          <p className="text-sm font-medium text-green-700">{deletionSuccessMessage}</p>
         ) : null}
 
         {deletionRequestQuery.data ? (
-          <div className="space-y-1 rounded-lg border border-ui-border p-3">
+          <div className="ui-panel-soft space-y-1">
             <p className="text-sm font-medium text-ui-heading">
               Current request status: {deletionRequestQuery.data.status}
             </p>

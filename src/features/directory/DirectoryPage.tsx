@@ -38,19 +38,23 @@ export const DirectoryPage = () => {
   const records = directoryQuery.data ?? []
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Directory</h1>
-      <p className="text-sm text-ui-muted">
-        Search your campus directory by person or organization. Private contact details are only
-        visible for shared chapter memberships.
-      </p>
+    <section className="ui-page">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Directory</p>
+        <h1 className="ui-page-title">Directory</h1>
+        <p className="ui-page-description">
+          Search your campus directory by person or organization. Private contact details are only
+          visible for shared chapter memberships.
+        </p>
+      </header>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-ui-body" htmlFor="directory-search">
+        <label className="ui-label" htmlFor="directory-search">
           Search by name or organization
         </label>
         <input
-          className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+          className="ui-input"
           id="directory-search"
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Search people or chapters"
@@ -60,7 +64,7 @@ export const DirectoryPage = () => {
 
       {directoryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading directory...</p> : null}
       {directoryQuery.isError ? (
-        <p className="text-sm text-red-700">{resolveErrorMessage(directoryQuery.error)}</p>
+        <p className="text-sm font-medium text-red-700">{resolveErrorMessage(directoryQuery.error)}</p>
       ) : null}
 
       {!directoryQuery.isLoading && !directoryQuery.isError && records.length === 0 ? (
@@ -70,7 +74,7 @@ export const DirectoryPage = () => {
       {records.length > 0 ? (
         <ul className="space-y-3">
           {records.map((record) => (
-            <li className="rounded-lg border border-ui-border p-4" key={record.userId}>
+            <li className="ui-panel" key={record.userId}>
               <p className="text-sm font-semibold text-ui-heading">{record.name}</p>
               <p className="mt-1 text-xs text-ui-muted">
                 Organizations: {formatOrganizationNames(record.organizationNames)}

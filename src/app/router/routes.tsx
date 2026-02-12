@@ -32,7 +32,7 @@ const LandingPage = () => (
       <div className="flex flex-wrap gap-2">
         {landingLinks.map((item) => (
           <Link
-            className="rounded-lg border border-ui-border px-3 py-2 text-sm text-ui-heading"
+            className="ui-btn-secondary min-h-[2.5rem] px-4 text-[0.85rem]"
             key={item.href}
             to={item.href}
           >
