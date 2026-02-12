@@ -158,8 +158,9 @@ test('offer accept and decline outcomes update UI membership states', async ({ p
 
   await navigateInApp(page, '/directory')
   await expect(page.getByRole('heading', { name: /directory/i })).toBeVisible()
-  await expect(page.getByText(/your membership status/i)).toBeVisible()
-  await expect(page.getByText(/active/i)).toBeVisible()
+  await expect(page.getByLabel(/search by name or organization/i)).toBeVisible()
+  await expect(page.getByText(/phase5-student-accept/i)).toBeVisible()
+  await expect(page.getByText(/phase five chapter/i)).toBeVisible()
 
   await writeSession(page, {
     isAuthenticated: true,

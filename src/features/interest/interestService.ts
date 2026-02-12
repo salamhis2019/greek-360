@@ -78,6 +78,7 @@ interface InterestService {
 
 interface ResettableInterestService extends InterestService {
   resetForTests: () => void
+  listAllInterestEntriesForDirectory?: () => Promise<InterestEntryRecord[]>
 }
 
 interface InMemoryInterestStore {
@@ -342,6 +343,10 @@ const createInMemoryInterestService = (
         .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
     },
 
+    async listAllInterestEntriesForDirectory() {
+      return [...store.interestEntries]
+    },
+
     resetForTests() {
       clearStore(store)
     },
@@ -537,6 +542,17 @@ export const resetInterestServiceForTests = () => {
   if ('resetForTests' in sharedInterestService && typeof sharedInterestService.resetForTests === 'function') {
     sharedInterestService.resetForTests()
   }
+}
+
+export const listInterestEntriesForDirectory = async (): Promise<InterestEntryRecord[]> => {
+  if (
+    'listAllInterestEntriesForDirectory' in sharedInterestService &&
+    typeof sharedInterestService.listAllInterestEntriesForDirectory === 'function'
+  ) {
+    return sharedInterestService.listAllInterestEntriesForDirectory()
+  }
+
+  return []
 }
 
 export const interestService: InterestService = {

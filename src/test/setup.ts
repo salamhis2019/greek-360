@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom'
 import { afterEach } from 'vitest'
+import { resetDirectoryServiceForTests } from '@/features/directory/directoryService'
 import { cleanup } from '@testing-library/react'
 import { resetAuthServiceForTests } from '@/features/auth/authService'
 import { resetInterestServiceForTests } from '@/features/interest/interestService'
@@ -11,6 +12,7 @@ afterEach(() => {
   cleanup()
   window.sessionStorage.clear()
   resetAuthServiceForTests()
+  resetDirectoryServiceForTests()
   resetInterestServiceForTests()
   resetOfferServiceForTests()
   resetRecruitmentServiceForTests()

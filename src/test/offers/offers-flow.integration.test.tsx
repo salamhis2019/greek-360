@@ -135,8 +135,11 @@ describe('Offers UI flow integration', () => {
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: /directory/i })).toBeInTheDocument()
     )
-    await waitFor(() => expect(screen.getByText(/your membership status/i)).toBeInTheDocument())
-    await waitFor(() => expect(screen.getByText(/active/i)).toBeInTheDocument())
+    await waitFor(() =>
+      expect(screen.getByLabelText(/search by name or organization/i)).toBeInTheDocument()
+    )
+    await waitFor(() => expect(screen.getByText(/offer-ui-student-1/i)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/org oflow5a/i)).toBeInTheDocument())
   })
 
   it('supports declining an offer and keeps membership inactive', async () => {

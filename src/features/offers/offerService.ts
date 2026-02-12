@@ -71,6 +71,7 @@ interface OfferService {
 
 interface ResettableOfferService extends OfferService {
   resetForTests: () => void
+  listAllMembershipsForDirectory?: () => Promise<MembershipRecord[]>
 }
 
 interface InMemoryOfferStore {
@@ -308,6 +309,10 @@ const createInMemoryOfferService = (
         .sort((first, second) => second.joinedAt.localeCompare(first.joinedAt))
     },
 
+    async listAllMembershipsForDirectory() {
+      return [...store.memberships]
+    },
+
     async ensurePendingOfferForFinalYes({
       interestEntryId,
       userId,
@@ -471,6 +476,17 @@ export const resetOfferServiceForTests = () => {
   if ('resetForTests' in sharedOfferService && typeof sharedOfferService.resetForTests === 'function') {
     sharedOfferService.resetForTests()
   }
+}
+
+export const listMembershipsForDirectory = async (): Promise<MembershipRecord[]> => {
+  if (
+    'listAllMembershipsForDirectory' in sharedOfferService &&
+    typeof sharedOfferService.listAllMembershipsForDirectory === 'function'
+  ) {
+    return sharedOfferService.listAllMembershipsForDirectory()
+  }
+
+  return []
 }
 
 export const offerService: OfferService = {

@@ -218,4 +218,33 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop table if exists public.memberships')
     expect(downSql).toContain('drop table if exists public.offers')
   })
+
+  it('includes the phase 6 directory and privacy migration pair with search and redaction workflow', () => {
+    const phaseSixUpPath = path.join(
+      upMigrationsDirectory,
+      '000007_phase6_directory_privacy.up.sql'
+    )
+    const phaseSixDownPath = path.join(
+      downMigrationsDirectory,
+      '000007_phase6_directory_privacy.down.sql'
+    )
+
+    expect(fs.existsSync(phaseSixUpPath)).toBe(true)
+    expect(fs.existsSync(phaseSixDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseSixUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseSixDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create or replace view public.directory_profile_memberships_v')
+    expect(upSql).toContain('create or replace function public.search_directory_people')
+    expect(upSql).toContain('users_university_lower_name_idx')
+    expect(upSql).toContain('organizations_university_lower_name_idx')
+    expect(upSql).toContain('phone_e164')
+    expect(upSql).toContain('email')
+
+    expect(downSql).toContain('drop function if exists public.search_directory_people(text, uuid)')
+    expect(downSql).toContain('drop view if exists public.directory_profile_memberships_v')
+    expect(downSql).toContain('drop index if exists users_university_lower_name_idx')
+    expect(downSql).toContain('drop index if exists organizations_university_lower_name_idx')
+  })
 })

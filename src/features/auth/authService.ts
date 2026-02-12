@@ -57,6 +57,7 @@ export interface AuthService {
 
 interface ResettableAuthService extends AuthService {
   resetForTests: () => void
+  listProfilesForDirectory?: () => Promise<UserProfileRecord[]>
 }
 
 interface InMemoryChallenge {
@@ -231,6 +232,10 @@ export const createInMemoryAuthService = (
       return updatedProfile
     },
 
+    async listProfilesForDirectory() {
+      return [...profilesByUserId.values()]
+    },
+
     resetForTests() {
       challengesByPhone.clear()
       profilesByPhone.clear()
@@ -337,6 +342,17 @@ export const resetAuthServiceForTests = () => {
   ) {
     sharedAuthService.resetForTests()
   }
+}
+
+export const listProfilesForDirectory = async (): Promise<UserProfileRecord[]> => {
+  if (
+    'listProfilesForDirectory' in sharedAuthService &&
+    typeof sharedAuthService.listProfilesForDirectory === 'function'
+  ) {
+    return sharedAuthService.listProfilesForDirectory()
+  }
+
+  return []
 }
 
 export const authService: AuthService = {
