@@ -142,6 +142,7 @@ export interface SuperAdminService {
   createJoinLink: (actor: SuperAdminActor, input: CreateJoinLinkInput) => Promise<JoinLinkRecord>
   resolveActiveJoinLinkByCode: (code: string) => Promise<ResolvedJoinLinkRecord | null>
   listOrganizationAdmins: (actor: SuperAdminActor) => Promise<OrganizationAdminRecord[]>
+  listAdminOrganizationIds: (userId: string | null) => Promise<string[]>
   assignOrganizationAdmin: (
     actor: SuperAdminActor,
     input: AssignOrganizationAdminInput
@@ -164,8 +165,13 @@ interface InMemorySuperAdminOptions {
   store?: InMemorySuperAdminStore
 }
 
+const forceInMemoryFromSession =
+  typeof window !== 'undefined' &&
+  window.sessionStorage.getItem('greek360.dev.useInMemory') === 'true'
+
 const useInMemorySuperAdmin =
   import.meta.env.MODE === 'test' ||
+  forceInMemoryFromSession ||
   environment.supabasePublishableKey === 'placeholder-publishable-key' ||
   environment.supabaseUrl.includes('placeholder-project-ref')
 
@@ -532,6 +538,16 @@ export const createInMemorySuperAdminService = (
       return [...store.organizationAdmins]
     },
 
+    async listAdminOrganizationIds(userId) {
+      if (!userId) {
+        return []
+      }
+
+      return store.organizationAdmins
+        .filter((assignment) => assignment.userId === userId)
+        .map((assignment) => assignment.organizationId)
+    },
+
     async assignOrganizationAdmin(actor, input) {
       requireSuperAdminActor(actor)
       validateAdminAssignmentInput(input)
@@ -855,6 +871,23 @@ const createSupabaseSuperAdminService = (client: SupabaseClient): SuperAdminServ
     }))
   },
 
+  async listAdminOrganizationIds(userId) {
+    if (!userId) {
+      return []
+    }
+
+    const { data, error } = await client
+      .from('organization_admins')
+      .select('organization_id')
+      .eq('user_id', userId)
+
+    if (error) {
+      throw new SuperAdminServiceError(mapSupabaseMessageToErrorCode(error.message), error.message)
+    }
+
+    return (data ?? []).map((item) => item.organization_id as string)
+  },
+
   async assignOrganizationAdmin(actor, input) {
     requireSuperAdminActor(actor)
 
@@ -980,6 +1013,14 @@ export const superAdminService: SuperAdminService = {
   async listOrganizationAdmins(actor) {
     try {
       return await sharedSuperAdminService.listOrganizationAdmins(actor)
+    } catch (error) {
+      throw mapUnknownErrorToSuperAdminServiceError(error)
+    }
+  },
+
+  async listAdminOrganizationIds(userId) {
+    try {
+      return await sharedSuperAdminService.listAdminOrganizationIds(userId)
     } catch (error) {
       throw mapUnknownErrorToSuperAdminServiceError(error)
     }

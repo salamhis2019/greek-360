@@ -10,6 +10,12 @@ import { defaultAuthSessionState, type AuthSessionState } from './session'
 
 const AUTH_SESSION_STORAGE_KEY = 'greek360.auth.session'
 
+declare global {
+  interface Window {
+    __greek360SetSession?: (nextSession: AuthSessionState) => void
+  }
+}
+
 interface AuthSessionContextValue extends AuthSessionState {
   setSession: (nextSession: AuthSessionState) => void
   clearSession: () => void
@@ -53,6 +59,20 @@ export const AuthSessionProvider = ({
 
     window.sessionStorage.setItem(AUTH_SESSION_STORAGE_KEY, JSON.stringify(session))
   }, [session])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    window.__greek360SetSession = (nextSession: AuthSessionState) => {
+      setSession(nextSession)
+    }
+
+    return () => {
+      delete window.__greek360SetSession
+    }
+  }, [])
 
   const contextValue = useMemo<AuthSessionContextValue>(
     () => ({

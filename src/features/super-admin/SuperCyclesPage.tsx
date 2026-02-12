@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   superAdminService,
@@ -296,6 +297,20 @@ export const SuperCyclesPage = () => {
                 <p className="text-xs text-ui-muted">
                   {getOrganizationName(cycle.organizationId)} | {cycle.status}
                 </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Link
+                    className="rounded-lg border border-ui-border px-2 py-1 text-xs font-medium text-ui-heading"
+                    to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`}
+                  >
+                    Open stage 1
+                  </Link>
+                  <Link
+                    className="rounded-lg border border-ui-border px-2 py-1 text-xs font-medium text-ui-heading"
+                    to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-2`}
+                  >
+                    Open stage 2
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>

@@ -152,4 +152,37 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop table if exists public.interest_entries')
     expect(downSql).toContain('drop table if exists public.audit_logs')
   })
+
+  it('includes the phase 4 recruitment decisions migration pair, secured decision writes, and queue listing functions', () => {
+    const phaseFourUpPath = path.join(
+      upMigrationsDirectory,
+      '000005_phase4_recruitment_decisions.up.sql'
+    )
+    const phaseFourDownPath = path.join(
+      downMigrationsDirectory,
+      '000005_phase4_recruitment_decisions.down.sql'
+    )
+
+    expect(fs.existsSync(phaseFourUpPath)).toBe(true)
+    expect(fs.existsSync(phaseFourDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseFourUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseFourDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.recruitment_decisions')
+    expect(upSql).toContain("stage text not null check (stage in ('shortlist', 'final'))")
+    expect(upSql).toContain('create or replace function public.assert_recruitment_decision_actor')
+    expect(upSql).toContain('create or replace function public.list_recruitment_stage1_queue')
+    expect(upSql).toContain('create or replace function public.list_recruitment_stage2_queue')
+    expect(upSql).toContain('create or replace function public.write_recruitment_stage1_decision')
+    expect(upSql).toContain('create or replace function public.write_recruitment_stage2_decision')
+    expect(upSql).toContain('recruitment_stage1_decision_recorded')
+    expect(upSql).toContain('recruitment_stage2_decision_recorded')
+
+    expect(downSql).toContain('drop function if exists public.write_recruitment_stage2_decision')
+    expect(downSql).toContain('drop function if exists public.write_recruitment_stage1_decision')
+    expect(downSql).toContain('drop function if exists public.list_recruitment_stage2_queue')
+    expect(downSql).toContain('drop function if exists public.list_recruitment_stage1_queue')
+    expect(downSql).toContain('drop table if exists public.recruitment_decisions')
+  })
 })

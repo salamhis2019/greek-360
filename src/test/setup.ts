@@ -3,6 +3,7 @@ import { afterEach } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import { resetAuthServiceForTests } from '@/features/auth/authService'
 import { resetInterestServiceForTests } from '@/features/interest/interestService'
+import { resetRecruitmentServiceForTests } from '@/features/recruitment/recruitmentService'
 import { resetSuperAdminServiceForTests } from '@/features/super-admin/superAdminService'
 
 afterEach(() => {
@@ -10,5 +11,6 @@ afterEach(() => {
   window.sessionStorage.clear()
   resetAuthServiceForTests()
   resetInterestServiceForTests()
+  resetRecruitmentServiceForTests()
   resetSuperAdminServiceForTests()
 })

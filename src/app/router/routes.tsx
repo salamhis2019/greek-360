@@ -3,6 +3,8 @@ import { AppShellLayout } from '@/app/layouts/AppShellLayout'
 import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
 import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
 import { JoinInterestPage } from '@/features/interest/JoinInterestPage'
+import { RecruitmentStage1Page } from '@/features/recruitment/RecruitmentStage1Page'
+import { RecruitmentStage2Page } from '@/features/recruitment/RecruitmentStage2Page'
 import { SuperAdminsPage } from '@/features/super-admin/SuperAdminsPage'
 import { SuperCyclesPage } from '@/features/super-admin/SuperCyclesPage'
 import { SuperOrganizationsPage } from '@/features/super-admin/SuperOrganizationsPage'
@@ -66,20 +68,6 @@ const PrivacySettingsPage = () => (
   />
 )
 
-const Stage1Page = () => (
-  <RouteSkeletonPage
-    title="Stage 1 queue"
-    description="Chapter admin shortlist/no workflow scaffolded for rapid one-tap triage."
-  />
-)
-
-const Stage2Page = () => (
-  <RouteSkeletonPage
-    title="Stage 2 decisions"
-    description="Chapter admin final yes/no workflow shell for pending offer generation."
-  />
-)
-
 const MessagesPage = () => (
   <RouteSkeletonPage
     title="Messages"
@@ -123,8 +111,8 @@ export const appRouteObjects: RouteObject[] = [
       {
         element: <RequireRole role="chapter_admin" />,
         children: [
-          { path: ROUTE_PATHS.adminStage1.slice(1), element: <Stage1Page /> },
-          { path: ROUTE_PATHS.adminStage2.slice(1), element: <Stage2Page /> },
+          { path: ROUTE_PATHS.adminStage1.slice(1), element: <RecruitmentStage1Page /> },
+          { path: ROUTE_PATHS.adminStage2.slice(1), element: <RecruitmentStage2Page /> },
           { path: ROUTE_PATHS.adminMessages.slice(1), element: <MessagesPage /> },
           { path: ROUTE_PATHS.adminMembers.slice(1), element: <MembersPage /> },
         ],

@@ -68,6 +68,11 @@ interface InterestService {
   resolveJoinCode: (joinCode: string) => Promise<ResolvedJoinCodeRecord>
   submitInterest: (params: SubmitInterestParams) => Promise<SubmitInterestResult>
   listInterestEntriesForUser: (userId: string) => Promise<InterestEntryRecord[]>
+  listInterestEntriesForOrganizationCycle: (
+    organizationId: string,
+    cycleId: string
+  ) => Promise<InterestEntryRecord[]>
+  getInterestEntryById: (interestEntryId: string) => Promise<InterestEntryRecord | null>
   listAuditLogsForActor: (userId: string) => Promise<InterestAuditLogRecord[]>
 }
 
@@ -85,8 +90,13 @@ interface InMemoryInterestServiceOptions {
   store?: InMemoryInterestStore
 }
 
+const forceInMemoryFromSession =
+  typeof window !== 'undefined' &&
+  window.sessionStorage.getItem('greek360.dev.useInMemory') === 'true'
+
 const useInMemoryInterest =
   import.meta.env.MODE === 'test' ||
+  forceInMemoryFromSession ||
   environment.supabasePublishableKey === 'placeholder-publishable-key' ||
   environment.supabaseUrl.includes('placeholder-project-ref')
 
@@ -316,6 +326,16 @@ const createInMemoryInterestService = (
         .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
     },
 
+    async listInterestEntriesForOrganizationCycle(organizationId, cycleId) {
+      return store.interestEntries
+        .filter((entry) => entry.organizationId === organizationId && entry.cycleId === cycleId)
+        .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+    },
+
+    async getInterestEntryById(interestEntryId) {
+      return store.interestEntries.find((entry) => entry.id === interestEntryId) ?? null
+    },
+
     async listAuditLogsForActor(userId) {
       return store.auditLogs
         .filter((log) => log.actorUserId === userId)
@@ -438,6 +458,53 @@ const createSupabaseInterestService = (client: SupabaseClient): InterestService 
     }))
   },
 
+  async listInterestEntriesForOrganizationCycle(organizationId, cycleId) {
+    const { data, error } = await client
+      .from('interest_entries')
+      .select('id, user_id, organization_id, cycle_id, source, created_at')
+      .eq('organization_id', organizationId)
+      .eq('cycle_id', cycleId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      throw new InterestServiceError(mapSupabaseMessageToErrorCode(error.message), error.message)
+    }
+
+    return (data ?? []).map((item) => ({
+      id: item.id as string,
+      userId: item.user_id as string,
+      organizationId: item.organization_id as string,
+      cycleId: item.cycle_id as string,
+      source: item.source as SubmitInterestSource,
+      createdAt: item.created_at as string,
+    }))
+  },
+
+  async getInterestEntryById(interestEntryId) {
+    const { data, error } = await client
+      .from('interest_entries')
+      .select('id, user_id, organization_id, cycle_id, source, created_at')
+      .eq('id', interestEntryId)
+      .maybeSingle()
+
+    if (error) {
+      throw new InterestServiceError(mapSupabaseMessageToErrorCode(error.message), error.message)
+    }
+
+    if (!data) {
+      return null
+    }
+
+    return {
+      id: data.id as string,
+      userId: data.user_id as string,
+      organizationId: data.organization_id as string,
+      cycleId: data.cycle_id as string,
+      source: data.source as SubmitInterestSource,
+      createdAt: data.created_at as string,
+    }
+  },
+
   async listAuditLogsForActor(userId) {
     const { data, error } = await client
       .from('audit_logs')
@@ -492,6 +559,25 @@ export const interestService: InterestService = {
   async listInterestEntriesForUser(userId) {
     try {
       return await sharedInterestService.listInterestEntriesForUser(userId)
+    } catch (error) {
+      throw mapUnknownToInterestServiceError(error)
+    }
+  },
+
+  async listInterestEntriesForOrganizationCycle(organizationId, cycleId) {
+    try {
+      return await sharedInterestService.listInterestEntriesForOrganizationCycle(
+        organizationId,
+        cycleId
+      )
+    } catch (error) {
+      throw mapUnknownToInterestServiceError(error)
+    }
+  },
+
+  async getInterestEntryById(interestEntryId) {
+    try {
+      return await sharedInterestService.getInterestEntryById(interestEntryId)
     } catch (error) {
       throw mapUnknownToInterestServiceError(error)
     }
