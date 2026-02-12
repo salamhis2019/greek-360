@@ -1,14 +1,16 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
+import { isUserDeleted } from '@/features/privacy/privacyDeletionState'
 import type { UserRole } from '@/features/auth/session'
 
 const AuthRedirect = () => <Navigate replace to="/auth" />
 const HomeRedirect = () => <Navigate replace to="/home" />
 
 export const RequireAuthFlow = () => {
-  const { isAuthenticated, needsOnboarding } = useAuthSession()
+  const { isAuthenticated, needsOnboarding, userId } = useAuthSession()
+  const deletedAccount = isUserDeleted(userId)
 
-  if (isAuthenticated && !needsOnboarding) {
+  if (isAuthenticated && !needsOnboarding && !deletedAccount) {
     return <HomeRedirect />
   }
 
@@ -16,9 +18,10 @@ export const RequireAuthFlow = () => {
 }
 
 export const RequireAuth = () => {
-  const { isAuthenticated, needsOnboarding } = useAuthSession()
+  const { isAuthenticated, needsOnboarding, userId } = useAuthSession()
+  const deletedAccount = isUserDeleted(userId)
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || deletedAccount) {
     return <AuthRedirect />
   }
 
@@ -34,9 +37,10 @@ interface RequireRoleProps {
 }
 
 export const RequireRole = ({ role }: RequireRoleProps) => {
-  const { isAuthenticated, needsOnboarding, roles } = useAuthSession()
+  const { isAuthenticated, needsOnboarding, roles, userId } = useAuthSession()
+  const deletedAccount = isUserDeleted(userId)
 
-  if (!isAuthenticated || needsOnboarding) {
+  if (!isAuthenticated || needsOnboarding || deletedAccount) {
     return <AuthRedirect />
   }
 

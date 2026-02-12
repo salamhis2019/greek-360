@@ -6,6 +6,7 @@ import { DirectoryPage } from '@/features/directory/DirectoryPage'
 import { JoinInterestPage } from '@/features/interest/JoinInterestPage'
 import { MessagesPage } from '@/features/messaging/MessagesPage'
 import { OffersInboxPage } from '@/features/offers/OffersInboxPage'
+import { PrivacySettingsPage } from '@/features/privacy/PrivacySettingsPage'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 import { RecruitmentStage1Page } from '@/features/recruitment/RecruitmentStage1Page'
 import { RecruitmentStage2Page } from '@/features/recruitment/RecruitmentStage2Page'
@@ -47,13 +48,6 @@ const StudentHomePage = () => (
   <RouteSkeletonPage
     title="Student home"
     description="Authenticated student dashboard shell for offers, profile, and directory."
-  />
-)
-
-const PrivacySettingsPage = () => (
-  <RouteSkeletonPage
-    title="Privacy settings"
-    description="Data export and deletion request controls are scaffolded for Phase 8."
   />
 )
 

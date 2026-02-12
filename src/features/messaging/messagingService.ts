@@ -61,6 +61,7 @@ export interface EmailJobRecord {
   failureDetails: EmailFailureRecord[]
   sentBy: string
   sentAt: string
+  recipientUserIds?: string[]
 }
 
 export interface MessagingAuditRecord {
@@ -134,6 +135,7 @@ interface MessagingService {
 
 interface ResettableMessagingService extends MessagingService {
   resetForTests: () => void
+  listAllJobsForPrivacyExport?: () => Promise<EmailJobRecord[]>
 }
 
 interface InMemoryMessagingStore {
@@ -615,6 +617,7 @@ const createInMemoryMessagingService = (
         failureDetails,
         sentBy: actor.actorUserId ?? '',
         sentAt: nowIso(),
+        recipientUserIds: [...recipientUserIds],
       }
 
       store.jobs.push(createdJob)
@@ -652,6 +655,13 @@ const createInMemoryMessagingService = (
     resetForTests() {
       clearStore(store)
     },
+
+    async listAllJobsForPrivacyExport() {
+      return store.jobs.map((job) => ({
+        ...job,
+        recipientUserIds: [...(job.recipientUserIds ?? [])],
+      }))
+    },
   }
 }
 
@@ -687,6 +697,9 @@ const mapJobRow = (row: Record<string, unknown> | null | undefined): EmailJobRec
   failureDetails: (row?.failure_details as EmailFailureRecord[]) ?? [],
   sentBy: String(row?.sent_by ?? ''),
   sentAt: String(row?.sent_at ?? nowIso()),
+  recipientUserIds: Array.isArray(row?.recipient_user_ids)
+    ? (row?.recipient_user_ids as string[])
+    : [],
 })
 
 const mapAuditRow = (row: Record<string, unknown> | null | undefined): MessagingAuditRecord => ({
@@ -822,6 +835,17 @@ export const resetMessagingServiceForTests = () => {
   ) {
     sharedMessagingService.resetForTests()
   }
+}
+
+export const listMessageJobsForPrivacyExport = async (): Promise<EmailJobRecord[]> => {
+  if (
+    'listAllJobsForPrivacyExport' in sharedMessagingService &&
+    typeof sharedMessagingService.listAllJobsForPrivacyExport === 'function'
+  ) {
+    return sharedMessagingService.listAllJobsForPrivacyExport()
+  }
+
+  return []
 }
 
 export const messagingService: MessagingService = {

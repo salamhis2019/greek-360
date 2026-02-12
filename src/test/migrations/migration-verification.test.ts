@@ -282,4 +282,34 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop table if exists public.email_jobs')
     expect(downSql).toContain('drop table if exists public.email_templates')
   })
+
+  it('includes the phase 8 privacy rights migration pair with export and deletion workflows', () => {
+    const phaseEightUpPath = path.join(
+      upMigrationsDirectory,
+      '000009_phase8_privacy_hardening.up.sql'
+    )
+    const phaseEightDownPath = path.join(
+      downMigrationsDirectory,
+      '000009_phase8_privacy_hardening.down.sql'
+    )
+
+    expect(fs.existsSync(phaseEightUpPath)).toBe(true)
+    expect(fs.existsSync(phaseEightDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseEightUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseEightDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.deletion_requests')
+    expect(upSql).toContain('create or replace function public.request_privacy_export')
+    expect(upSql).toContain('create or replace function public.request_account_deletion')
+    expect(upSql).toContain('create or replace function public.process_account_deletion')
+    expect(upSql).toContain('privacy_export_requested')
+    expect(upSql).toContain('deletion_requested')
+    expect(upSql).toContain('deletion_completed')
+
+    expect(downSql).toContain('drop function if exists public.process_account_deletion')
+    expect(downSql).toContain('drop function if exists public.request_account_deletion')
+    expect(downSql).toContain('drop function if exists public.request_privacy_export')
+    expect(downSql).toContain('drop table if exists public.deletion_requests')
+  })
 })

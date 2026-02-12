@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { environment } from '@/lib/env'
+import { isUserDeleted } from '@/features/privacy/privacyDeletionState'
 import { supabase } from '@/lib/supabase/client'
 import { normalizePhoneNumber } from './phone'
 import type { UserRole } from './session'
@@ -201,6 +202,9 @@ export const createInMemoryAuthService = (
 
       challengesByPhone.delete(phoneE164)
       const profile = ensureProfile(phoneE164)
+      if (isUserDeleted(profile.userId)) {
+        throw new AuthServiceError('unknown', 'This account has been deleted.')
+      }
 
       return {
         profile,
@@ -220,6 +224,10 @@ export const createInMemoryAuthService = (
         throw new AuthServiceError('unknown', 'Unable to find user profile.')
       }
 
+      if (isUserDeleted(userId)) {
+        throw new AuthServiceError('unknown', 'This account has been deleted.')
+      }
+
       const updatedProfile = {
         ...existingProfile,
         name: trimmedName,
@@ -233,7 +241,7 @@ export const createInMemoryAuthService = (
     },
 
     async listProfilesForDirectory() {
-      return [...profilesByUserId.values()]
+      return [...profilesByUserId.values()].filter((profile) => !isUserDeleted(profile.userId))
     },
 
     resetForTests() {
@@ -279,12 +287,16 @@ const createSupabaseAuthService = (client: SupabaseClient): AuthService => ({
 
     const { data: profile, error: profileError } = await client
       .from('users')
-      .select('id, phone_e164, name, email')
+      .select('id, phone_e164, name, email, deleted_at')
       .eq('id', authenticatedUser.id)
       .single()
 
     if (profileError) {
       throw new AuthServiceError('unknown', profileError.message)
+    }
+
+    if (profile.deleted_at) {
+      throw new AuthServiceError('unknown', 'This account has been deleted.')
     }
 
     return {

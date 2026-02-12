@@ -4,30 +4,31 @@ Mobile-optimized web MVP for fraternity and sorority recruitment and membership 
 
 This repository is implemented phase-by-phase from `spec.md` with strict TDD gates.
 
-## Phase 2 Status
+## Phase 8 Status
 
-Phase 2 super-admin foundation is implemented on top of Phases 0 and 1:
-- React app shell with provider architecture.
-- Auth onboarding flow (`/auth`) with phone entry, OTP verification, and first-time name capture.
-- Session-aware route guards that enforce onboarding completion before authenticated routes.
-- Super-admin setup workflows:
-  - universities (`/super/universities`)
-  - organizations (`/super/organizations`)
-  - recruitment cycles + static join codes (`/super/cycles`)
-  - admin assignments (`/super/admins`)
-- Supabase Phase 2 migration pair for:
-  - `universities`, `organizations`, `recruitment_cycles`, `join_links`, `organization_admins`
-  - super-admin role model (`super_admin_users`)
-  - deny-by-default RLS + guarded setup functions (`create_*`, `assign/revoke_organization_admin`)
-- Phase 2 tests:
-  - super-admin mutation security tests
-  - unique/invalid-input service tests
-  - UI setup integration test
-  - E2E super-admin setup journey
-- Environment separation (`dev`, `prod`).
-- Supabase migration framework with up/down verification.
-- Vitest + Testing Library + Playwright baselines.
-- CI split into fast checks and full checks.
+Phase 8 privacy rights, hardening, and launch-readiness work is implemented on top of Phases 0-7:
+
+- Privacy settings experience (`/settings/privacy`) for:
+  - user data export generation
+  - account deletion request with OTP re-auth
+- Privacy domain service with:
+  - export payload assembly (profile, interests, decisions, offers, memberships, communications metadata)
+  - deletion request lifecycle (`requested`, `processing`, `completed`, `rejected`)
+  - super-admin/system deletion processing guardrails
+  - invalid re-auth rate limiting
+- Access hardening for deleted users via route-guard enforcement.
+- Supabase Phase 8 migration pair:
+  - `deletion_requests` table
+  - secured functions: `request_privacy_export`, `request_account_deletion`, `process_account_deletion`
+  - privacy operation audit events
+- Phase 8 tests:
+  - privacy service integration coverage
+  - privacy settings UI integration coverage
+  - privacy security regression suite
+  - phase 8 E2E privacy flow
+  - migration verification coverage for phase 8 pair
+- Launch-readiness runbook and checklist:
+  - `docs/phase-8-launch-readiness.md`
 
 ## Prerequisites
 
