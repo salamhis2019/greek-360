@@ -2,6 +2,7 @@ import { Link, type RouteObject } from 'react-router-dom'
 import { AppShellLayout } from '@/app/layouts/AppShellLayout'
 import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
 import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
+import { JoinInterestPage } from '@/features/interest/JoinInterestPage'
 import { SuperAdminsPage } from '@/features/super-admin/SuperAdminsPage'
 import { SuperCyclesPage } from '@/features/super-admin/SuperCyclesPage'
 import { SuperOrganizationsPage } from '@/features/super-admin/SuperOrganizationsPage'
@@ -33,13 +34,6 @@ const LandingPage = () => (
         ))}
       </div>
     }
-  />
-)
-
-const JoinByCodePage = () => (
-  <RouteSkeletonPage
-    title="Join a chapter"
-    description="Join code entry and deep-link route are scaffolded for recruitment interest capture."
   />
 )
 
@@ -114,8 +108,8 @@ export const appRouteObjects: RouteObject[] = [
         element: <RequireAuthFlow />,
         children: [{ path: ROUTE_PATHS.auth.slice(1), element: <AuthOnboardingPage /> }],
       },
-      { path: ROUTE_PATHS.joinWithCode.slice(1), element: <JoinByCodePage /> },
-      { path: ROUTE_PATHS.manualCodeEntry.slice(1), element: <JoinByCodePage /> },
+      { path: ROUTE_PATHS.joinWithCode.slice(1), element: <JoinInterestPage mode="deep-link" /> },
+      { path: ROUTE_PATHS.manualCodeEntry.slice(1), element: <JoinInterestPage mode="manual" /> },
       {
         element: <RequireAuth />,
         children: [

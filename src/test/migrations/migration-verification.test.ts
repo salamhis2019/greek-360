@@ -122,4 +122,34 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop table if exists public.universities')
     expect(downSql).toContain('drop table if exists public.super_admin_users')
   })
+
+  it('includes the phase 3 interest capture migration pair, submission functions, and audit logging', () => {
+    const phaseThreeUpPath = path.join(
+      upMigrationsDirectory,
+      '000004_phase3_interest_capture.up.sql'
+    )
+    const phaseThreeDownPath = path.join(
+      downMigrationsDirectory,
+      '000004_phase3_interest_capture.down.sql'
+    )
+
+    expect(fs.existsSync(phaseThreeUpPath)).toBe(true)
+    expect(fs.existsSync(phaseThreeDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseThreeUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseThreeDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.interest_entries')
+    expect(upSql).toContain('create table if not exists public.audit_logs')
+    expect(upSql).toContain("source text not null check (source in ('qr', 'manual_code'))")
+    expect(upSql).toContain('create or replace function public.resolve_active_join_link')
+    expect(upSql).toContain('create or replace function public.submit_interest')
+    expect(upSql).toContain('interest_submission_duplicate')
+    expect(upSql).toContain('interest_submitted')
+
+    expect(downSql).toContain('drop function if exists public.submit_interest(text, text)')
+    expect(downSql).toContain('drop function if exists public.resolve_active_join_link(text)')
+    expect(downSql).toContain('drop table if exists public.interest_entries')
+    expect(downSql).toContain('drop table if exists public.audit_logs')
+  })
 })

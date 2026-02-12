@@ -51,6 +51,15 @@ export interface JoinLinkRecord {
   createdAt: string
 }
 
+export interface ResolvedJoinLinkRecord {
+  organizationId: string
+  cycleId: string
+  code: string
+  organizationName: string
+  cycleTerm: string
+  cycleYear: number
+}
+
 export interface OrganizationAdminRecord {
   organizationId: string
   userId: string
@@ -131,6 +140,7 @@ export interface SuperAdminService {
   ) => Promise<RecruitmentCycleRecord>
   listJoinLinks: (actor: SuperAdminActor) => Promise<JoinLinkRecord[]>
   createJoinLink: (actor: SuperAdminActor, input: CreateJoinLinkInput) => Promise<JoinLinkRecord>
+  resolveActiveJoinLinkByCode: (code: string) => Promise<ResolvedJoinLinkRecord | null>
   listOrganizationAdmins: (actor: SuperAdminActor) => Promise<OrganizationAdminRecord[]>
   assignOrganizationAdmin: (
     actor: SuperAdminActor,
@@ -488,6 +498,35 @@ export const createInMemorySuperAdminService = (
       return createdRecord
     },
 
+    async resolveActiveJoinLinkByCode(code) {
+      const normalizedCode = normalizeJoinCode(code)
+      const joinLink = store.joinLinks.find((item) => item.code === normalizedCode)
+
+      if (!joinLink || !joinLink.isActive) {
+        return null
+      }
+
+      const organization = store.organizations.find((item) => item.id === joinLink.organizationId)
+      const cycle = store.recruitmentCycles.find((item) => item.id === joinLink.cycleId)
+
+      if (!organization || !cycle) {
+        return null
+      }
+
+      if (organization.status !== 'active' || cycle.status !== 'active') {
+        return null
+      }
+
+      return {
+        organizationId: joinLink.organizationId,
+        cycleId: joinLink.cycleId,
+        code: joinLink.code,
+        organizationName: organization.name,
+        cycleTerm: cycle.term,
+        cycleYear: cycle.year,
+      }
+    },
+
     async listOrganizationAdmins(actor) {
       requireSuperAdminActor(actor)
       return [...store.organizationAdmins]
@@ -754,6 +793,49 @@ const createSupabaseSuperAdminService = (client: SupabaseClient): SuperAdminServ
     }
   },
 
+  async resolveActiveJoinLinkByCode(code) {
+    const normalizedCode = normalizeJoinCode(code)
+    const { data, error } = await client
+      .from('join_links')
+      .select(
+        'code, organization_id, cycle_id, is_active, organizations(name, status), recruitment_cycles(term, year, status)'
+      )
+      .eq('code', normalizedCode)
+      .maybeSingle()
+
+    if (error) {
+      throw new SuperAdminServiceError(mapSupabaseMessageToErrorCode(error.message), error.message)
+    }
+
+    if (!data) {
+      return null
+    }
+
+    const organizationInfo = Array.isArray(data.organizations)
+      ? data.organizations[0]
+      : data.organizations
+    const cycleInfo = Array.isArray(data.recruitment_cycles)
+      ? data.recruitment_cycles[0]
+      : data.recruitment_cycles
+
+    if (!data.is_active || !organizationInfo || !cycleInfo) {
+      return null
+    }
+
+    if (organizationInfo.status !== 'active' || cycleInfo.status !== 'active') {
+      return null
+    }
+
+    return {
+      organizationId: data.organization_id as string,
+      cycleId: data.cycle_id as string,
+      code: data.code as string,
+      organizationName: organizationInfo.name as string,
+      cycleTerm: cycleInfo.term as string,
+      cycleYear: Number(cycleInfo.year),
+    }
+  },
+
   async listOrganizationAdmins(actor) {
     requireSuperAdminActor(actor)
 
@@ -882,6 +964,14 @@ export const superAdminService: SuperAdminService = {
   async createJoinLink(actor, input) {
     try {
       return await sharedSuperAdminService.createJoinLink(actor, input)
+    } catch (error) {
+      throw mapUnknownErrorToSuperAdminServiceError(error)
+    }
+  },
+
+  async resolveActiveJoinLinkByCode(code) {
+    try {
+      return await sharedSuperAdminService.resolveActiveJoinLinkByCode(code)
     } catch (error) {
       throw mapUnknownErrorToSuperAdminServiceError(error)
     }

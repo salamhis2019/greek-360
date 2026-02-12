@@ -1,5 +1,5 @@
 import { FormEvent, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
 import { authService, AuthServiceError } from './authService'
 import { useAuthSession } from './AuthSessionProvider'
@@ -16,7 +16,22 @@ const resolveErrorMessage = (error: unknown) => {
 
 export const AuthOnboardingPage = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { isAuthenticated, userId, needsOnboarding, displayName, setSession } = useAuthSession()
+
+  const postAuthRedirectPath = useMemo(() => {
+    const redirectPath = new URLSearchParams(location.search).get('redirect')
+
+    if (!redirectPath || !redirectPath.startsWith('/')) {
+      return ROUTE_PATHS.home
+    }
+
+    if (redirectPath.startsWith('//') || redirectPath.startsWith('/auth')) {
+      return ROUTE_PATHS.home
+    }
+
+    return redirectPath
+  }, [location.search])
 
   const initialStep: AuthStep = useMemo(() => {
     if (isAuthenticated && needsOnboarding) {
@@ -75,7 +90,7 @@ export const AuthOnboardingPage = () => {
         return
       }
 
-      navigate(ROUTE_PATHS.home)
+      navigate(postAuthRedirectPath)
     } catch (error) {
       setErrorMessage(resolveErrorMessage(error))
     } finally {
@@ -109,7 +124,7 @@ export const AuthOnboardingPage = () => {
         roles: ['student'],
       })
 
-      navigate(ROUTE_PATHS.home)
+      navigate(postAuthRedirectPath)
     } catch (error) {
       setErrorMessage(resolveErrorMessage(error))
     } finally {
