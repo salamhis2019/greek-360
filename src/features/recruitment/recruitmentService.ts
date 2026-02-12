@@ -5,6 +5,7 @@ import {
   type InterestEntryRecord,
   type SubmitInterestSource,
 } from '@/features/interest/interestService'
+import { offerService } from '@/features/offers/offerService'
 import { superAdminService } from '@/features/super-admin/superAdminService'
 import { environment } from '@/lib/env'
 import { supabase } from '@/lib/supabase/client'
@@ -326,6 +327,15 @@ const createInMemoryRecruitmentService = (
       const existing = findDecision(interestEntry.id, 'final')
       if (existing) {
         if (existing.decision === normalizedDecision) {
+          if (existing.decision === 'yes') {
+            await offerService.ensurePendingOfferForFinalYes({
+              interestEntryId: interestEntry.id,
+              userId: interestEntry.userId,
+              organizationId: interestEntry.organizationId,
+              cycleId: interestEntry.cycleId,
+            })
+          }
+
           return existing
         }
 
@@ -346,6 +356,16 @@ const createInMemoryRecruitmentService = (
       }
 
       store.decisions.push(createdDecision)
+
+      if (createdDecision.decision === 'yes') {
+        await offerService.ensurePendingOfferForFinalYes({
+          interestEntryId: interestEntry.id,
+          userId: interestEntry.userId,
+          organizationId: interestEntry.organizationId,
+          cycleId: interestEntry.cycleId,
+        })
+      }
+
       return createdDecision
     },
 

@@ -185,4 +185,37 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop function if exists public.list_recruitment_stage1_queue')
     expect(downSql).toContain('drop table if exists public.recruitment_decisions')
   })
+
+  it('includes the phase 5 offers and memberships migration pair with offer response workflow', () => {
+    const phaseFiveUpPath = path.join(
+      upMigrationsDirectory,
+      '000006_phase5_offers_memberships.up.sql'
+    )
+    const phaseFiveDownPath = path.join(
+      downMigrationsDirectory,
+      '000006_phase5_offers_memberships.down.sql'
+    )
+
+    expect(fs.existsSync(phaseFiveUpPath)).toBe(true)
+    expect(fs.existsSync(phaseFiveDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseFiveUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseFiveDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.offers')
+    expect(upSql).toContain('create table if not exists public.memberships')
+    expect(upSql).toContain("status text not null check (status in ('pending', 'accepted', 'declined', 'expired'))")
+    expect(upSql).toContain("status text not null check (status in ('active', 'inactive'))")
+    expect(upSql).toContain('create unique index if not exists memberships_user_active_unique_idx')
+    expect(upSql).toContain('create or replace function public.create_offer_for_final_yes')
+    expect(upSql).toContain('create or replace function public.respond_to_offer')
+    expect(upSql).toContain('offer_accepted')
+    expect(upSql).toContain('offer_declined')
+    expect(upSql).toContain('membership_activated')
+
+    expect(downSql).toContain('drop function if exists public.respond_to_offer(uuid, text)')
+    expect(downSql).toContain('drop function if exists public.create_offer_for_final_yes(uuid)')
+    expect(downSql).toContain('drop table if exists public.memberships')
+    expect(downSql).toContain('drop table if exists public.offers')
+  })
 })

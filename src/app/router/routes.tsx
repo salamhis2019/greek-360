@@ -2,7 +2,10 @@ import { Link, type RouteObject } from 'react-router-dom'
 import { AppShellLayout } from '@/app/layouts/AppShellLayout'
 import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
 import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
+import { DirectoryPage } from '@/features/directory/DirectoryPage'
 import { JoinInterestPage } from '@/features/interest/JoinInterestPage'
+import { OffersInboxPage } from '@/features/offers/OffersInboxPage'
+import { ProfilePage } from '@/features/profile/ProfilePage'
 import { RecruitmentStage1Page } from '@/features/recruitment/RecruitmentStage1Page'
 import { RecruitmentStage2Page } from '@/features/recruitment/RecruitmentStage2Page'
 import { SuperAdminsPage } from '@/features/super-admin/SuperAdminsPage'
@@ -46,21 +49,6 @@ const StudentHomePage = () => (
   />
 )
 
-const OffersPage = () => (
-  <RouteSkeletonPage title="Offers" description="Offer response workflow skeleton is ready for Phase 5." />
-)
-
-const DirectoryPage = () => (
-  <RouteSkeletonPage
-    title="Directory"
-    description="Campus directory shell is ready for privacy-gated profile visibility in Phase 6."
-  />
-)
-
-const ProfilePage = () => (
-  <RouteSkeletonPage title="Profile" description="Profile shell with avatar and contact details placeholder." />
-)
-
 const PrivacySettingsPage = () => (
   <RouteSkeletonPage
     title="Privacy settings"
@@ -102,7 +90,7 @@ export const appRouteObjects: RouteObject[] = [
         element: <RequireAuth />,
         children: [
           { path: ROUTE_PATHS.home.slice(1), element: <StudentHomePage /> },
-          { path: ROUTE_PATHS.offers.slice(1), element: <OffersPage /> },
+          { path: ROUTE_PATHS.offers.slice(1), element: <OffersInboxPage /> },
           { path: ROUTE_PATHS.directory.slice(1), element: <DirectoryPage /> },
           { path: ROUTE_PATHS.profile.slice(1), element: <ProfilePage /> },
           { path: ROUTE_PATHS.privacySettings.slice(1), element: <PrivacySettingsPage /> },
