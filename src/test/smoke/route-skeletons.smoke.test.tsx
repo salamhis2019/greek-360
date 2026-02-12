@@ -64,8 +64,9 @@ describe('Route skeleton coverage', () => {
       session: superAdminSession,
     },
     { path: '/does-not-exist', heading: /not found/i, session: {} },
-  ])('renders $path', ({ path, heading, session }) => {
+  ])('renders $path', async ({ path, heading, session }) => {
     renderAppAtRoute(path, session)
-    expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument()
+
+    expect(await screen.findByRole('heading', { level: 1, name: heading })).toBeInTheDocument()
   })
 })

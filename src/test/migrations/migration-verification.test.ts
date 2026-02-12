@@ -86,4 +86,40 @@ describe('Phase 0 migration verification', () => {
     expect(upSql).toContain('normalize_phone_e164')
     expect(downSql).toContain('drop table if exists public.users')
   })
+
+  it('includes the phase 2 super-admin migration pair, core tables, and permission functions', () => {
+    const phaseTwoUpPath = path.join(
+      upMigrationsDirectory,
+      '000003_phase2_super_admin_foundation.up.sql'
+    )
+    const phaseTwoDownPath = path.join(
+      downMigrationsDirectory,
+      '000003_phase2_super_admin_foundation.down.sql'
+    )
+
+    expect(fs.existsSync(phaseTwoUpPath)).toBe(true)
+    expect(fs.existsSync(phaseTwoDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseTwoUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseTwoDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.universities')
+    expect(upSql).toContain('create table if not exists public.organizations')
+    expect(upSql).toContain('create table if not exists public.recruitment_cycles')
+    expect(upSql).toContain('create table if not exists public.join_links')
+    expect(upSql).toContain('create table if not exists public.organization_admins')
+    expect(upSql).toContain('create table if not exists public.super_admin_users')
+    expect(upSql).toContain('alter table public.universities enable row level security')
+    expect(upSql).toContain('create or replace function public.create_university')
+    expect(upSql).toContain('create or replace function public.assign_organization_admin')
+    expect(upSql).toContain('create or replace function public.revoke_organization_admin')
+
+    expect(downSql).toContain('drop function if exists public.revoke_organization_admin(uuid, uuid)')
+    expect(downSql).toContain('drop table if exists public.organization_admins')
+    expect(downSql).toContain('drop table if exists public.join_links')
+    expect(downSql).toContain('drop table if exists public.recruitment_cycles')
+    expect(downSql).toContain('drop table if exists public.organizations')
+    expect(downSql).toContain('drop table if exists public.universities')
+    expect(downSql).toContain('drop table if exists public.super_admin_users')
+  })
 })

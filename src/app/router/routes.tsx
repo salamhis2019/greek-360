@@ -2,6 +2,10 @@ import { Link, type RouteObject } from 'react-router-dom'
 import { AppShellLayout } from '@/app/layouts/AppShellLayout'
 import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
 import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
+import { SuperAdminsPage } from '@/features/super-admin/SuperAdminsPage'
+import { SuperCyclesPage } from '@/features/super-admin/SuperCyclesPage'
+import { SuperOrganizationsPage } from '@/features/super-admin/SuperOrganizationsPage'
+import { SuperUniversitiesPage } from '@/features/super-admin/SuperUniversitiesPage'
 import { RequireAuth, RequireAuthFlow, RequireRole } from './guards'
 import { ROUTE_PATHS } from './routePaths'
 
@@ -93,34 +97,6 @@ const MembersPage = () => (
   <RouteSkeletonPage
     title="Members"
     description="Chapter membership management shell and directory tools placeholder."
-  />
-)
-
-const SuperUniversitiesPage = () => (
-  <RouteSkeletonPage
-    title="Universities"
-    description="Super-admin setup shell for campus creation and activation."
-  />
-)
-
-const SuperOrganizationsPage = () => (
-  <RouteSkeletonPage
-    title="Organizations"
-    description="Super-admin organization creation shell with fraternity and sorority support."
-  />
-)
-
-const SuperAdminsPage = () => (
-  <RouteSkeletonPage
-    title="Admin assignments"
-    description="Super-admin-only admin assignment shell for chapter operations."
-  />
-)
-
-const SuperCyclesPage = () => (
-  <RouteSkeletonPage
-    title="Recruitment cycles"
-    description="Cycle and static join-code management shell for each organization."
   />
 )
 
