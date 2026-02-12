@@ -4,6 +4,7 @@ import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
 import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
 import { DirectoryPage } from '@/features/directory/DirectoryPage'
 import { JoinInterestPage } from '@/features/interest/JoinInterestPage'
+import { MessagesPage } from '@/features/messaging/MessagesPage'
 import { OffersInboxPage } from '@/features/offers/OffersInboxPage'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 import { RecruitmentStage1Page } from '@/features/recruitment/RecruitmentStage1Page'
@@ -53,13 +54,6 @@ const PrivacySettingsPage = () => (
   <RouteSkeletonPage
     title="Privacy settings"
     description="Data export and deletion request controls are scaffolded for Phase 8."
-  />
-)
-
-const MessagesPage = () => (
-  <RouteSkeletonPage
-    title="Messages"
-    description="Acceptance and rejection message composer placeholder for Phase 7."
   />
 )
 

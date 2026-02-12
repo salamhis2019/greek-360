@@ -4,6 +4,7 @@ import { resetDirectoryServiceForTests } from '@/features/directory/directorySer
 import { cleanup } from '@testing-library/react'
 import { resetAuthServiceForTests } from '@/features/auth/authService'
 import { resetInterestServiceForTests } from '@/features/interest/interestService'
+import { resetMessagingServiceForTests } from '@/features/messaging/messagingService'
 import { resetOfferServiceForTests } from '@/features/offers/offerService'
 import { resetRecruitmentServiceForTests } from '@/features/recruitment/recruitmentService'
 import { resetSuperAdminServiceForTests } from '@/features/super-admin/superAdminService'
@@ -14,6 +15,7 @@ afterEach(() => {
   resetAuthServiceForTests()
   resetDirectoryServiceForTests()
   resetInterestServiceForTests()
+  resetMessagingServiceForTests()
   resetOfferServiceForTests()
   resetRecruitmentServiceForTests()
   resetSuperAdminServiceForTests()

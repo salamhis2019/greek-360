@@ -247,4 +247,39 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop index if exists users_university_lower_name_idx')
     expect(downSql).toContain('drop index if exists organizations_university_lower_name_idx')
   })
+
+  it('includes the phase 7 messaging migration pair, template table, jobs table, and send function', () => {
+    const phaseSevenUpPath = path.join(
+      upMigrationsDirectory,
+      '000008_phase7_messaging_communications.up.sql'
+    )
+    const phaseSevenDownPath = path.join(
+      downMigrationsDirectory,
+      '000008_phase7_messaging_communications.down.sql'
+    )
+
+    expect(fs.existsSync(phaseSevenUpPath)).toBe(true)
+    expect(fs.existsSync(phaseSevenDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseSevenUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseSevenDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.email_templates')
+    expect(upSql).toContain('create table if not exists public.email_jobs')
+    expect(upSql).toContain("type text not null check (type in ('acceptance', 'rejection'))")
+    expect(upSql).toContain(
+      "kind text not null check (kind in ('acceptance', 'rejection'))"
+    )
+    expect(upSql).toContain('create or replace function public.create_email_template')
+    expect(upSql).toContain('create or replace function public.list_email_templates')
+    expect(upSql).toContain('create or replace function public.send_cycle_messages')
+    expect(upSql).toContain('messages_sent')
+    expect(upSql).toContain('email_jobs_dedupe_unique')
+
+    expect(downSql).toContain('drop function if exists public.send_cycle_messages')
+    expect(downSql).toContain('drop function if exists public.list_email_templates')
+    expect(downSql).toContain('drop function if exists public.create_email_template')
+    expect(downSql).toContain('drop table if exists public.email_jobs')
+    expect(downSql).toContain('drop table if exists public.email_templates')
+  })
 })
