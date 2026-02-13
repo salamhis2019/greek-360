@@ -1,7 +1,24 @@
 import { describe, expect, it } from 'vitest'
-import { createInMemoryAuthService } from '@/features/auth/authService'
+import { createInMemoryAuthService, resolveUserRoles } from '@/features/auth/authService'
 
 describe('in-memory auth service', () => {
+  it('resolves all supported roles from privilege flags', () => {
+    expect(resolveUserRoles({ isSuperAdmin: false, isChapterAdmin: false })).toEqual(['student'])
+    expect(resolveUserRoles({ isSuperAdmin: false, isChapterAdmin: true })).toEqual([
+      'student',
+      'chapter_admin',
+    ])
+    expect(resolveUserRoles({ isSuperAdmin: true, isChapterAdmin: false })).toEqual([
+      'student',
+      'super_admin',
+    ])
+    expect(resolveUserRoles({ isSuperAdmin: true, isChapterAdmin: true })).toEqual([
+      'student',
+      'chapter_admin',
+      'super_admin',
+    ])
+  })
+
   it('supports OTP challenge and verify success with first-login name capture required', async () => {
     const service = createInMemoryAuthService()
 

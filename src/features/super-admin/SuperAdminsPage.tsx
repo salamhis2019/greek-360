@@ -95,22 +95,28 @@ export const SuperAdminsPage = () => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Admin assignments</h1>
-      <p className="text-sm text-ui-muted">Assign and remove chapter admins for each organization.</p>
+    <section className="ui-page-admin space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Super admin</p>
+        <h1 className="ui-page-title">Admin assignments</h1>
+        <p className="ui-page-description">
+          Assign and remove chapter admins for each organization.
+        </p>
+      </header>
       <SuperAdminNav />
 
       <form
-        className="space-y-3 rounded-lg border border-ui-border p-4"
+        className="ui-panel space-y-3"
         onSubmit={submitAdminAssignment}
       >
-        <h2 className="text-sm font-semibold text-ui-heading">Assign admin</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="assignment-organization">
+        <h2 className="ui-subheading">Assign admin</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="assignment-organization">
             Organization
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="assignment-organization"
             onChange={(event) => setOrganizationId(event.target.value)}
             value={organizationId}
@@ -122,21 +128,21 @@ export const SuperAdminsPage = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="assignment-user-id">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="assignment-user-id">
             Admin user id
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="assignment-user-id"
             onChange={(event) => setUserIdInput(event.target.value)}
             placeholder="org-admin-user-1"
             value={userIdInput}
           />
         </div>
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={isSubmitting || organizations.length === 0}
           type="submit"
         >
@@ -145,24 +151,24 @@ export const SuperAdminsPage = () => {
       </form>
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Current admin assignments</h2>
+        <h2 className="ui-subheading">Current admin assignments</h2>
         {adminAssignments.length === 0 ? (
           <p className="text-sm text-ui-muted">No admin assignments configured yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {adminAssignments.map((assignment) => (
               <li
-                className="flex items-center justify-between rounded-lg border border-ui-border p-3"
+                className="ui-panel flex items-center justify-between gap-3"
                 key={`${assignment.organizationId}-${assignment.userId}`}
               >
                 <div>
-                  <p className="text-sm font-semibold text-ui-heading">{assignment.userId}</p>
-                  <p className="text-xs text-ui-muted">
+                  <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">{assignment.userId}</p>
+                  <p className="ui-meta">
                     {getOrganizationName(assignment.organizationId)}
                   </p>
                 </div>
                 <button
-                  className="rounded-lg border border-ui-border px-3 py-1 text-xs text-ui-body"
+                  className="ui-btn-secondary min-h-[2.35rem] px-4 text-xs"
                   onClick={() => void removeAssignment(assignment)}
                   type="button"
                 >

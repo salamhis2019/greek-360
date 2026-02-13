@@ -90,9 +90,13 @@ export const RecruitmentStage1Page = () => {
 
   if (!hasRouteParams) {
     return (
-      <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h1 className="text-2xl font-semibold text-ui-heading">Stage 1 queue</h1>
-        <p className="text-sm text-red-700">
+      <section className="ui-page-admin">
+        <header className="ui-page-header">
+          <p className="ui-page-brand">Greek 360</p>
+          <p className="ui-page-eyebrow">Recruitment</p>
+          <h1 className="ui-page-title">Stage 1 queue</h1>
+        </header>
+        <p className="text-sm font-medium text-red-700">
           Organization and cycle identifiers are required for this route.
         </p>
       </section>
@@ -100,35 +104,37 @@ export const RecruitmentStage1Page = () => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Stage 1 queue</h1>
-      <p className="text-sm text-ui-muted">
-        Review incoming interest and decide shortlist or no with one tap.
-      </p>
+    <section className="ui-page-admin space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Recruitment</p>
+        <h1 className="ui-page-title">Stage 1 queue</h1>
+        <p className="ui-page-description">Review incoming interest and decide shortlist or no with one tap.</p>
+      </header>
       <RecruitmentAdminNav cycleId={cycleId} organizationId={organizationId} />
 
       {stage1QueueQuery.isLoading ? <p className="text-sm text-ui-muted">Loading candidates...</p> : null}
       {stage1QueueQuery.isError ? (
-        <p className="text-sm text-red-700">{resolveErrorMessage(stage1QueueQuery.error)}</p>
+        <p className="text-sm font-medium text-red-700">{resolveErrorMessage(stage1QueueQuery.error)}</p>
       ) : null}
-      {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+      {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
 
       {queue.length === 0 && !stage1QueueQuery.isLoading ? (
         <p className="text-sm text-ui-muted">Stage 1 queue is clear.</p>
       ) : null}
 
-      <ul className="space-y-2">
+      <ul className="space-y-3">
         {queue.map((candidate) => (
-          <li className="space-y-3 rounded-lg border border-ui-border p-3" key={candidate.interestEntryId}>
+          <li className="ui-panel space-y-3" key={candidate.interestEntryId}>
             <div>
-              <p className="text-sm font-semibold text-ui-heading">{candidate.userId}</p>
-              <p className="text-xs text-ui-muted">
+              <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">{candidate.userId}</p>
+              <p className="ui-meta">
                 Source: {candidate.source} | Submitted: {formatCreatedAt(candidate.createdAt)}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <button
-                className="rounded-lg bg-ui-heading px-3 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+                className="ui-btn-primary min-h-[2.9rem]"
                 onClick={() =>
                   stage1DecisionMutation.mutate({
                     interestEntryId: candidate.interestEntryId,
@@ -140,7 +146,7 @@ export const RecruitmentStage1Page = () => {
                 Shortlist
               </button>
               <button
-                className="rounded-lg border border-ui-border px-3 py-2 text-sm font-medium text-ui-heading disabled:opacity-60"
+                className="ui-btn-secondary min-h-[2.9rem]"
                 onClick={() =>
                   stage1DecisionMutation.mutate({
                     interestEntryId: candidate.interestEntryId,

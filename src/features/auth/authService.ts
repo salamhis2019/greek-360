@@ -77,6 +77,26 @@ const OTP_MAX_FAILED_ATTEMPTS = 5
 const OTP_LOCK_MS = 60 * 1000
 const OTP_DEV_CODE = '123456'
 
+export const resolveUserRoles = ({
+  isSuperAdmin,
+  isChapterAdmin,
+}: {
+  isSuperAdmin: boolean
+  isChapterAdmin: boolean
+}): UserRole[] => {
+  const roles: UserRole[] = ['student']
+
+  if (isChapterAdmin) {
+    roles.push('chapter_admin')
+  }
+
+  if (isSuperAdmin) {
+    roles.push('super_admin')
+  }
+
+  return roles
+}
+
 const normalizeOrThrow = (phoneNumber: string) => {
   try {
     return normalizePhoneNumber(phoneNumber)
@@ -208,7 +228,10 @@ export const createInMemoryAuthService = (
 
       return {
         profile,
-        roles: ['student'],
+        roles: resolveUserRoles({
+          isSuperAdmin: false,
+          isChapterAdmin: false,
+        }),
         requiresNameEntry: profile.name.trim().length === 0,
       }
     },
@@ -299,6 +322,37 @@ const createSupabaseAuthService = (client: SupabaseClient): AuthService => ({
       throw new AuthServiceError('unknown', 'This account has been deleted.')
     }
 
+    let isSuperAdmin = false
+    let isChapterAdmin = false
+
+    const { data: superAdminFlag, error: superAdminFlagError } = await client.rpc(
+      'current_user_is_super_admin'
+    )
+
+    if (!superAdminFlagError) {
+      isSuperAdmin = Boolean(superAdminFlag)
+    } else {
+      const { data: superAdminRecord, error: superAdminLookupError } = await client
+        .from('super_admin_users')
+        .select('user_id')
+        .eq('user_id', authenticatedUser.id)
+        .maybeSingle()
+
+      if (!superAdminLookupError) {
+        isSuperAdmin = Boolean(superAdminRecord)
+      }
+    }
+
+    const { data: chapterAdminAssignments, error: chapterAdminError } = await client
+      .from('organization_admins')
+      .select('organization_id')
+      .eq('user_id', authenticatedUser.id)
+      .limit(1)
+
+    if (!chapterAdminError) {
+      isChapterAdmin = (chapterAdminAssignments ?? []).length > 0
+    }
+
     return {
       profile: {
         userId: profile.id as string,
@@ -306,7 +360,10 @@ const createSupabaseAuthService = (client: SupabaseClient): AuthService => ({
         name: (profile.name as string) ?? '',
         email: (profile.email as string | null) ?? null,
       },
-      roles: ['student'],
+      roles: resolveUserRoles({
+        isSuperAdmin,
+        isChapterAdmin,
+      }),
       requiresNameEntry: ((profile.name as string) ?? '').trim().length === 0,
     }
   },

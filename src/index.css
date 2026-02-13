@@ -50,6 +50,13 @@ a {
     padding: 2rem 0.25rem 2.5rem;
   }
 
+  .ui-page-admin {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 66rem;
+    padding: 2rem 0.25rem 2.75rem;
+  }
+
   .ui-page-header {
     margin-bottom: 1.75rem;
     border-bottom: 1px solid rgb(0 0 0 / 0.1);
@@ -147,6 +154,52 @@ a {
     box-shadow: 0 0 0 4px rgb(0 0 0 / 0.08);
   }
 
+  .ui-select {
+    height: 3.1rem;
+    width: 100%;
+    border: 1px solid rgb(0 0 0 / 0.1);
+    border-radius: 1rem;
+    background-color: var(--ui-surface);
+    padding: 0 1rem;
+    font-size: 0.96rem;
+    font-weight: 500;
+    color: var(--ui-heading);
+    outline: none;
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .ui-select:focus-visible {
+    border-color: rgb(0 0 0 / 0.25);
+    box-shadow: 0 0 0 4px rgb(0 0 0 / 0.08);
+  }
+
+  .ui-textarea {
+    width: 100%;
+    border: 1px solid rgb(0 0 0 / 0.1);
+    border-radius: 1rem;
+    background-color: var(--ui-surface);
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ui-heading);
+    outline: none;
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .ui-textarea::placeholder {
+    color: rgb(0 0 0 / 0.35);
+  }
+
+  .ui-textarea:focus-visible {
+    border-color: rgb(0 0 0 / 0.25);
+    box-shadow: 0 0 0 4px rgb(0 0 0 / 0.08);
+  }
+
   .ui-btn-primary {
     display: inline-flex;
     align-items: center;
@@ -211,6 +264,14 @@ a {
     font-weight: 600;
     color: var(--ui-heading);
   }
+
+  .ui-subheading {
+    margin: 0;
+    font-size: 0.94rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ui-heading);
+  }
 }
 
 @layer utilities {
@@ -244,6 +305,11 @@ a {
     .ui-page {
       padding-top: 2.75rem;
       padding-bottom: 3rem;
+    }
+
+    .ui-page-admin {
+      padding-top: 2.75rem;
+      padding-bottom: 3.2rem;
     }
   }
 }

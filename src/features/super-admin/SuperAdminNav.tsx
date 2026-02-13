@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
 
 const superAdminLinks = [
@@ -9,17 +9,28 @@ const superAdminLinks = [
 ]
 
 export const SuperAdminNav = () => {
+  const location = useLocation()
+  const baseLinkClass =
+    'inline-flex min-h-[2.55rem] items-center justify-center rounded-full border px-4 text-sm font-semibold tracking-[-0.01em] transition'
+
   return (
-    <nav className="flex flex-wrap gap-2">
-      {superAdminLinks.map((link) => (
-        <Link
-          className="rounded-lg border border-ui-border px-3 py-1 text-sm text-ui-heading"
-          key={link.to}
-          to={link.to}
-        >
-          {link.label}
-        </Link>
-      ))}
+    <nav aria-label="Super admin sections" className="flex flex-wrap gap-2">
+      {superAdminLinks.map((link) => {
+        const linkStateClass =
+          location.pathname === link.to
+            ? 'border-black bg-black text-white'
+            : 'border-black/10 bg-white text-ui-heading hover:border-black/25 hover:bg-black/[0.02]'
+
+        return (
+          <Link
+            className={`${baseLinkClass} ${linkStateClass}`}
+            key={link.to}
+            to={link.to}
+          >
+            {link.label}
+          </Link>
+        )
+      })}
     </nav>
   )
 }

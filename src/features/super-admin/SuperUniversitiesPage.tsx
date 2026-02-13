@@ -66,44 +66,48 @@ export const SuperUniversitiesPage = () => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Universities</h1>
-      <p className="text-sm text-ui-muted">
-        Create and activate universities before configuring chapters and cycles.
-      </p>
+    <section className="ui-page-admin space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Super admin</p>
+        <h1 className="ui-page-title">Universities</h1>
+        <p className="ui-page-description">
+          Create and activate universities before configuring chapters and cycles.
+        </p>
+      </header>
       <SuperAdminNav />
 
-      <form className="space-y-3 rounded-lg border border-ui-border p-4" onSubmit={submitUniversity}>
-        <h2 className="text-sm font-semibold text-ui-heading">Create university</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="university-name">
+      <form className="ui-panel space-y-3" onSubmit={submitUniversity}>
+        <h2 className="ui-subheading">Create university</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="university-name">
             University name
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="university-name"
             onChange={(event) => setName(event.target.value)}
             value={name}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="university-slug">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="university-slug">
             University slug
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="university-slug"
             onChange={(event) => setSlug(event.target.value)}
             placeholder="university-of-pacific"
             value={slug}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="university-status">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="university-status">
             University status
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="university-status"
             onChange={(event) => setStatus(event.target.value as UniversityStatus)}
             value={status}
@@ -112,9 +116,9 @@ export const SuperUniversitiesPage = () => {
             <option value="inactive">inactive</option>
           </select>
         </div>
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={isSubmitting}
           type="submit"
         >
@@ -123,15 +127,15 @@ export const SuperUniversitiesPage = () => {
       </form>
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Current universities</h2>
+        <h2 className="ui-subheading">Current universities</h2>
         {universities.length === 0 ? (
           <p className="text-sm text-ui-muted">No universities configured yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {universities.map((university) => (
-              <li className="rounded-lg border border-ui-border p-3" key={university.id}>
-                <p className="text-sm font-semibold text-ui-heading">{university.name}</p>
-                <p className="text-xs text-ui-muted">
+              <li className="ui-panel" key={university.id}>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">{university.name}</p>
+                <p className="ui-meta">
                   {university.slug} | {university.status}
                 </p>
               </li>

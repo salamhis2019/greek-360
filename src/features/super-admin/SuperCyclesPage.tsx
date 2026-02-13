@@ -146,21 +146,25 @@ export const SuperCyclesPage = () => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Recruitment cycles</h1>
-      <p className="text-sm text-ui-muted">
-        Configure recruitment cycles and generate static join codes.
-      </p>
+    <section className="ui-page-admin space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Super admin</p>
+        <h1 className="ui-page-title">Recruitment cycles</h1>
+        <p className="ui-page-description">
+          Configure recruitment cycles and generate static join codes.
+        </p>
+      </header>
       <SuperAdminNav />
 
-      <form className="space-y-3 rounded-lg border border-ui-border p-4" onSubmit={submitCycle}>
-        <h2 className="text-sm font-semibold text-ui-heading">Create cycle</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="cycle-organization">
+      <form className="ui-panel space-y-3" onSubmit={submitCycle}>
+        <h2 className="ui-subheading">Create cycle</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="cycle-organization">
             Organization
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="cycle-organization"
             onChange={(event) => setOrganizationId(event.target.value)}
             value={organizationId}
@@ -172,35 +176,35 @@ export const SuperCyclesPage = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="cycle-term">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="cycle-term">
             Term
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="cycle-term"
             onChange={(event) => setTerm(event.target.value)}
             value={term}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="cycle-year">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="cycle-year">
             Year
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="cycle-year"
             inputMode="numeric"
             onChange={(event) => setYear(event.target.value)}
             value={year}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="cycle-status">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="cycle-status">
             Cycle status
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="cycle-status"
             onChange={(event) => setCycleStatus(event.target.value as RecruitmentCycleStatus)}
             value={cycleStatus}
@@ -211,7 +215,7 @@ export const SuperCyclesPage = () => {
           </select>
         </div>
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={isSubmittingCycle || organizations.length === 0}
           type="submit"
         >
@@ -219,14 +223,14 @@ export const SuperCyclesPage = () => {
         </button>
       </form>
 
-      <form className="space-y-3 rounded-lg border border-ui-border p-4" onSubmit={submitJoinLink}>
-        <h2 className="text-sm font-semibold text-ui-heading">Generate static join code</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="join-organization">
+      <form className="ui-panel space-y-3" onSubmit={submitJoinLink}>
+        <h2 className="ui-subheading">Generate static join code</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="join-organization">
             Organization
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="join-organization"
             onChange={(event) => setJoinOrganizationId(event.target.value)}
             value={joinOrganizationId}
@@ -238,12 +242,12 @@ export const SuperCyclesPage = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="join-cycle">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="join-cycle">
             Cycle
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="join-cycle"
             onChange={(event) => setJoinCycleId(event.target.value)}
             value={joinCycleId}
@@ -255,27 +259,27 @@ export const SuperCyclesPage = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="join-code">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="join-code">
             Join code
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="join-code"
             onChange={(event) => setJoinCode(event.target.value)}
             value={joinCode}
           />
         </div>
         <button
-          className="w-full rounded-lg border border-ui-border px-4 py-2 text-sm font-medium text-ui-heading"
+          className="ui-btn-secondary"
           onClick={() => setJoinCode(generateJoinCode())}
           type="button"
         >
           Generate code
         </button>
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={isSubmittingJoinCode || !joinOrganizationId || !joinCycleId}
           type="submit"
         >
@@ -284,28 +288,28 @@ export const SuperCyclesPage = () => {
       </form>
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Current cycles</h2>
+        <h2 className="ui-subheading">Current cycles</h2>
         {cycles.length === 0 ? (
           <p className="text-sm text-ui-muted">No cycles configured yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {cycles.map((cycle) => (
-              <li className="rounded-lg border border-ui-border p-3" key={cycle.id}>
-                <p className="text-sm font-semibold text-ui-heading">
+              <li className="ui-panel" key={cycle.id}>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">
                   {cycle.term} {cycle.year}
                 </p>
-                <p className="text-xs text-ui-muted">
+                <p className="ui-meta">
                   {getOrganizationName(cycle.organizationId)} | {cycle.status}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <Link
-                    className="rounded-lg border border-ui-border px-2 py-1 text-xs font-medium text-ui-heading"
+                    className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
                     to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`}
                   >
                     Open stage 1
                   </Link>
                   <Link
-                    className="rounded-lg border border-ui-border px-2 py-1 text-xs font-medium text-ui-heading"
+                    className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
                     to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-2`}
                   >
                     Open stage 2
@@ -318,15 +322,15 @@ export const SuperCyclesPage = () => {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Current join links</h2>
+        <h2 className="ui-subheading">Current join links</h2>
         {joinLinks.length === 0 ? (
           <p className="text-sm text-ui-muted">No join links generated yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {joinLinks.map((joinLink) => (
-              <li className="rounded-lg border border-ui-border p-3" key={joinLink.id}>
-                <p className="text-sm font-semibold text-ui-heading">Code: {joinLink.code}</p>
-                <p className="text-xs text-ui-muted">
+              <li className="ui-panel" key={joinLink.id}>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">Code: {joinLink.code}</p>
+                <p className="ui-meta">
                   {getOrganizationName(joinLink.organizationId)} | {joinLink.isActive ? 'active' : 'inactive'}
                 </p>
               </li>

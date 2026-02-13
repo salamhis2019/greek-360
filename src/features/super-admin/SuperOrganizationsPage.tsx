@@ -93,22 +93,26 @@ export const SuperOrganizationsPage = () => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Organizations</h1>
-      <p className="text-sm text-ui-muted">Create fraternities and sororities under each university.</p>
+    <section className="ui-page-admin space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Super admin</p>
+        <h1 className="ui-page-title">Organizations</h1>
+        <p className="ui-page-description">Create fraternities and sororities under each university.</p>
+      </header>
       <SuperAdminNav />
 
       <form
-        className="space-y-3 rounded-lg border border-ui-border p-4"
+        className="ui-panel space-y-3"
         onSubmit={submitOrganization}
       >
-        <h2 className="text-sm font-semibold text-ui-heading">Create organization</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="organization-university">
+        <h2 className="ui-subheading">Create organization</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="organization-university">
             University
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="organization-university"
             onChange={(event) => setUniversityId(event.target.value)}
             value={universityId}
@@ -120,35 +124,35 @@ export const SuperOrganizationsPage = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="organization-name">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="organization-name">
             Organization name
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="organization-name"
             onChange={(event) => setName(event.target.value)}
             value={name}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="organization-slug">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="organization-slug">
             Organization slug
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-input"
             id="organization-slug"
             onChange={(event) => setSlug(event.target.value)}
             placeholder="gamma-eta"
             value={slug}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="organization-type">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="organization-type">
             Organization type
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="organization-type"
             onChange={(event) => setType(event.target.value as OrganizationType)}
             value={type}
@@ -157,12 +161,12 @@ export const SuperOrganizationsPage = () => {
             <option value="sorority">sorority</option>
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="organization-status">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="organization-status">
             Organization status
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-base"
+            className="ui-select"
             id="organization-status"
             onChange={(event) => setStatus(event.target.value as OrganizationStatus)}
             value={status}
@@ -171,9 +175,9 @@ export const SuperOrganizationsPage = () => {
             <option value="inactive">inactive</option>
           </select>
         </div>
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={isSubmitting || universities.length === 0}
           type="submit"
         >
@@ -182,15 +186,15 @@ export const SuperOrganizationsPage = () => {
       </form>
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Current organizations</h2>
+        <h2 className="ui-subheading">Current organizations</h2>
         {organizations.length === 0 ? (
           <p className="text-sm text-ui-muted">No organizations configured yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {organizations.map((organization) => (
-              <li className="rounded-lg border border-ui-border p-3" key={organization.id}>
-                <p className="text-sm font-semibold text-ui-heading">{organization.name}</p>
-                <p className="text-xs text-ui-muted">
+              <li className="ui-panel" key={organization.id}>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">{organization.name}</p>
+                <p className="ui-meta">
                   {organization.type} | {organization.slug} |{' '}
                   {getUniversityName(organization.universityId)}
                 </p>

@@ -17,7 +17,8 @@ const resolveErrorMessage = (error: unknown) => {
 export const AuthOnboardingPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isAuthenticated, userId, needsOnboarding, displayName, setSession } = useAuthSession()
+  const { isAuthenticated, userId, needsOnboarding, displayName, roles, setSession } =
+    useAuthSession()
 
   const postAuthRedirectPath = useMemo(() => {
     const redirectPath = new URLSearchParams(location.search).get('redirect')
@@ -123,7 +124,7 @@ export const AuthOnboardingPage = () => {
         phoneE164: result.phoneE164,
         displayName: result.name,
         needsOnboarding: false,
-        roles: ['student'],
+        roles: roles.length > 0 ? roles : ['student'],
       })
 
       navigate(postAuthRedirectPath)

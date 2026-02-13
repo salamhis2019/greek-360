@@ -140,9 +140,13 @@ export const MessagesPage = () => {
 
   if (!hasRouteParams) {
     return (
-      <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-        <h1 className="text-2xl font-semibold text-ui-heading">Messages</h1>
-        <p className="text-sm text-red-700">
+      <section className="ui-page-admin">
+        <header className="ui-page-header">
+          <p className="ui-page-brand">Greek 360</p>
+          <p className="ui-page-eyebrow">Recruitment</p>
+          <h1 className="ui-page-title">Messages</h1>
+        </header>
+        <p className="text-sm font-medium text-red-700">
           Organization and cycle identifiers are required for this route.
         </p>
       </section>
@@ -150,38 +154,42 @@ export const MessagesPage = () => {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-ui-border bg-ui-surface p-5 shadow-sm">
-      <h1 className="text-2xl font-semibold text-ui-heading">Messages</h1>
-      <p className="text-sm text-ui-muted">
-        Create templates and send acceptance or optional rejection messages to targeted groups.
-      </p>
+    <section className="ui-page-admin space-y-4">
+      <header className="ui-page-header">
+        <p className="ui-page-brand">Greek 360</p>
+        <p className="ui-page-eyebrow">Recruitment</p>
+        <h1 className="ui-page-title">Messages</h1>
+        <p className="ui-page-description">
+          Create templates and send acceptance or optional rejection messages to targeted groups.
+        </p>
+      </header>
       <RecruitmentAdminNav cycleId={cycleId} organizationId={organizationId} />
 
       <form
-        className="space-y-3 rounded-lg border border-ui-border p-4"
+        className="ui-panel space-y-3"
         onSubmit={(event: FormEvent<HTMLFormElement>) => {
           event.preventDefault()
           createTemplateMutation.mutate()
         }}
       >
-        <h2 className="text-sm font-semibold text-ui-heading">Template manager</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="template-name">
+        <h2 className="ui-subheading">Template manager</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="template-name">
             Template name
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+            className="ui-input"
             id="template-name"
             onChange={(event) => setTemplateName(event.target.value)}
             value={templateName}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="template-type">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="template-type">
             Template type
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+            className="ui-select"
             id="template-type"
             onChange={(event) => setTemplateKind(event.target.value as MessageKind)}
             value={templateKind}
@@ -190,23 +198,23 @@ export const MessagesPage = () => {
             <option value="rejection">rejection</option>
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="template-subject">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="template-subject">
             Template subject
           </label>
           <input
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+            className="ui-input"
             id="template-subject"
             onChange={(event) => setTemplateSubject(event.target.value)}
             value={templateSubject}
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="template-body">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="template-body">
             Template body
           </label>
           <textarea
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+            className="ui-textarea"
             id="template-body"
             onChange={(event) => setTemplateBody(event.target.value)}
             rows={4}
@@ -214,7 +222,7 @@ export const MessagesPage = () => {
           />
         </div>
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={createTemplateMutation.isPending}
           type="submit"
         >
@@ -223,7 +231,7 @@ export const MessagesPage = () => {
       </form>
 
       <form
-        className="space-y-3 rounded-lg border border-ui-border p-4"
+        className="ui-panel space-y-3"
         onSubmit={(event: FormEvent<HTMLFormElement>) => {
           event.preventDefault()
 
@@ -239,16 +247,16 @@ export const MessagesPage = () => {
                   bodyText: customBody,
                 }
               : null,
-          })
+            })
         }}
       >
-        <h2 className="text-sm font-semibold text-ui-heading">Message composer</h2>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="message-kind">
+        <h2 className="ui-subheading">Message composer</h2>
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="message-kind">
             Message type
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+            className="ui-select"
             id="message-kind"
             onChange={(event) => setMessageKind(event.target.value as MessageKind)}
             value={messageKind}
@@ -257,12 +265,12 @@ export const MessagesPage = () => {
             <option value="rejection">rejection</option>
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="recipient-group">
+        <div className="space-y-2">
+          <label className="ui-label" htmlFor="recipient-group">
             Recipient group
           </label>
           <select
-            className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+            className="ui-select"
             id="recipient-group"
             onChange={(event) => setRecipientGroup(event.target.value as MessageRecipientGroup)}
             value={recipientGroup}
@@ -285,24 +293,24 @@ export const MessagesPage = () => {
         </label>
 
         {effectiveUseCustomMessage ? (
-          <div className="space-y-3 rounded-lg border border-ui-border bg-ui-canvas p-3">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="custom-subject">
+          <div className="ui-panel-soft space-y-3">
+            <div className="space-y-2">
+              <label className="ui-label" htmlFor="custom-subject">
                 Custom subject
               </label>
               <input
-                className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+                className="ui-input"
                 id="custom-subject"
                 onChange={(event) => setCustomSubject(event.target.value)}
                 value={customSubject}
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="custom-body">
+            <div className="space-y-2">
+              <label className="ui-label" htmlFor="custom-body">
                 Custom body
               </label>
               <textarea
-                className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+                className="ui-textarea"
                 id="custom-body"
                 onChange={(event) => setCustomBody(event.target.value)}
                 rows={4}
@@ -311,12 +319,12 @@ export const MessagesPage = () => {
             </div>
           </div>
         ) : (
-          <div>
-            <label className="mb-1 block text-sm font-medium text-ui-body" htmlFor="message-template">
+          <div className="space-y-2">
+            <label className="ui-label" htmlFor="message-template">
               Template
             </label>
             <select
-              className="w-full rounded-lg border border-ui-border bg-ui-surface px-3 py-2 text-sm"
+              className="ui-select"
               id="message-template"
               onChange={(event) => setSelectedTemplateName(event.target.value)}
               value={effectiveSelectedTemplateName}
@@ -331,7 +339,7 @@ export const MessagesPage = () => {
         )}
 
         <button
-          className="w-full rounded-lg bg-ui-heading px-4 py-2 text-sm font-medium text-ui-surface disabled:opacity-60"
+          className="ui-btn-primary"
           disabled={sendMessageMutation.isPending}
           type="submit"
         >
@@ -342,15 +350,15 @@ export const MessagesPage = () => {
       {templatesQuery.isLoading ? <p className="text-sm text-ui-muted">Loading templates...</p> : null}
       {jobsQuery.isLoading ? <p className="text-sm text-ui-muted">Loading message jobs...</p> : null}
       {templatesQuery.isError ? (
-        <p className="text-sm text-red-700">{resolveErrorMessage(templatesQuery.error)}</p>
+        <p className="text-sm font-medium text-red-700">{resolveErrorMessage(templatesQuery.error)}</p>
       ) : null}
       {jobsQuery.isError ? (
-        <p className="text-sm text-red-700">{resolveErrorMessage(jobsQuery.error)}</p>
+        <p className="text-sm font-medium text-red-700">{resolveErrorMessage(jobsQuery.error)}</p>
       ) : null}
-      {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+      {errorMessage ? <p className="text-sm font-medium text-red-700">{errorMessage}</p> : null}
 
       {lastSendResult ? (
-        <div className="space-y-2 rounded-lg border border-ui-border bg-ui-canvas p-3">
+        <div className="ui-panel-soft space-y-2">
           <p className="text-sm font-medium text-ui-heading">
             {lastSendResult.wasDeduplicated
               ? 'Duplicate send prevented. Existing send result reused.'
@@ -361,7 +369,7 @@ export const MessagesPage = () => {
           {lastSendResult.job.failedCount > 0 ? (
             <ul className="space-y-1">
               {lastSendResult.job.failureDetails.map((failure) => (
-                <li className="text-xs text-red-700" key={`${failure.userId}-${failure.email}`}>
+                <li className="text-xs font-medium text-red-700" key={`${failure.userId}-${failure.email}`}>
                   {failure.userId}: {failure.reason}
                 </li>
               ))}
@@ -371,15 +379,15 @@ export const MessagesPage = () => {
       ) : null}
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Saved templates</h2>
+        <h2 className="ui-subheading">Saved templates</h2>
         {(templatesQuery.data ?? []).length === 0 ? (
           <p className="text-sm text-ui-muted">No templates saved yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {(templatesQuery.data ?? []).map((template) => (
-              <li className="rounded-lg border border-ui-border p-3" key={template.id}>
-                <p className="text-sm font-semibold text-ui-heading">{template.name}</p>
-                <p className="text-xs text-ui-muted">
+              <li className="ui-panel" key={template.id}>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">{template.name}</p>
+                <p className="ui-meta">
                   {template.kind} | Subject: {template.subject}
                 </p>
               </li>
@@ -389,17 +397,17 @@ export const MessagesPage = () => {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold text-ui-heading">Recent sends</h2>
+        <h2 className="ui-subheading">Recent sends</h2>
         {(jobsQuery.data ?? []).length === 0 ? (
           <p className="text-sm text-ui-muted">No messages sent yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {(jobsQuery.data ?? []).map((job) => (
-              <li className="rounded-lg border border-ui-border p-3" key={job.id}>
-                <p className="text-sm font-semibold text-ui-heading">
+              <li className="ui-panel" key={job.id}>
+                <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">
                   {job.kind} | {job.recipientGroup}
                 </p>
-                <p className="text-xs text-ui-muted">
+                <p className="ui-meta">
                   Status: {job.status} | Sent {job.sentCount}/{job.recipientCount}
                 </p>
               </li>
