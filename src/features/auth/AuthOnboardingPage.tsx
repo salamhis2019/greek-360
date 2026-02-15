@@ -1,8 +1,8 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ROUTE_PATHS } from '@/app/router/routePaths'
 import { authService, AuthServiceError } from './authService'
 import { useAuthSession } from './AuthSessionProvider'
+import { resolveDefaultWorkspace, workspaceToDefaultPath } from '@/features/workspace/workspace'
 
 type AuthStep = 'phone' | 'otp' | 'profile'
 
@@ -20,15 +20,15 @@ export const AuthOnboardingPage = () => {
   const { isAuthenticated, userId, needsOnboarding, displayName, roles, setSession } =
     useAuthSession()
 
-  const postAuthRedirectPath = useMemo(() => {
+  const redirectPathFromQuery = useMemo(() => {
     const redirectPath = new URLSearchParams(location.search).get('redirect')
 
     if (!redirectPath || !redirectPath.startsWith('/')) {
-      return ROUTE_PATHS.home
+      return null
     }
 
     if (redirectPath.startsWith('//') || redirectPath.startsWith('/auth')) {
-      return ROUTE_PATHS.home
+      return null
     }
 
     return redirectPath
@@ -93,7 +93,8 @@ export const AuthOnboardingPage = () => {
         return
       }
 
-      navigate(postAuthRedirectPath)
+      const defaultWorkspacePath = workspaceToDefaultPath(resolveDefaultWorkspace(result.roles))
+      navigate(redirectPathFromQuery ?? defaultWorkspacePath)
     } catch (error) {
       setErrorMessage(resolveErrorMessage(error))
     } finally {
@@ -127,7 +128,8 @@ export const AuthOnboardingPage = () => {
         roles: roles.length > 0 ? roles : ['student'],
       })
 
-      navigate(postAuthRedirectPath)
+      const defaultWorkspacePath = workspaceToDefaultPath(resolveDefaultWorkspace(roles))
+      navigate(redirectPathFromQuery ?? defaultWorkspacePath)
     } catch (error) {
       setErrorMessage(resolveErrorMessage(error))
     } finally {

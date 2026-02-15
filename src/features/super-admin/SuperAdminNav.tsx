@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
 
 const superAdminLinks = [
+  { to: ROUTE_PATHS.superHome, label: 'Overview' },
   { to: ROUTE_PATHS.superUniversities, label: 'Universities' },
   { to: ROUTE_PATHS.superOrganizations, label: 'Organizations' },
   { to: ROUTE_PATHS.superCycles, label: 'Recruitment cycles' },
@@ -18,7 +19,7 @@ export const SuperAdminNav = () => {
       {superAdminLinks.map((link) => {
         const linkStateClass =
           location.pathname === link.to
-            ? 'border-black bg-black text-white'
+            ? 'border-black bg-black !text-white'
             : 'border-black/10 bg-white text-ui-heading hover:border-black/25 hover:bg-black/[0.02]'
 
         return (

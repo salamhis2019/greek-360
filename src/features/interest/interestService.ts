@@ -1,4 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import type { OfferStatus } from '@/features/offers/offerService'
+import { offerService } from '@/features/offers/offerService'
 import { environment } from '@/lib/env'
 import { supabase } from '@/lib/supabase/client'
 import { parseJoinCodeOrThrow } from './joinCode'
@@ -41,6 +43,17 @@ export interface SubmitInterestResult {
   resolvedJoinCode: ResolvedJoinCodeRecord
 }
 
+export interface StudentSummaryRow {
+  interest_entry_id: string
+  organization_id: string
+  organization_name: string
+  cycle_id: string
+  cycle_term: string
+  cycle_year: number
+  submitted_at: string
+  offer_status: OfferStatus | null
+}
+
 export type InterestServiceErrorCode =
   | 'unauthenticated'
   | 'invalid_code'
@@ -67,6 +80,7 @@ interface SubmitInterestParams {
 interface InterestService {
   resolveJoinCode: (joinCode: string) => Promise<ResolvedJoinCodeRecord>
   submitInterest: (params: SubmitInterestParams) => Promise<SubmitInterestResult>
+  listStudentSummaryRows: () => Promise<StudentSummaryRow[]>
   listInterestEntriesForUser: (userId: string) => Promise<InterestEntryRecord[]>
   listInterestEntriesForOrganizationCycle: (
     organizationId: string,
@@ -321,6 +335,10 @@ const createInMemoryInterestService = (
       }
     },
 
+    async listStudentSummaryRows() {
+      return []
+    },
+
     async listInterestEntriesForUser(userId) {
       return store.interestEntries
         .filter((entry) => entry.userId === userId)
@@ -440,6 +458,34 @@ const createSupabaseInterestService = (client: SupabaseClient): InterestService 
         cycleYear: Number(row.cycle_year ?? 0),
       },
     }
+  },
+
+  async listStudentSummaryRows() {
+    const { data, error } = await client.rpc('list_my_student_home_summary')
+
+    if (error) {
+      throw new InterestServiceError(mapSupabaseMessageToErrorCode(error.message), error.message)
+    }
+
+    const rows = Array.isArray(data) ? data : [data]
+
+    return rows
+      .filter(Boolean)
+      .map((row) => {
+        const typedRow = row as Record<string, unknown>
+
+        return {
+          interest_entry_id: String(typedRow.interest_entry_id ?? ''),
+          organization_id: String(typedRow.organization_id ?? ''),
+          organization_name: String(typedRow.organization_name ?? ''),
+          cycle_id: String(typedRow.cycle_id ?? ''),
+          cycle_term: String(typedRow.cycle_term ?? ''),
+          cycle_year: Number(typedRow.cycle_year ?? 0),
+          submitted_at: String(typedRow.submitted_at ?? ''),
+          offer_status: (typedRow.offer_status as OfferStatus | null) ?? null,
+        } satisfies StudentSummaryRow
+      })
+      .filter((row) => row.interest_entry_id.length > 0)
   },
 
   async listInterestEntriesForUser(userId) {
@@ -567,6 +613,58 @@ export const interestService: InterestService = {
   async submitInterest(params) {
     try {
       return await sharedInterestService.submitInterest(params)
+    } catch (error) {
+      throw mapUnknownToInterestServiceError(error)
+    }
+  },
+
+  async listStudentSummaryRows() {
+    try {
+      if (useInMemoryInterest) {
+        const currentSession =
+          typeof window !== 'undefined'
+            ? (window.sessionStorage.getItem('greek360.auth.session') ?? null)
+            : null
+        const actorUserId = currentSession
+          ? (JSON.parse(currentSession) as { userId?: string | null }).userId ?? null
+          : null
+
+        if (!actorUserId) {
+          return []
+        }
+
+        const [interests, offers, organizations, cycles] = await Promise.all([
+          sharedInterestService.listInterestEntriesForUser(actorUserId),
+          offerService.listOffersForStudent(actorUserId),
+          superAdminService.listOrganizations({
+            actorUserId: 'interest-summary-system',
+            actorRoles: ['super_admin'],
+          }),
+          superAdminService.listRecruitmentCycles({
+            actorUserId: 'interest-summary-system',
+            actorRoles: ['super_admin'],
+          }),
+        ])
+
+        const offersByInterestId = new Map(offers.map((offer) => [offer.interestEntryId, offer]))
+        const organizationsById = new Map(
+          organizations.map((organization) => [organization.id, organization])
+        )
+        const cyclesById = new Map(cycles.map((cycle) => [cycle.id, cycle]))
+
+        return interests.map((interest) => ({
+          interest_entry_id: interest.id,
+          organization_id: interest.organizationId,
+          organization_name: organizationsById.get(interest.organizationId)?.name ?? 'Unknown organization',
+          cycle_id: interest.cycleId,
+          cycle_term: cyclesById.get(interest.cycleId)?.term ?? 'unknown',
+          cycle_year: cyclesById.get(interest.cycleId)?.year ?? 0,
+          submitted_at: interest.createdAt,
+          offer_status: offersByInterestId.get(interest.id)?.status ?? null,
+        }))
+      }
+
+      return await sharedInterestService.listStudentSummaryRows()
     } catch (error) {
       throw mapUnknownToInterestServiceError(error)
     }

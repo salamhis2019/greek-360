@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { renderAppAtRoute } from '@/test/utils/renderAppAtRoute'
 
 describe('Super-admin setup integration', () => {
@@ -23,7 +23,11 @@ describe('Super-admin setup integration', () => {
       expect(screen.getByText(/university of pacific/i)).toBeInTheDocument()
     )
 
-    fireEvent.click(screen.getByRole('link', { name: /organizations/i }))
+    fireEvent.click(
+      within(screen.getByRole('navigation', { name: /super admin sections/i })).getByRole('link', {
+        name: /organizations/i,
+      })
+    )
     await waitFor(() =>
       expect(screen.getByRole('heading', { level: 1, name: /^organizations$/i })).toBeInTheDocument()
     )
@@ -41,7 +45,11 @@ describe('Super-admin setup integration', () => {
 
     await waitFor(() => expect(screen.getByText(/gamma eta/i)).toBeInTheDocument())
 
-    fireEvent.click(screen.getByRole('link', { name: /recruitment cycles/i }))
+    fireEvent.click(
+      within(screen.getByRole('navigation', { name: /super admin sections/i })).getByRole('link', {
+        name: /recruitment cycles/i,
+      })
+    )
     await waitFor(() =>
       expect(
         screen.getByRole('heading', { level: 1, name: /^recruitment cycles$/i })
@@ -63,7 +71,11 @@ describe('Super-admin setup integration', () => {
 
     await waitFor(() => expect(screen.getByText(/code:/i)).toBeInTheDocument())
 
-    fireEvent.click(screen.getByRole('link', { name: /admin assignments/i }))
+    fireEvent.click(
+      within(screen.getByRole('navigation', { name: /super admin sections/i })).getByRole('link', {
+        name: /admin assignments/i,
+      })
+    )
     await waitFor(() =>
       expect(
         screen.getByRole('heading', { level: 1, name: /^admin assignments$/i })

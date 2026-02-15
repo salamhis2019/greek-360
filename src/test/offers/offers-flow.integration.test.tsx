@@ -98,7 +98,7 @@ describe('Offers UI flow integration', () => {
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: /offers inbox/i })).toBeInTheDocument()
     )
-    await waitFor(() => expect(screen.getByText(/status: pending/i)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/^pending$/i)).toBeInTheDocument())
 
     fireEvent.click(screen.getByRole('button', { name: /accept/i }))
     await waitFor(() =>
@@ -106,7 +106,7 @@ describe('Offers UI flow integration', () => {
     )
     fireEvent.click(screen.getByRole('button', { name: /confirm accept/i }))
 
-    await waitFor(() => expect(screen.getByText(/status: accepted/i)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/^accepted$/i)).toBeInTheDocument())
     await waitFor(() => expect(screen.getByText(/membership active/i)).toBeInTheDocument())
 
     cleanup()
@@ -156,7 +156,7 @@ describe('Offers UI flow integration', () => {
       displayName: 'Offer UI Student 2',
     })
 
-    await waitFor(() => expect(screen.getByText(/status: pending/i)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/^pending$/i)).toBeInTheDocument())
 
     fireEvent.click(screen.getByRole('button', { name: /decline/i }))
     await waitFor(() =>
@@ -164,7 +164,7 @@ describe('Offers UI flow integration', () => {
     )
     fireEvent.click(screen.getByRole('button', { name: /confirm decline/i }))
 
-    await waitFor(() => expect(screen.getByText(/status: declined/i)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/^declined$/i)).toBeInTheDocument())
     expect(screen.queryByText(/membership active/i)).not.toBeInTheDocument()
   })
 })

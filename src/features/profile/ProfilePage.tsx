@@ -49,7 +49,9 @@ export const ProfilePage = () => {
         {activeMembership ? (
           <div className="space-y-1">
             <p className="text-sm font-medium text-ui-heading">Active membership</p>
-            <p className="text-xs text-ui-muted">Organization: {activeMembership.organizationId}</p>
+            <p className="text-xs text-ui-muted">
+              Organization: {activeMembership.organizationName ?? activeMembership.organizationId}
+            </p>
             <p className="text-xs text-ui-muted">Joined: {formatTimestamp(activeMembership.joinedAt)}</p>
           </div>
         ) : null}

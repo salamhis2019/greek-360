@@ -54,6 +54,7 @@ export interface AuthService {
   startPhoneAuth: (phoneNumber: string) => Promise<StartPhoneAuthResult>
   verifyPhoneAuth: (params: VerifyPhoneAuthParams) => Promise<VerifyPhoneAuthResult>
   upsertProfile: (params: UpsertProfileParams) => Promise<UserProfileRecord>
+  signOut: () => Promise<void>
 }
 
 interface ResettableAuthService extends AuthService {
@@ -263,6 +264,10 @@ export const createInMemoryAuthService = (
       return updatedProfile
     },
 
+    async signOut() {
+      return
+    },
+
     async listProfilesForDirectory() {
       return [...profilesByUserId.values()].filter((profile) => !isUserDeleted(profile.userId))
     },
@@ -398,6 +403,14 @@ const createSupabaseAuthService = (client: SupabaseClient): AuthService => ({
       email: record.email ?? null,
     }
   },
+
+  async signOut() {
+    const { error } = await client.auth.signOut()
+
+    if (error) {
+      throw new AuthServiceError(resolveErrorCodeFromMessage(error.message), error.message)
+    }
+  },
 })
 
 const sharedAuthService = useInMemoryAuth
@@ -444,6 +457,14 @@ export const authService: AuthService = {
   async upsertProfile(params) {
     try {
       return await sharedAuthService.upsertProfile(params)
+    } catch (error) {
+      throw mapUnknownErrorToAuthServiceError(error)
+    }
+  },
+
+  async signOut() {
+    try {
+      return await sharedAuthService.signOut()
     } catch (error) {
       throw mapUnknownErrorToAuthServiceError(error)
     }

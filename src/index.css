@@ -217,6 +217,11 @@ a {
     transition: background-color 120ms ease;
   }
 
+  .ui-btn-primary:link,
+  .ui-btn-primary:visited {
+    color: #ffffff;
+  }
+
   .ui-btn-primary:hover {
     background-color: rgb(17 17 17 / 0.9);
   }

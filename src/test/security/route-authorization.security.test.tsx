@@ -18,7 +18,7 @@ describe('Route authorization baseline', () => {
       roles: ['chapter_admin'],
     })
 
-    expect(screen.getByRole('heading', { name: /student home/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /admin dashboard/i })).toBeInTheDocument()
   })
 
   it('forces authenticated users with incomplete onboarding back to auth flow', () => {
@@ -42,5 +42,17 @@ describe('Route authorization baseline', () => {
     })
 
     expect(screen.getByRole('heading', { name: /student home/i })).toBeInTheDocument()
+  })
+
+  it('redirects fully onboarded super-admin users to the super-admin workspace', () => {
+    renderAppAtRoute('/auth', {
+      isAuthenticated: true,
+      userId: 'user-2',
+      roles: ['student', 'super_admin'],
+      needsOnboarding: false,
+      displayName: 'Casey Admin',
+    })
+
+    expect(screen.getByRole('heading', { name: /super-admin dashboard/i })).toBeInTheDocument()
   })
 })

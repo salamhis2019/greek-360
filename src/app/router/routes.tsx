@@ -6,12 +6,16 @@ import { DirectoryPage } from '@/features/directory/DirectoryPage'
 import { JoinInterestPage } from '@/features/interest/JoinInterestPage'
 import { MessagesPage } from '@/features/messaging/MessagesPage'
 import { OffersInboxPage } from '@/features/offers/OffersInboxPage'
+import { AdminDashboardPage } from '@/features/admin/AdminDashboardPage'
+import { AdminMembersPage } from '@/features/admin/AdminMembersPage'
 import { PrivacySettingsPage } from '@/features/privacy/PrivacySettingsPage'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 import { RecruitmentStage1Page } from '@/features/recruitment/RecruitmentStage1Page'
 import { RecruitmentStage2Page } from '@/features/recruitment/RecruitmentStage2Page'
+import { StudentHomePage } from '@/features/student/StudentHomePage'
 import { SuperAdminsPage } from '@/features/super-admin/SuperAdminsPage'
 import { SuperCyclesPage } from '@/features/super-admin/SuperCyclesPage'
+import { SuperDashboardPage } from '@/features/super-admin/SuperDashboardPage'
 import { SuperOrganizationsPage } from '@/features/super-admin/SuperOrganizationsPage'
 import { SuperUniversitiesPage } from '@/features/super-admin/SuperUniversitiesPage'
 import { RequireAuth, RequireAuthFlow, RequireRole } from './guards'
@@ -21,6 +25,8 @@ const landingLinks = [
   { href: ROUTE_PATHS.auth, label: 'Sign in' },
   { href: ROUTE_PATHS.manualCodeEntry, label: 'Enter join code' },
   { href: ROUTE_PATHS.home, label: 'Student home' },
+  { href: ROUTE_PATHS.adminHome, label: 'Chapter-admin workspace' },
+  { href: ROUTE_PATHS.superHome, label: 'Super-admin workspace' },
   { href: ROUTE_PATHS.superUniversities, label: 'Super-admin console' },
 ]
 
@@ -41,20 +47,6 @@ const LandingPage = () => (
         ))}
       </div>
     }
-  />
-)
-
-const StudentHomePage = () => (
-  <RouteSkeletonPage
-    title="Student home"
-    description="Authenticated student dashboard shell for offers, profile, and directory."
-  />
-)
-
-const MembersPage = () => (
-  <RouteSkeletonPage
-    title="Members"
-    description="Chapter membership management shell and directory tools placeholder."
   />
 )
 
@@ -87,15 +79,17 @@ export const appRouteObjects: RouteObject[] = [
       {
         element: <RequireRole role="chapter_admin" />,
         children: [
+          { path: ROUTE_PATHS.adminHome.slice(1), element: <AdminDashboardPage /> },
           { path: ROUTE_PATHS.adminStage1.slice(1), element: <RecruitmentStage1Page /> },
           { path: ROUTE_PATHS.adminStage2.slice(1), element: <RecruitmentStage2Page /> },
           { path: ROUTE_PATHS.adminMessages.slice(1), element: <MessagesPage /> },
-          { path: ROUTE_PATHS.adminMembers.slice(1), element: <MembersPage /> },
+          { path: ROUTE_PATHS.adminMembers.slice(1), element: <AdminMembersPage /> },
         ],
       },
       {
         element: <RequireRole role="super_admin" />,
         children: [
+          { path: ROUTE_PATHS.superHome.slice(1), element: <SuperDashboardPage /> },
           { path: ROUTE_PATHS.superUniversities.slice(1), element: <SuperUniversitiesPage /> },
           { path: ROUTE_PATHS.superOrganizations.slice(1), element: <SuperOrganizationsPage /> },
           { path: ROUTE_PATHS.superAdmins.slice(1), element: <SuperAdminsPage /> },

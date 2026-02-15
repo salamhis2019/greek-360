@@ -11,7 +11,10 @@ export interface OfferRecord {
   interestEntryId: string
   userId: string
   organizationId: string
+  organizationName: string | null
   cycleId: string
+  cycleTerm: string | null
+  cycleYear: number | null
   status: OfferStatus
   offeredAt: string
   respondedAt: string | null
@@ -21,6 +24,7 @@ export interface MembershipRecord {
   id: string
   userId: string
   organizationId: string
+  organizationName: string | null
   status: MembershipStatus
   joinedAt: string
   endedAt: string | null
@@ -276,6 +280,7 @@ const createInMemoryOfferService = (
         id: createId(),
         userId: actorUserId,
         organizationId: offer.organizationId,
+        organizationName: offer.organizationName,
         status: 'active',
         joinedAt: nowIso(),
         endedAt: null,
@@ -334,7 +339,10 @@ const createInMemoryOfferService = (
         interestEntryId,
         userId,
         organizationId,
+        organizationName: null,
         cycleId,
+        cycleTerm: null,
+        cycleYear: null,
         status: 'pending',
         offeredAt: nowIso(),
         respondedAt: null,
@@ -356,7 +364,15 @@ const mapOfferRow = (row: Record<string, unknown> | null | undefined): OfferReco
     interestEntryId: String(row?.interest_entry_id ?? ''),
     userId: String(row?.user_id ?? ''),
     organizationId: String(row?.organization_id ?? ''),
+    organizationName: (row?.organization_name as string | null) ?? null,
     cycleId: String(row?.cycle_id ?? ''),
+    cycleTerm: (row?.cycle_term as string | null) ?? null,
+    cycleYear:
+      typeof row?.cycle_year === 'number'
+        ? row.cycle_year
+        : row?.cycle_year
+          ? Number(row.cycle_year)
+          : null,
     status: String(row?.offer_status ?? row?.status ?? 'pending') as OfferStatus,
     offeredAt: String(row?.offered_at ?? nowIso()),
     respondedAt: (row?.responded_at as string | null) ?? null,
@@ -375,6 +391,7 @@ const mapMembershipRow = (
     id: membershipId,
     userId: String(row?.user_id ?? ''),
     organizationId: String(row?.organization_id ?? ''),
+    organizationName: (row?.organization_name as string | null) ?? null,
     status: String(row?.membership_status ?? row?.status ?? 'active') as MembershipStatus,
     joinedAt: String(row?.membership_joined_at ?? row?.joined_at ?? nowIso()),
     endedAt:
@@ -456,7 +473,10 @@ const createSupabaseOfferService = (client: SupabaseClient): OfferService => ({
         interestEntryId,
         userId,
         organizationId,
+        organizationName: null,
         cycleId,
+        cycleTerm: null,
+        cycleYear: null,
         status: 'pending',
         offeredAt: nowIso(),
         respondedAt: null,

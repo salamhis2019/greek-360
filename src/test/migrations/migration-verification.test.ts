@@ -312,4 +312,31 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop function if exists public.request_privacy_export')
     expect(downSql).toContain('drop table if exists public.deletion_requests')
   })
+
+  it('includes the phase 9 workspace read-model migration pair for student/admin dashboards', () => {
+    const phaseNineUpPath = path.join(
+      upMigrationsDirectory,
+      '000010_phase9_workspace_read_models.up.sql'
+    )
+    const phaseNineDownPath = path.join(
+      downMigrationsDirectory,
+      '000010_phase9_workspace_read_models.down.sql'
+    )
+
+    expect(fs.existsSync(phaseNineUpPath)).toBe(true)
+    expect(fs.existsSync(phaseNineDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseNineUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseNineDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create or replace function public.list_my_student_home_summary')
+    expect(upSql).toContain('create or replace function public.list_my_admin_cycles')
+    expect(upSql).toContain('create or replace function public.list_organization_members')
+    expect(upSql).toContain('create or replace function public.list_my_offers')
+    expect(upSql).toContain('create or replace function public.list_my_memberships')
+
+    expect(downSql).toContain('drop function if exists public.list_organization_members')
+    expect(downSql).toContain('drop function if exists public.list_my_admin_cycles')
+    expect(downSql).toContain('drop function if exists public.list_my_student_home_summary')
+  })
 })

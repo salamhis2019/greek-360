@@ -6,9 +6,10 @@ interface RecruitmentAdminNavProps {
 }
 
 const navItems = [
-  { label: 'Stage 1', pathSuffix: 'stage-1' },
-  { label: 'Stage 2', pathSuffix: 'stage-2' },
-  { label: 'Messages', pathSuffix: 'messages' },
+  { label: 'Stage 1', href: (organizationId: string, cycleId: string) => `/admin/recruitment/${organizationId}/${cycleId}/stage-1` },
+  { label: 'Stage 2', href: (organizationId: string, cycleId: string) => `/admin/recruitment/${organizationId}/${cycleId}/stage-2` },
+  { label: 'Messages', href: (organizationId: string, cycleId: string) => `/admin/recruitment/${organizationId}/${cycleId}/messages` },
+  { label: 'Members', href: (organizationId: string, _cycleId: string) => `/admin/members/${organizationId}` },
 ]
 
 export const RecruitmentAdminNav = ({
@@ -22,16 +23,16 @@ export const RecruitmentAdminNav = ({
   return (
     <nav aria-label="Recruitment admin sections" className="flex flex-wrap gap-2">
       {navItems.map((item) => {
-        const href = `/admin/recruitment/${organizationId}/${cycleId}/${item.pathSuffix}`
+        const href = item.href(organizationId, cycleId)
         const isActive = location.pathname === href
         const linkStateClass = isActive
-          ? 'border-black bg-black text-white'
+          ? 'border-black bg-black !text-white'
           : 'border-black/10 bg-white text-ui-heading hover:border-black/25 hover:bg-black/[0.02]'
 
         return (
           <Link
             className={`${baseLinkClass} ${linkStateClass}`}
-            key={item.pathSuffix}
+            key={item.label}
             to={href}
           >
             {item.label}

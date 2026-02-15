@@ -29,6 +29,18 @@ const formatTimestamp = (value: string | null) => {
   return parsed.toLocaleString()
 }
 
+const statusClassByOfferStatus = {
+  pending: 'border-amber-300 bg-amber-50 text-amber-800',
+  accepted: 'border-green-300 bg-green-50 text-green-800',
+  declined: 'border-red-200 bg-red-50 text-red-800',
+  expired: 'border-slate-300 bg-slate-100 text-slate-700',
+} as const
+
+const offerStatusChipBaseClass = [
+  'mt-1 inline-flex rounded-full border px-2.5 py-1',
+  'text-[0.67rem] font-semibold uppercase tracking-[0.08em]',
+].join(' ')
+
 export const OffersInboxPage = () => {
   const { userId } = useAuthSession()
   const queryClient = useQueryClient()
@@ -99,9 +111,21 @@ export const OffersInboxPage = () => {
             <li className="ui-panel space-y-3" key={offer.id}>
               <div>
                 <p className="text-sm font-semibold tracking-[-0.01em] text-ui-heading">
-                  Organization: {offer.organizationId}
+                  Organization: {offer.organizationName ?? offer.organizationId}
                 </p>
-                <p className="ui-meta">Status: {offer.status}</p>
+                <p className="ui-meta">
+                  Cycle:{' '}
+                  {offer.cycleTerm && offer.cycleYear
+                    ? `${offer.cycleTerm} ${offer.cycleYear}`
+                    : offer.cycleId}
+                </p>
+                <span
+                  className={`${offerStatusChipBaseClass} ${
+                    statusClassByOfferStatus[offer.status]
+                  }`}
+                >
+                  {offer.status}
+                </span>
                 <p className="ui-meta">Offered: {formatTimestamp(offer.offeredAt)}</p>
                 <p className="ui-meta">Responded: {formatTimestamp(offer.respondedAt)}</p>
                 {offer.status === 'accepted' ? (

@@ -304,6 +304,12 @@ export const SuperCyclesPage = () => {
                 <div className="mt-2 flex flex-wrap gap-2">
                   <Link
                     className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
+                    to="/admin"
+                  >
+                    Open admin workspace
+                  </Link>
+                  <Link
+                    className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
                     to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`}
                   >
                     Open stage 1

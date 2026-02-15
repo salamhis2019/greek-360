@@ -7,6 +7,7 @@ import {
   type MessageRecipientGroup,
 } from '@/features/messaging/messagingLogic'
 import { RecruitmentAdminNav } from '@/features/recruitment/RecruitmentAdminNav'
+import { AdminContextBanner } from '@/features/admin/AdminContextBanner'
 import {
   messagingService,
   MessagingServiceError,
@@ -164,6 +165,7 @@ export const MessagesPage = () => {
         </p>
       </header>
       <RecruitmentAdminNav cycleId={cycleId} organizationId={organizationId} />
+      <AdminContextBanner cycleId={cycleId} organizationId={organizationId} />
 
       <form
         className="ui-panel space-y-3"

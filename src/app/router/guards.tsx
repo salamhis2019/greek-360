@@ -2,16 +2,21 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { isUserDeleted } from '@/features/privacy/privacyDeletionState'
 import type { UserRole } from '@/features/auth/session'
+import { resolveDefaultWorkspace, workspaceToDefaultPath } from '@/features/workspace/workspace'
 
 const AuthRedirect = () => <Navigate replace to="/auth" />
-const HomeRedirect = () => <Navigate replace to="/home" />
 
 export const RequireAuthFlow = () => {
-  const { isAuthenticated, needsOnboarding, userId } = useAuthSession()
+  const { isAuthenticated, needsOnboarding, userId, roles } = useAuthSession()
   const deletedAccount = isUserDeleted(userId)
 
   if (isAuthenticated && !needsOnboarding && !deletedAccount) {
-    return <HomeRedirect />
+    return (
+      <Navigate
+        replace
+        to={workspaceToDefaultPath(resolveDefaultWorkspace(roles))}
+      />
+    )
   }
 
   return <Outlet />
@@ -45,7 +50,12 @@ export const RequireRole = ({ role }: RequireRoleProps) => {
   }
 
   if (!roles.includes(role)) {
-    return <HomeRedirect />
+    return (
+      <Navigate
+        replace
+        to={workspaceToDefaultPath(resolveDefaultWorkspace(roles))}
+      />
+    )
   }
 
   return <Outlet />

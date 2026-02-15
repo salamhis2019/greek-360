@@ -9,6 +9,7 @@ import {
   type RecruitmentCandidateRecord,
 } from './recruitmentService'
 import { RecruitmentAdminNav } from './RecruitmentAdminNav'
+import { AdminContextBanner } from '@/features/admin/AdminContextBanner'
 
 const resolveErrorMessage = (error: unknown) => {
   if (error instanceof RecruitmentServiceError) {
@@ -112,6 +113,7 @@ export const RecruitmentStage1Page = () => {
         <p className="ui-page-description">Review incoming interest and decide shortlist or no with one tap.</p>
       </header>
       <RecruitmentAdminNav cycleId={cycleId} organizationId={organizationId} />
+      <AdminContextBanner cycleId={cycleId} organizationId={organizationId} />
 
       {stage1QueueQuery.isLoading ? <p className="text-sm text-ui-muted">Loading candidates...</p> : null}
       {stage1QueueQuery.isError ? (

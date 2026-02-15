@@ -4,6 +4,8 @@ export const ROUTE_PATHS = {
   joinWithCode: '/join/:code',
   manualCodeEntry: '/code',
   home: '/home',
+  adminHome: '/admin',
+  superHome: '/super',
   offers: '/offers',
   directory: '/directory',
   profile: '/profile',
