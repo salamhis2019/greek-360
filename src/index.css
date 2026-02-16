@@ -20,6 +20,7 @@
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
   background-color: var(--ui-canvas);
   background-image: linear-gradient(180deg, #fafaf8 0%, #f4f4f1 100%);
   color: var(--ui-body);

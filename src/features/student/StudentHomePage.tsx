@@ -27,8 +27,8 @@ const statusClassName: Record<StudentInterestStatus, string> = {
 }
 
 const interestStatusChipBaseClass = [
-  'inline-flex items-center rounded-full border px-2.5 py-1',
-  'text-[0.67rem] font-semibold uppercase tracking-[0.08em]',
+  'inline-flex w-fit max-w-full items-center rounded-full border px-2.5 py-1',
+  'text-[0.67rem] font-semibold uppercase tracking-[0.08em] leading-tight break-words',
 ].join(' ')
 
 const resolveErrorMessage = (error: unknown) => {
@@ -59,7 +59,7 @@ export const StudentHomePage = () => {
   const summary = summaryQuery.data
 
   return (
-    <section className="ui-page space-y-4">
+    <section className="ui-page space-y-3 overflow-x-hidden">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Student workspace</p>
@@ -76,12 +76,12 @@ export const StudentHomePage = () => {
 
       {summary ? (
         <>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="ui-panel space-y-2">
+          <div className="grid gap-2 sm:gap-3 sm:grid-cols-2">
+            <div className="ui-panel space-y-2 overflow-hidden">
               <p className="ui-subheading">Membership</p>
               {summary.activeMembership ? (
                 <>
-                  <p className="text-sm font-semibold text-ui-heading">
+                  <p className="text-sm font-semibold text-ui-heading break-words">
                     {summary.activeMembership.organizationName}
                   </p>
                   <p className="ui-meta">Joined: {formatTimestamp(summary.activeMembership.joinedAt)}</p>
@@ -89,30 +89,33 @@ export const StudentHomePage = () => {
               ) : (
                 <>
                   <p className="text-sm text-ui-muted">No active membership yet.</p>
-                  <Link className="ui-btn-secondary mt-1 px-4 text-xs" to={ROUTE_PATHS.manualCodeEntry}>
+                  <Link
+                    className="ui-btn-secondary mt-1 w-full px-4 text-xs sm:w-auto"
+                    to={ROUTE_PATHS.manualCodeEntry}
+                  >
                     Enter a join code
                   </Link>
                 </>
               )}
             </div>
 
-            <div className="ui-panel space-y-2">
+            <div className="ui-panel space-y-2 overflow-hidden">
               <p className="ui-subheading">Offers</p>
               <p className="text-[1.45rem] font-semibold tracking-[-0.02em] text-ui-heading">
                 {summary.pendingOffersCount}
               </p>
               <p className="text-xs text-ui-muted">Pending offers waiting for your response.</p>
-              <Link className="ui-btn-secondary mt-1 px-4 text-xs" to={ROUTE_PATHS.offers}>
+              <Link className="ui-btn-secondary mt-1 w-full px-4 text-xs sm:w-auto" to={ROUTE_PATHS.offers}>
                 Open offers inbox
               </Link>
             </div>
           </div>
 
           <section className="space-y-2">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="ui-subheading">Recent interests</h2>
               <Link
-                className="text-xs font-semibold uppercase tracking-[0.08em] text-ui-heading underline underline-offset-4"
+                className="ui-btn-secondary min-h-[2.1rem] w-full px-4 text-xs sm:w-auto"
                 to={ROUTE_PATHS.manualCodeEntry}
               >
                 Add chapter
@@ -125,23 +128,28 @@ export const StudentHomePage = () => {
                 <p className="text-xs text-ui-muted">
                   Start by entering a chapter join code from recruitment events.
                 </p>
-                <Link className="ui-btn-primary px-4 text-sm" to={ROUTE_PATHS.manualCodeEntry}>
+                <Link
+                  className="ui-btn-primary w-full px-4 text-sm !text-white sm:w-auto"
+                  to={ROUTE_PATHS.manualCodeEntry}
+                >
                   Enter join code
                 </Link>
               </div>
             ) : (
-              <ul className="space-y-3">
+              <ul className="space-y-2 sm:space-y-3">
                 {summary.interests.map((interest) => (
-                  <li className="ui-panel space-y-2" key={interest.interestEntryId}>
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-ui-heading">{interest.organizationName}</p>
+                  <li className="ui-panel space-y-2 overflow-hidden" key={interest.interestEntryId}>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-ui-heading break-words">
+                          {interest.organizationName}
+                        </p>
                         <p className="ui-meta">
                           {interest.cycleTerm} {interest.cycleYear}
                         </p>
                       </div>
                       <span
-                        className={`${interestStatusChipBaseClass} ${
+                        className={`${interestStatusChipBaseClass} self-start ${
                           statusClassName[interest.status]
                         }`}
                       >

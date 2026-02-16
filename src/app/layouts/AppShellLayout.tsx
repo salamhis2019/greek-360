@@ -74,7 +74,7 @@ export const AppShellLayout = () => {
     <div className="min-h-screen bg-ui-canvas text-ui-body">
       <header className="sticky top-0 z-20 border-b border-black/10 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:px-5">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <Link className="text-[1.02rem] font-semibold tracking-[-0.02em] text-ui-heading" to="/">
               Greek 360
             </Link>
@@ -87,7 +87,7 @@ export const AppShellLayout = () => {
               </span>
               {isAuthenticated ? (
                 <button
-                  className="ui-btn-secondary min-h-[2.1rem] px-3 text-xs"
+                  className="ui-btn-secondary min-h-[2.1rem] whitespace-nowrap px-3 text-xs"
                   disabled={isSigningOut}
                   onClick={() => void submitSignOut()}
                   type="button"
@@ -100,19 +100,19 @@ export const AppShellLayout = () => {
 
           {isAuthenticated ? (
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs font-medium uppercase tracking-[0.08em] text-black/52">
+              <p className="min-w-0 break-words text-xs font-medium uppercase tracking-[0.08em] text-black/52">
                 {displayName
                   ? `${displayName} · ${workspaceLabels[activeWorkspace]}`
                   : workspaceLabels[activeWorkspace]}
               </p>
               {availableWorkspaces.length > 1 ? (
                 <label
-                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-black/48"
+                  className="flex w-full flex-col items-start gap-1 text-xs font-semibold uppercase tracking-[0.08em] text-black/48 sm:w-auto sm:flex-row sm:items-center sm:gap-2"
                   htmlFor="workspace-switcher"
                 >
                   Workspace
                   <select
-                    className="ui-select h-9 min-w-[11rem] rounded-full px-3 text-xs"
+                    className="ui-select h-9 w-full min-w-0 rounded-full px-3 text-xs sm:w-auto sm:min-w-[11rem]"
                     id="workspace-switcher"
                     onChange={(event) =>
                       navigate(workspaceToDefaultPath(event.target.value as ActiveWorkspace))
