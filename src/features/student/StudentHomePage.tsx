@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
+import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   StudentDashboardServiceError,
@@ -62,14 +63,25 @@ export const StudentHomePage = () => {
     <section className="ui-page space-y-3 overflow-x-hidden">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
-        <p className="ui-page-eyebrow">Student workspace</p>
-        <h1 className="ui-page-title">Student home</h1>
+        <p className="ui-page-eyebrow">My rush</p>
+        <h1 className="ui-page-title">My Rush</h1>
         <p className="ui-page-description">
-          Track your active membership, offers, and recruitment progress in one place.
+          Run your rush from one place: chapter codes, offers, and your current status.
         </p>
       </header>
 
-      {summaryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading your dashboard...</p> : null}
+      <PageActionList
+        actions={[
+          { label: 'Join a chapter', to: ROUTE_PATHS.manualCodeEntry, tone: 'primary' },
+          { label: 'Open my offers', to: ROUTE_PATHS.offers },
+          { label: 'Search campus directory', to: ROUTE_PATHS.directory },
+          { label: 'Edit my profile', to: ROUTE_PATHS.profile },
+          { label: 'Privacy and data settings', to: ROUTE_PATHS.privacySettings },
+        ]}
+        title="Quick actions"
+      />
+
+      {summaryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading your rush updates...</p> : null}
       {summaryQuery.isError ? (
         <p className="text-sm font-medium text-red-700">{resolveErrorMessage(summaryQuery.error)}</p>
       ) : null}

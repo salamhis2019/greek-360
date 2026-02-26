@@ -9,7 +9,7 @@ describe('Route authorization baseline', () => {
       roles: ['student'],
     })
 
-    expect(screen.getByRole('heading', { name: /student home/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /my rush/i })).toBeInTheDocument()
   })
 
   it('blocks chapter admin access to super-admin routes', () => {
@@ -18,7 +18,7 @@ describe('Route authorization baseline', () => {
       roles: ['chapter_admin'],
     })
 
-    expect(screen.getByRole('heading', { name: /admin dashboard/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /chapter recruiting/i })).toBeInTheDocument()
   })
 
   it('forces authenticated users with incomplete onboarding back to auth flow', () => {
@@ -41,10 +41,10 @@ describe('Route authorization baseline', () => {
       displayName: 'Alex Student',
     })
 
-    expect(screen.getByRole('heading', { name: /student home/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /my rush/i })).toBeInTheDocument()
   })
 
-  it('redirects fully onboarded super-admin users to the super-admin workspace', () => {
+  it('redirects fully onboarded super-admin users to campus setup', () => {
     renderAppAtRoute('/auth', {
       isAuthenticated: true,
       userId: 'user-2',
@@ -53,6 +53,6 @@ describe('Route authorization baseline', () => {
       displayName: 'Casey Admin',
     })
 
-    expect(screen.getByRole('heading', { name: /super-admin dashboard/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /campus setup/i })).toBeInTheDocument()
   })
 })

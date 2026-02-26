@@ -14,7 +14,7 @@ const superAdminActor: SuperAdminActor = {
   actorRoles: ['super_admin'],
 }
 
-describe('Student home workspace', () => {
+describe('Student rush home', () => {
   it('shows a guided empty state when the student has no interests', async () => {
     resetInterestServiceForTests()
     resetOfferServiceForTests()
@@ -88,7 +88,7 @@ describe('Student home workspace', () => {
     })
 
     await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /student home/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /my rush/i })).toBeInTheDocument()
     )
     await waitFor(() =>
       expect(screen.getByText(/student home chapter/i)).toBeInTheDocument()

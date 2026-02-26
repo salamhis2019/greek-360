@@ -6,10 +6,22 @@ interface RecruitmentAdminNavProps {
 }
 
 const navItems = [
-  { label: 'Stage 1', href: (organizationId: string, cycleId: string) => `/admin/recruitment/${organizationId}/${cycleId}/stage-1` },
-  { label: 'Stage 2', href: (organizationId: string, cycleId: string) => `/admin/recruitment/${organizationId}/${cycleId}/stage-2` },
-  { label: 'Messages', href: (organizationId: string, cycleId: string) => `/admin/recruitment/${organizationId}/${cycleId}/messages` },
-  { label: 'Members', href: (organizationId: string, _cycleId: string) => `/admin/members/${organizationId}` },
+  {
+    label: 'Review stage 1',
+    href: (organizationId: string, cycleId: string) =>
+      `/admin/recruitment/${organizationId}/${cycleId}/stage-1`,
+  },
+  {
+    label: 'Review stage 2',
+    href: (organizationId: string, cycleId: string) =>
+      `/admin/recruitment/${organizationId}/${cycleId}/stage-2`,
+  },
+  {
+    label: 'Send messages',
+    href: (organizationId: string, cycleId: string) =>
+      `/admin/recruitment/${organizationId}/${cycleId}/messages`,
+  },
+  { label: 'Manage members', href: (organizationId: string, _cycleId: string) => `/admin/members/${organizationId}` },
 ]
 
 export const RecruitmentAdminNav = ({
@@ -17,17 +29,16 @@ export const RecruitmentAdminNav = ({
   cycleId,
 }: RecruitmentAdminNavProps) => {
   const location = useLocation()
-  const baseLinkClass =
-    'inline-flex min-h-[2.55rem] items-center justify-center rounded-full border px-4 text-sm font-semibold tracking-[-0.01em] transition'
+  const baseLinkClass = 'ui-action-link min-h-[2.85rem] text-sm'
 
   return (
-    <nav aria-label="Recruitment admin sections" className="flex flex-wrap gap-2">
+    <nav aria-label="Recruitment admin sections" className="ui-action-list">
       {navItems.map((item) => {
         const href = item.href(organizationId, cycleId)
         const isActive = location.pathname === href
         const linkStateClass = isActive
-          ? 'border-black bg-black !text-white'
-          : 'border-black/10 bg-white text-ui-heading hover:border-black/25 hover:bg-black/[0.02]'
+          ? 'ui-action-link-primary'
+          : ''
 
         return (
           <Link
@@ -35,7 +46,8 @@ export const RecruitmentAdminNav = ({
             key={item.label}
             to={href}
           >
-            {item.label}
+            <span>{item.label}</span>
+            <span aria-hidden="true">{'->'}</span>
           </Link>
         )
       })}

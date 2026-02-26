@@ -23,5 +23,29 @@ describe('Phase 0 app shell smoke tests', () => {
     })
 
     expect(screen.getByRole('heading', { name: /stage 1 queue/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /review stage 1/i })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^stage 1$/i })).not.toBeInTheDocument()
+  })
+
+  it('does not render top pill navigation for authenticated users', () => {
+    renderAppAtRoute('/home', {
+      isAuthenticated: true,
+      roles: ['student'],
+      userId: 'student-user-1',
+      displayName: 'Taylor Student',
+    })
+
+    expect(screen.queryByRole('navigation', { name: /primary navigation/i })).not.toBeInTheDocument()
+  })
+
+  it('uses role-first wording for the shell role switcher', () => {
+    renderAppAtRoute('/home', {
+      isAuthenticated: true,
+      roles: ['student', 'chapter_admin'],
+      userId: 'chapter-user-1',
+      displayName: 'Morgan Admin',
+    })
+
+    expect(screen.getByLabelText(/role view/i)).toBeInTheDocument()
   })
 })

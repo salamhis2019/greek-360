@@ -23,14 +23,14 @@ describe('Route skeleton coverage', () => {
     { path: '/auth', heading: /sign in/i, session: {} },
     { path: '/join/code-1', heading: /join a chapter/i, session: {} },
     { path: '/code', heading: /join a chapter/i, session: {} },
-    { path: '/home', heading: /student home/i, session: studentSession },
+    { path: '/home', heading: /my rush/i, session: studentSession },
     { path: '/offers', heading: /offers/i, session: studentSession },
     { path: '/directory', heading: /directory/i, session: studentSession },
     { path: '/profile', heading: /profile/i, session: studentSession },
     { path: '/settings/privacy', heading: /privacy settings/i, session: studentSession },
     {
       path: '/admin',
-      heading: /admin dashboard/i,
+      heading: /chapter recruiting/i,
       session: chapterAdminSession,
     },
     {
@@ -50,7 +50,7 @@ describe('Route skeleton coverage', () => {
     },
     {
       path: '/super',
-      heading: /super-admin dashboard/i,
+      heading: /campus setup/i,
       session: superAdminSession,
     },
     {

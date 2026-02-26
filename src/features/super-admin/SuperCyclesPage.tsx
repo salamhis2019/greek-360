@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   superAdminService,
@@ -149,7 +149,7 @@ export const SuperCyclesPage = () => {
     <section className="ui-page-admin space-y-4">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
-        <p className="ui-page-eyebrow">Super admin</p>
+        <p className="ui-page-eyebrow">Campus setup</p>
         <h1 className="ui-page-title">Recruitment cycles</h1>
         <p className="ui-page-description">
           Configure recruitment cycles and generate static join codes.
@@ -301,25 +301,22 @@ export const SuperCyclesPage = () => {
                 <p className="ui-meta">
                   {getOrganizationName(cycle.organizationId)} | {cycle.status}
                 </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <Link
-                    className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
-                    to="/admin"
-                  >
-                    Open admin workspace
-                  </Link>
-                  <Link
-                    className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
-                    to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`}
-                  >
-                    Open stage 1
-                  </Link>
-                  <Link
-                    className="ui-btn-secondary min-h-[2.15rem] px-3 text-xs"
-                    to={`/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-2`}
-                  >
-                    Open stage 2
-                  </Link>
+                <div className="mt-3">
+                  <PageActionList
+                    actions={[
+                      { label: 'Open chapter recruiting', to: '/admin' },
+                      {
+                        label: 'Review stage 1',
+                        to: `/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`,
+                        tone: 'primary',
+                      },
+                      {
+                        label: 'Review stage 2',
+                        to: `/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-2`,
+                      },
+                    ]}
+                    title="Cycle shortcuts"
+                  />
                 </div>
               </li>
             ))}

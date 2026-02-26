@@ -65,7 +65,7 @@ describe('Auth onboarding flow integration', () => {
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
     await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /student home/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /my rush/i })).toBeInTheDocument()
     )
   })
 })

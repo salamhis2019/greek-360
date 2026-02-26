@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   AdminDashboardServiceError,
@@ -36,14 +37,14 @@ export const AdminDashboardPage = () => {
     <section className="ui-page-admin space-y-4">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
-        <p className="ui-page-eyebrow">Chapter admin workspace</p>
-        <h1 className="ui-page-title">Admin dashboard</h1>
+        <p className="ui-page-eyebrow">Chapter recruiting</p>
+        <h1 className="ui-page-title">Chapter Recruiting</h1>
         <p className="ui-page-description">
-          Choose a cycle to run stage decisions, messages, and member operations.
+          Pick a chapter and cycle, then move fast through shortlist, finals, bids, and members.
         </p>
       </header>
 
-      {summaryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading admin cycles...</p> : null}
+      {summaryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading chapter cycles...</p> : null}
       {summaryQuery.isError ? (
         <p className="text-sm font-medium text-red-700">{resolveErrorMessage(summaryQuery.error)}</p>
       ) : null}
@@ -76,33 +77,25 @@ export const AdminDashboardPage = () => {
                   {cycle.pendingOffersCount}
                 </p>
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  className="ui-btn-secondary min-h-[2.2rem] px-4 text-xs"
-                  to={`/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-1`}
-                >
-                  Stage 1
-                </Link>
-                <Link
-                  className="ui-btn-secondary min-h-[2.2rem] px-4 text-xs"
-                  to={`/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-2`}
-                >
-                  Stage 2
-                </Link>
-                <Link
-                  className="ui-btn-secondary min-h-[2.2rem] px-4 text-xs"
-                  to={`/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/messages`}
-                >
-                  Messages
-                </Link>
-                <Link
-                  className="ui-btn-secondary min-h-[2.2rem] px-4 text-xs"
-                  to={`/admin/members/${cycle.organizationId}`}
-                >
-                  Members
-                </Link>
-              </div>
+              <PageActionList
+                actions={[
+                  {
+                    label: 'Review stage 1',
+                    to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-1`,
+                    tone: 'primary',
+                  },
+                  {
+                    label: 'Review stage 2',
+                    to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-2`,
+                  },
+                  {
+                    label: 'Send chapter messages',
+                    to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/messages`,
+                  },
+                  { label: 'Manage members', to: `/admin/members/${cycle.organizationId}` },
+                ]}
+                title="Cycle actions"
+              />
             </li>
           ))}
         </ul>

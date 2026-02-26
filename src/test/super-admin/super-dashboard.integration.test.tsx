@@ -12,7 +12,7 @@ const superAdminActor: SuperAdminActor = {
   actorRoles: ['super_admin'],
 }
 
-describe('Super-admin dashboard workspace', () => {
+describe('Campus setup dashboard', () => {
   it('shows setup checklist counts', async () => {
     resetSuperAdminServiceForTests()
 
@@ -56,7 +56,7 @@ describe('Super-admin dashboard workspace', () => {
     })
 
     await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /super-admin dashboard/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /campus setup/i })).toBeInTheDocument()
     )
 
     await waitFor(() => expect(screen.getByText(/1 cycles · 1 join links/i)).toBeInTheDocument())

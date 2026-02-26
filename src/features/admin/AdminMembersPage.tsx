@@ -51,14 +51,14 @@ export const AdminMembersPage = () => {
       <section className="ui-page-admin space-y-3">
         <header className="ui-page-header">
           <p className="ui-page-brand">Greek 360</p>
-          <p className="ui-page-eyebrow">Chapter admin workspace</p>
+          <p className="ui-page-eyebrow">Chapter recruiting</p>
           <h1 className="ui-page-title">Members</h1>
           <p className="ui-page-description">
-            Pick an organization from the admin dashboard first.
+            Pick an organization from chapter recruiting first.
           </p>
         </header>
         <Link className="ui-btn-secondary w-fit px-4 text-xs" to="/admin">
-          Go to admin dashboard
+          Go to chapter recruiting
         </Link>
       </section>
     )
@@ -68,14 +68,14 @@ export const AdminMembersPage = () => {
     <section className="ui-page-admin space-y-4">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
-        <p className="ui-page-eyebrow">Chapter admin workspace</p>
+        <p className="ui-page-eyebrow">Chapter recruiting</p>
         <h1 className="ui-page-title">Members</h1>
         <p className="ui-page-description">Organization: {organizationName}</p>
       </header>
 
-      <div className="flex flex-wrap gap-2">
-        <Link className="ui-btn-secondary min-h-[2.2rem] px-4 text-xs" to="/admin">
-          Back to admin dashboard
+      <div className="ui-action-list">
+        <Link className="ui-btn-secondary min-h-[2.2rem] w-full px-4 text-xs sm:w-fit" to="/admin">
+          Back to chapter recruiting
         </Link>
       </div>
       <AdminContextBanner organizationId={organizationId} />

@@ -4,7 +4,6 @@ import { ROUTE_PATHS } from '@/app/router/routePaths'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { authService } from '@/features/auth/authService'
 import {
-  getWorkspaceNavItems,
   listAvailableWorkspaces,
   resolveWorkspaceFromPath,
   workspaceToDefaultPath,
@@ -12,36 +11,10 @@ import {
 } from '@/features/workspace/workspace'
 import { environment } from '@/lib/env'
 
-const workspaceLabels: Record<ActiveWorkspace, string> = {
-  student: 'Student',
-  chapter_admin: 'Chapter admin',
-  super_admin: 'Super admin',
-}
-
-const publicNavItems = [
-  { href: ROUTE_PATHS.auth, label: 'Sign in' },
-  { href: ROUTE_PATHS.manualCodeEntry, label: 'Enter code' },
-]
-
-const primaryNavItemBaseClass = [
-  'inline-flex min-h-[2.2rem] shrink-0 items-center justify-center rounded-full border',
-  'px-3 text-xs font-semibold tracking-[0.01em] transition',
-].join(' ')
-
-const isNavItemActive = (pathname: string, href: string) => {
-  if (href === ROUTE_PATHS.home) {
-    return pathname === ROUTE_PATHS.home
-  }
-
-  if (href === ROUTE_PATHS.adminHome) {
-    return pathname.startsWith('/admin')
-  }
-
-  if (href === ROUTE_PATHS.superHome) {
-    return pathname.startsWith('/super')
-  }
-
-  return pathname === href || pathname.startsWith(`${href}/`)
+const roleViewLabels: Record<ActiveWorkspace, string> = {
+  student: 'My Rush',
+  chapter_admin: 'Chapter Recruiting',
+  super_admin: 'Campus Setup',
 }
 
 export const AppShellLayout = () => {
@@ -52,9 +25,6 @@ export const AppShellLayout = () => {
 
   const availableWorkspaces = listAvailableWorkspaces(roles)
   const activeWorkspace = resolveWorkspaceFromPath(location.pathname, roles)
-  const navItems = isAuthenticated
-    ? getWorkspaceNavItems(activeWorkspace, roles)
-    : publicNavItems
 
   const submitSignOut = async () => {
     setIsSigningOut(true)
@@ -102,15 +72,15 @@ export const AppShellLayout = () => {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="min-w-0 break-words text-xs font-medium uppercase tracking-[0.08em] text-black/52">
                 {displayName
-                  ? `${displayName} · ${workspaceLabels[activeWorkspace]}`
-                  : workspaceLabels[activeWorkspace]}
+                  ? `${displayName} · ${roleViewLabels[activeWorkspace]}`
+                  : roleViewLabels[activeWorkspace]}
               </p>
               {availableWorkspaces.length > 1 ? (
                 <label
                   className="flex w-full flex-col items-start gap-1 text-xs font-semibold uppercase tracking-[0.08em] text-black/48 sm:w-auto sm:flex-row sm:items-center sm:gap-2"
                   htmlFor="workspace-switcher"
                 >
-                  Workspace
+                  Role view
                   <select
                     className="ui-select h-9 w-full min-w-0 rounded-full px-3 text-xs sm:w-auto sm:min-w-[11rem]"
                     id="workspace-switcher"
@@ -121,7 +91,7 @@ export const AppShellLayout = () => {
                   >
                     {availableWorkspaces.map((workspace) => (
                       <option key={workspace} value={workspace}>
-                        {workspaceLabels[workspace]}
+                        {roleViewLabels[workspace]}
                       </option>
                     ))}
                   </select>
@@ -129,26 +99,6 @@ export const AppShellLayout = () => {
               ) : null}
             </div>
           ) : null}
-
-          <nav aria-label="Primary navigation" className="flex gap-2 overflow-x-auto pb-1">
-            {navItems.map((item) => {
-              const isActive = isNavItemActive(location.pathname, item.href)
-
-              return (
-                <Link
-                  className={`${primaryNavItemBaseClass} ${
-                    isActive
-                      ? 'border-black bg-black !text-white'
-                      : 'border-black/10 bg-white text-ui-heading hover:border-black/25 hover:bg-black/[0.02]'
-                  }`}
-                  key={item.href}
-                  to={item.href}
-                >
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
         </div>
       </header>
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 sm:px-5">

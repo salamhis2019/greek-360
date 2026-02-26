@@ -69,7 +69,7 @@ export const SuperUniversitiesPage = () => {
     <section className="ui-page-admin space-y-4">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
-        <p className="ui-page-eyebrow">Super admin</p>
+        <p className="ui-page-eyebrow">Campus setup</p>
         <h1 className="ui-page-title">Universities</h1>
         <p className="ui-page-description">
           Create and activate universities before configuring chapters and cycles.

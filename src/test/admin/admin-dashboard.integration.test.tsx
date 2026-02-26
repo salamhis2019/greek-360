@@ -15,7 +15,7 @@ const superAdminActor: SuperAdminActor = {
   actorRoles: ['super_admin'],
 }
 
-describe('Chapter-admin dashboard workspace', () => {
+describe('Chapter recruiting dashboard', () => {
   it('lists manageable cycles with queue counts and quick links', async () => {
     resetInterestServiceForTests()
     resetOfferServiceForTests()
@@ -68,7 +68,7 @@ describe('Chapter-admin dashboard workspace', () => {
     })
 
     await waitFor(() =>
-      expect(screen.getByRole('heading', { name: /admin dashboard/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /chapter recruiting/i })).toBeInTheDocument()
     )
 
     await waitFor(() =>

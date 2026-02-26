@@ -24,10 +24,10 @@ import { ROUTE_PATHS } from './routePaths'
 const landingLinks = [
   { href: ROUTE_PATHS.auth, label: 'Sign in' },
   { href: ROUTE_PATHS.manualCodeEntry, label: 'Enter join code' },
-  { href: ROUTE_PATHS.home, label: 'Student home' },
-  { href: ROUTE_PATHS.adminHome, label: 'Chapter-admin workspace' },
-  { href: ROUTE_PATHS.superHome, label: 'Super-admin workspace' },
-  { href: ROUTE_PATHS.superUniversities, label: 'Super-admin console' },
+  { href: ROUTE_PATHS.home, label: 'My Rush' },
+  { href: ROUTE_PATHS.adminHome, label: 'Chapter recruiting' },
+  { href: ROUTE_PATHS.superHome, label: 'Campus setup' },
+  { href: ROUTE_PATHS.superUniversities, label: 'Setup tools' },
 ]
 
 const LandingPage = () => (

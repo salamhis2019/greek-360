@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
-import { SuperAdminNav } from '@/features/super-admin/SuperAdminNav'
 import {
   SuperAdminServiceError,
   superAdminService,
@@ -48,15 +48,23 @@ export const SuperDashboardPage = () => {
     <section className="ui-page-admin space-y-4">
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
-        <p className="ui-page-eyebrow">Super admin workspace</p>
-        <h1 className="ui-page-title">Super-admin dashboard</h1>
+        <p className="ui-page-eyebrow">Campus setup</p>
+        <h1 className="ui-page-title">Campus Setup</h1>
         <p className="ui-page-description">
-          Run setup in order, then hand off cycle operations to chapter-admin flows.
+          Set up schools, chapters, and cycles, then hand recruiting off to chapter officers.
         </p>
       </header>
-      <SuperAdminNav />
+      <PageActionList
+        actions={[
+          { label: 'Manage universities', to: '/super/universities', tone: 'primary' },
+          { label: 'Manage organizations', to: '/super/organizations' },
+          { label: 'Manage recruitment cycles', to: '/super/cycles' },
+          { label: 'Manage chapter admin assignments', to: '/super/admins' },
+        ]}
+        title="Setup actions"
+      />
 
-      {summaryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading setup summary...</p> : null}
+      {summaryQuery.isLoading ? <p className="text-sm text-ui-muted">Loading campus setup...</p> : null}
       {summaryQuery.isError ? (
         <p className="text-sm font-medium text-red-700">{resolveErrorMessage(summaryQuery.error)}</p>
       ) : null}

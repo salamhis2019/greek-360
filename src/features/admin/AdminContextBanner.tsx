@@ -41,12 +41,15 @@ export const AdminContextBanner = ({ organizationId, cycleId }: AdminContextBann
           {cycleLabel ? ` · ${cycleLabel}` : ''}
         </p>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <Link className="ui-btn-secondary min-h-[2.1rem] px-3 text-xs" to="/admin">
+      <div className="ui-action-list w-full sm:w-auto">
+        <Link className="ui-btn-secondary min-h-[2.1rem] w-full px-3 text-xs sm:w-auto" to="/admin">
           Switch cycle
         </Link>
         {cycleId ? (
-          <Link className="ui-btn-secondary min-h-[2.1rem] px-3 text-xs" to={`/admin/members/${organizationId}`}>
+          <Link
+            className="ui-btn-secondary min-h-[2.1rem] w-full px-3 text-xs sm:w-auto"
+            to={`/admin/members/${organizationId}`}
+          >
             Members
           </Link>
         ) : null}
