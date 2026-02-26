@@ -72,11 +72,28 @@ export const StudentHomePage = () => {
 
       <PageActionList
         actions={[
-          { label: 'Join a chapter', to: ROUTE_PATHS.manualCodeEntry, tone: 'primary' },
-          { label: 'Open my offers', to: ROUTE_PATHS.offers },
-          { label: 'Search campus directory', to: ROUTE_PATHS.directory },
-          { label: 'Edit my profile', to: ROUTE_PATHS.profile },
-          { label: 'Privacy and data settings', to: ROUTE_PATHS.privacySettings },
+          {
+            label: 'Join a chapter',
+            hint: 'Join fast with a chapter code',
+            to: ROUTE_PATHS.manualCodeEntry,
+            tone: 'primary',
+          },
+          {
+            label: 'Open my offers',
+            hint: 'Respond to bids before they expire',
+            to: ROUTE_PATHS.offers,
+          },
+          {
+            label: 'Search campus directory',
+            hint: 'Find members and organizations',
+            to: ROUTE_PATHS.directory,
+          },
+          { label: 'Edit my profile', hint: 'Update your name and photo', to: ROUTE_PATHS.profile },
+          {
+            label: 'Privacy and data settings',
+            hint: 'Export or remove your account data',
+            to: ROUTE_PATHS.privacySettings,
+          },
         ]}
         title="Quick actions"
       />

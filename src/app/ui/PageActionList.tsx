@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 
 export interface PageActionItem {
   label: string
+  hint?: string
   to: string
   tone?: 'primary' | 'secondary'
 }
@@ -21,8 +22,13 @@ export const PageActionList = ({ title, actions }: PageActionListProps) => (
           key={`${action.to}-${action.label}`}
           to={action.to}
         >
-          <span>{action.label}</span>
-          <span aria-hidden="true">{'->'}</span>
+          <span className="ui-action-link-main">
+            <span className="ui-action-link-label">{action.label}</span>
+            {action.hint ? <span className="ui-action-link-hint">{action.hint}</span> : null}
+          </span>
+          <span aria-hidden="true" className="ui-action-chevron">
+            {'->'}
+          </span>
         </Link>
       ))}
     </div>

@@ -56,10 +56,27 @@ export const SuperDashboardPage = () => {
       </header>
       <PageActionList
         actions={[
-          { label: 'Manage universities', to: '/super/universities', tone: 'primary' },
-          { label: 'Manage organizations', to: '/super/organizations' },
-          { label: 'Manage recruitment cycles', to: '/super/cycles' },
-          { label: 'Manage chapter admin assignments', to: '/super/admins' },
+          {
+            label: 'Manage universities',
+            hint: 'Create campus records and status',
+            to: '/super/universities',
+            tone: 'primary',
+          },
+          {
+            label: 'Manage organizations',
+            hint: 'Add fraternities and sororities',
+            to: '/super/organizations',
+          },
+          {
+            label: 'Manage recruitment cycles',
+            hint: 'Open terms and generate join codes',
+            to: '/super/cycles',
+          },
+          {
+            label: 'Manage chapter admin assignments',
+            hint: 'Grant or revoke chapter admin access',
+            to: '/super/admins',
+          },
         ]}
         title="Setup actions"
       />

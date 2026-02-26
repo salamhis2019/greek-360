@@ -81,18 +81,25 @@ export const AdminDashboardPage = () => {
                 actions={[
                   {
                     label: 'Review stage 1',
+                    hint: 'Sort first-look candidates quickly',
                     to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-1`,
                     tone: 'primary',
                   },
                   {
                     label: 'Review stage 2',
+                    hint: 'Make final yes or no decisions',
                     to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-2`,
                   },
                   {
                     label: 'Send chapter messages',
+                    hint: 'Send accepted and rejected updates',
                     to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/messages`,
                   },
-                  { label: 'Manage members', to: `/admin/members/${cycle.organizationId}` },
+                  {
+                    label: 'Manage members',
+                    hint: 'View active members and contact rules',
+                    to: `/admin/members/${cycle.organizationId}`,
+                  },
                 ]}
                 title="Cycle actions"
               />

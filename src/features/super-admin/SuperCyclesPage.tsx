@@ -304,14 +304,20 @@ export const SuperCyclesPage = () => {
                 <div className="mt-3">
                   <PageActionList
                     actions={[
-                      { label: 'Open chapter recruiting', to: '/admin' },
+                      {
+                        label: 'Open chapter recruiting',
+                        hint: 'Jump to chapter-level cycle overview',
+                        to: '/admin',
+                      },
                       {
                         label: 'Review stage 1',
+                        hint: 'Process initial shortlist decisions',
                         to: `/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`,
                         tone: 'primary',
                       },
                       {
                         label: 'Review stage 2',
+                        hint: 'Finalize yes and no decisions',
                         to: `/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-2`,
                       },
                     ]}

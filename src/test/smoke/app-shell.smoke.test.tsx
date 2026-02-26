@@ -48,4 +48,15 @@ describe('Phase 0 app shell smoke tests', () => {
 
     expect(screen.getByLabelText(/role view/i)).toBeInTheDocument()
   })
+
+  it('shows supportive action copy on student quick actions', () => {
+    renderAppAtRoute('/home', {
+      isAuthenticated: true,
+      roles: ['student'],
+      userId: 'student-user-2',
+      displayName: 'Jordan Student',
+    })
+
+    expect(screen.getByText(/join fast with a chapter code/i)).toBeInTheDocument()
+  })
 })
