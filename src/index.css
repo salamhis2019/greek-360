@@ -232,7 +232,7 @@ a {
     font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: 0.01em;
-    color: #ffffff;
+    color: #ffffff !important;
     transition:
       transform 120ms ease,
       box-shadow 120ms ease,
@@ -241,8 +241,14 @@ a {
   }
 
   .ui-btn-primary:link,
-  .ui-btn-primary:visited {
-    color: #ffffff;
+  .ui-btn-primary:visited,
+  .ui-btn-primary:hover,
+  .ui-btn-primary:active {
+    color: #ffffff !important;
+  }
+
+  .ui-btn-primary * {
+    color: inherit;
   }
 
   .ui-btn-primary:hover {
@@ -376,7 +382,7 @@ a {
   .ui-action-link-primary {
     border-color: rgb(13 42 71 / 0.3);
     background: linear-gradient(102deg, var(--ui-accent-strong) 0%, var(--ui-accent) 100%);
-    color: #ffffff;
+    color: #ffffff !important;
     box-shadow: 0 10px 18px rgb(13 42 71 / 0.22);
   }
 
@@ -384,8 +390,18 @@ a {
     filter: brightness(1.04);
   }
 
+  .ui-action-link-primary:link,
+  .ui-action-link-primary:visited,
+  .ui-action-link-primary:active {
+    color: #ffffff !important;
+  }
+
+  .ui-action-link-primary .ui-action-link-label {
+    color: #ffffff !important;
+  }
+
   .ui-action-link-primary .ui-action-link-hint {
-    color: rgb(255 255 255 / 0.84);
+    color: rgb(255 255 255 / 0.92) !important;
   }
 
   .ui-action-link-primary .ui-action-chevron {
