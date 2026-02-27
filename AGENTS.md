@@ -7,13 +7,11 @@ This file is the fast-start guide for any agent working in this repository.
 - Project: `greek-360`
 - Type: Mobile-optimized web app (React + Vite + TypeScript)
 - Product: Recruitment and membership management for fraternities/sororities
-- Source of truth: `spec.md` (comprehensive product + technical plan)
-- Current date context in spec: February 10, 2026
 
 ## 2) Product Goals (MVP)
 
-- Make student interest submission extremely fast (QR/code -> OTP -> interested).
-- Make chapter admin triage fast (one-tap stage decisions).
+- Make pledge interest submission extremely fast (QR/code -> OTP -> interested).
+- Make frat/sorority admin triage fast (one-tap stage decisions).
 - Preserve strict privacy:
   - Same university can see basic profile fields.
   - Private contact details only for same-chapter members.
@@ -63,48 +61,6 @@ Coverage targets from spec:
 - Edge/data workflows: >= 85%
 - UI critical paths: >= 80%
 
-## 6) Delivery Phases (High Level)
-
-Detailed plan lives in `spec.md` Phase 0 through Phase 8.
-
-- Phase 0: Foundation + CI + test harness
-- Phase 1: Auth and onboarding
-- Phase 2: Super-admin setup
-- Phase 3: Interest capture (QR/code)
-- Phase 4: Recruitment decisions
-- Phase 5: Offer acceptance + membership activation
-- Phase 6: Directory + privacy gating
-- Phase 7: Messaging
-- Phase 8: Data rights + hardening + launch readiness
-
-Each phase has TDD requirements and explicit exit gates in `spec.md`.
-
-## 7) Repo Status and Working Norms
-
-- This repo started as a React starter; product implementation is guided by `spec.md`.
-- Keep scope aligned to spec; do not invent features without user approval.
-- Prefer small, test-first PR-sized changes.
-- Preserve minimal UI and low-click flows.
-- Prioritize mobile behavior in all UX implementations.
-
-## 8) Suggested Working Protocol for Agents
-
-Before coding:
-1. Read relevant sections in `spec.md`.
-2. Identify the current phase and acceptance criteria.
-3. Define tests first (unit/integration/E2E/security as appropriate).
-
-During coding:
-1. Commit to Red -> Green -> Refactor loops.
-2. Keep permission logic centralized and test-backed.
-3. Protect critical workflows with idempotency tests.
-
-Before handoff:
-1. Run lint/type/tests.
-2. Confirm coverage and required test suites.
-3. Verify behavior against locked decisions.
-4. Summarize what changed, what was tested, and any risks.
-
 ## 9) Useful Commands
 
 - Install dependencies: `npm install`
@@ -115,12 +71,4 @@ Before handoff:
 - Type/test baseline: `npm run test:run`
 - Coverage: `npm run test:coverage`
 - Build: `npm run build`
-
-## 10) If There Is a Conflict
-
-Priority order:
-1. Explicit user request in current conversation.
-2. `spec.md` (product + architecture + phase gates).
-3. Keep MVP minimal and secure.
-4. Ask for clarification instead of guessing on product behavior.
 
