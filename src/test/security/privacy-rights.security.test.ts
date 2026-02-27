@@ -32,14 +32,14 @@ describe('Privacy rights security regression', () => {
     })
   })
 
-  it('rate-limits repeated invalid deletion re-auth attempts', async () => {
+  it('rate-limits repeated invalid deletion phone confirmation attempts', async () => {
     const studentUserId = await bootstrapStudent('+14155553111')
 
     for (let attempt = 0; attempt < 5; attempt += 1) {
       await expect(
         privacyService.requestMyDeletion(
           { actorUserId: studentUserId, actorRoles: ['student'] },
-          { otpCode: '000000' }
+          { phoneNumber: '+14155559999' }
         )
       ).rejects.toMatchObject({
         code: 'invalid_reauth',
@@ -49,7 +49,7 @@ describe('Privacy rights security regression', () => {
     await expect(
       privacyService.requestMyDeletion(
         { actorUserId: studentUserId, actorRoles: ['student'] },
-        { otpCode: '000000' }
+        { phoneNumber: '+14155559999' }
       )
     ).rejects.toMatchObject({
       code: 'rate_limited',
@@ -60,7 +60,7 @@ describe('Privacy rights security regression', () => {
     const studentUserId = await bootstrapStudent('+14155553112')
     const deletionRequest = await privacyService.requestMyDeletion(
       { actorUserId: studentUserId, actorRoles: ['student'] },
-      { otpCode: '123456' }
+      { phoneNumber: '+14155553112' }
     )
 
     await expect(
@@ -77,7 +77,7 @@ describe('Privacy rights security regression', () => {
     const studentUserId = await bootstrapStudent('+14155553113')
     const deletionRequest = await privacyService.requestMyDeletion(
       { actorUserId: studentUserId, actorRoles: ['student'] },
-      { otpCode: '123456' }
+      { phoneNumber: '+14155553113' }
     )
 
     await privacyService.processDeletionRequest(

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { normalizePhoneNumber } from '@/features/auth/phone'
 import { type UserProfileRecord, listProfilesForDirectory } from '@/features/auth/authService'
 import type { UserRole } from '@/features/auth/session'
 import { type InterestEntryRecord, interestService } from '@/features/interest/interestService'
@@ -73,7 +74,7 @@ export class PrivacyServiceError extends Error {
 }
 
 interface RequestDeletionInput {
-  otpCode: string
+  phoneNumber: string
 }
 
 interface ProcessDeletionInput {
@@ -99,7 +100,7 @@ interface ResettablePrivacyService extends PrivacyService {
 
 interface InMemoryPrivacyStore {
   deletionRequests: DeletionRequestRecord[]
-  invalidOtpAttemptsByUserId: Map<string, number[]>
+  invalidReauthAttemptsByUserId: Map<string, number[]>
 }
 
 interface InMemoryPrivacyOptions {
@@ -107,9 +108,8 @@ interface InMemoryPrivacyOptions {
   store?: InMemoryPrivacyStore
 }
 
-const DELETE_REAUTH_CODE = '123456'
-const INVALID_OTP_WINDOW_MS = 60 * 1000
-const MAX_INVALID_OTP_ATTEMPTS = 5
+const INVALID_REAUTH_WINDOW_MS = 60 * 1000
+const MAX_INVALID_REAUTH_ATTEMPTS = 5
 
 const forceInMemoryFromSession =
   typeof window !== 'undefined' &&
@@ -134,14 +134,14 @@ const createId = () => {
 
 const createInMemoryStore = (): InMemoryPrivacyStore => ({
   deletionRequests: [],
-  invalidOtpAttemptsByUserId: new Map(),
+  invalidReauthAttemptsByUserId: new Map(),
 })
 
 const sharedInMemoryStore = createInMemoryStore()
 
 const clearStore = (store: InMemoryPrivacyStore) => {
   store.deletionRequests.length = 0
-  store.invalidOtpAttemptsByUserId.clear()
+  store.invalidReauthAttemptsByUserId.clear()
 }
 
 const mapUnknownToPrivacyError = (error: unknown): PrivacyServiceError => {
@@ -163,7 +163,11 @@ const mapSupabaseErrorCode = (message: string): PrivacyServiceErrorCode => {
     return 'forbidden'
   }
 
-  if (normalized.includes('otp') || normalized.includes('verification')) {
+  if (
+    normalized.includes('otp') ||
+    normalized.includes('verification') ||
+    normalized.includes('phone confirmation')
+  ) {
     return 'invalid_reauth'
   }
 
@@ -294,30 +298,47 @@ const createInMemoryPrivacyService = (
   const store = options.store ?? createInMemoryStore()
 
   const readRecentAttempts = (userId: string) => {
-    const attempts = store.invalidOtpAttemptsByUserId.get(userId) ?? []
-    const windowStart = now() - INVALID_OTP_WINDOW_MS
+    const attempts = store.invalidReauthAttemptsByUserId.get(userId) ?? []
+    const windowStart = now() - INVALID_REAUTH_WINDOW_MS
     const recentAttempts = attempts.filter((timestamp) => timestamp >= windowStart)
-    store.invalidOtpAttemptsByUserId.set(userId, recentAttempts)
+    store.invalidReauthAttemptsByUserId.set(userId, recentAttempts)
     return recentAttempts
   }
 
   const appendFailedAttempt = (userId: string) => {
     const recentAttempts = readRecentAttempts(userId)
-    store.invalidOtpAttemptsByUserId.set(userId, [...recentAttempts, now()])
+    store.invalidReauthAttemptsByUserId.set(userId, [...recentAttempts, now()])
   }
 
-  const validateOtp = (userId: string, otpCode: string) => {
+  const validatePhoneConfirmation = async (userId: string, phoneNumber: string) => {
     const recentAttempts = readRecentAttempts(userId)
-    if (recentAttempts.length >= MAX_INVALID_OTP_ATTEMPTS) {
+    if (recentAttempts.length >= MAX_INVALID_REAUTH_ATTEMPTS) {
       throw new PrivacyServiceError('rate_limited', 'Too many attempts. Try again in a minute.')
     }
 
-    if (otpCode.trim() !== DELETE_REAUTH_CODE) {
+    const profile = await resolveProfileForUser(userId)
+    if (!profile.phoneE164) {
       appendFailedAttempt(userId)
-      throw new PrivacyServiceError('invalid_reauth', 'Verification code is invalid.')
+      throw new PrivacyServiceError('invalid_reauth', 'Phone number does not match your account.')
     }
 
-    store.invalidOtpAttemptsByUserId.delete(userId)
+    let normalizedPhoneNumber: string
+    let normalizedAccountPhone: string
+
+    try {
+      normalizedPhoneNumber = normalizePhoneNumber(phoneNumber).replace(/\D/g, '')
+      normalizedAccountPhone = normalizePhoneNumber(profile.phoneE164).replace(/\D/g, '')
+    } catch {
+      appendFailedAttempt(userId)
+      throw new PrivacyServiceError('invalid_reauth', 'Phone number does not match your account.')
+    }
+
+    if (normalizedPhoneNumber !== normalizedAccountPhone) {
+      appendFailedAttempt(userId)
+      throw new PrivacyServiceError('invalid_reauth', 'Phone number does not match your account.')
+    }
+
+    store.invalidReauthAttemptsByUserId.delete(userId)
   }
 
   const findLatestRequestByUserId = (userId: string) => {
@@ -334,7 +355,7 @@ const createInMemoryPrivacyService = (
 
     async requestMyDeletion(actor, input) {
       const actorUserId = assertAuthenticatedActor(actor)
-      validateOtp(actorUserId, input.otpCode)
+      await validatePhoneConfirmation(actorUserId, input.phoneNumber)
 
       const existing = findLatestRequestByUserId(actorUserId)
       if (existing && (existing.status === 'requested' || existing.status === 'processing')) {
@@ -465,7 +486,7 @@ const createSupabasePrivacyService = (client: SupabaseClient): PrivacyService =>
     assertAuthenticatedActor(actor)
 
     const { data, error } = await client.rpc('request_account_deletion', {
-      reauth_otp: input.otpCode,
+      confirmation_phone: input.phoneNumber,
     })
 
     if (error) {

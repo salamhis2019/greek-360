@@ -3,10 +3,10 @@ import { screen } from '@testing-library/react'
 import { renderAppAtRoute } from '@/test/utils/renderAppAtRoute'
 
 describe('Phase 0 app shell smoke tests', () => {
-  it('renders the public landing shell with environment marker', () => {
+  it('routes unauthenticated root path to auth with environment marker', () => {
     renderAppAtRoute('/')
 
-    expect(screen.getByRole('heading', { name: /greek 360/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument()
     expect(screen.getByTestId('app-environment')).toBeInTheDocument()
   })
 

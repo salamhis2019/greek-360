@@ -144,7 +144,7 @@ describe('Privacy service integration', () => {
     expect(exportBundle.communications.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('enforces OTP re-auth, supports delete request lifecycle, and marks user deleted on completion', async () => {
+  it('enforces phone confirmation, supports delete request lifecycle, and marks user deleted on completion', async () => {
     const studentUserId = await bootstrapStudent(
       '+14155553002',
       'Phase8 Deletion Student',
@@ -154,7 +154,7 @@ describe('Privacy service integration', () => {
     await expect(
       privacyService.requestMyDeletion(
         { actorUserId: studentUserId, actorRoles: ['student'] },
-        { otpCode: '000000' }
+        { phoneNumber: '+14155550000' }
       )
     ).rejects.toMatchObject({
       code: 'invalid_reauth',
@@ -162,7 +162,7 @@ describe('Privacy service integration', () => {
 
     const request = await privacyService.requestMyDeletion(
       { actorUserId: studentUserId, actorRoles: ['student'] },
-      { otpCode: '123456' }
+      { phoneNumber: '+14155553002' }
     )
 
     expect(request.status).toBe('requested')

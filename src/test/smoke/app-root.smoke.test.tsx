@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import App from '@/app/App'
 
 describe('App root bootstrap', () => {
-  it('renders the app shell', () => {
+  it('routes root users into sign-in flow', () => {
     render(<App />)
-    expect(screen.getByRole('heading', { name: /greek 360/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument()
   })
 })

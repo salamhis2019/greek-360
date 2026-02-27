@@ -1,12 +1,30 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { authService } from '@/features/auth/authService'
 import { renderAppAtRoute } from '@/test/utils/renderAppAtRoute'
+
+const bootstrapStudent = async (phoneNumber: string, name: string) => {
+  await authService.startPhoneAuth(phoneNumber)
+  const verified = await authService.verifyPhoneAuth({
+    phoneNumber,
+    otpCode: '123456',
+  })
+
+  await authService.upsertProfile({
+    userId: verified.profile.userId,
+    name,
+  })
+
+  return verified.profile.userId
+}
 
 describe('Privacy settings integration', () => {
   it('supports export generation from settings', async () => {
+    const studentUserId = await bootstrapStudent('+14155556001', 'Phase 8 UI Export Student')
+
     renderAppAtRoute('/settings/privacy', {
       isAuthenticated: true,
-      userId: 'phase8-ui-student-export',
+      userId: studentUserId,
       displayName: 'Phase 8 UI Export Student',
       roles: ['student'],
     })
@@ -22,10 +40,12 @@ describe('Privacy settings integration', () => {
     )
   })
 
-  it('requires OTP re-auth before allowing deletion requests', async () => {
+  it('requires phone confirmation before allowing deletion requests', async () => {
+    const studentUserId = await bootstrapStudent('+14155556002', 'Phase 8 UI Delete Student')
+
     renderAppAtRoute('/settings/privacy', {
       isAuthenticated: true,
-      userId: 'phase8-ui-student-delete',
+      userId: studentUserId,
       displayName: 'Phase 8 UI Delete Student',
       roles: ['student'],
     })
@@ -34,17 +54,17 @@ describe('Privacy settings integration', () => {
       expect(screen.getByRole('heading', { name: /privacy settings/i })).toBeInTheDocument()
     )
 
-    fireEvent.change(screen.getByLabelText(/one-time passcode/i), {
-      target: { value: '000000' },
+    fireEvent.change(screen.getByLabelText(/confirm phone number/i), {
+      target: { value: '+14155550000' },
     })
     fireEvent.click(screen.getByRole('button', { name: /request account deletion/i }))
 
     await waitFor(() =>
-      expect(screen.getByText(/verification code is invalid/i)).toBeInTheDocument()
+      expect(screen.getByText(/phone number does not match your account/i)).toBeInTheDocument()
     )
 
-    fireEvent.change(screen.getByLabelText(/one-time passcode/i), {
-      target: { value: '123456' },
+    fireEvent.change(screen.getByLabelText(/confirm phone number/i), {
+      target: { value: '+14155556002' },
     })
     fireEvent.click(screen.getByRole('button', { name: /request account deletion/i }))
 

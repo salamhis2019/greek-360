@@ -1,4 +1,4 @@
-import { Link, type RouteObject } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 import { AppShellLayout } from '@/app/layouts/AppShellLayout'
 import { RouteSkeletonPage } from '@/app/ui/RouteSkeletonPage'
 import { AuthOnboardingPage } from '@/features/auth/AuthOnboardingPage'
@@ -21,35 +21,6 @@ import { SuperUniversitiesPage } from '@/features/super-admin/SuperUniversitiesP
 import { RequireAuth, RequireAuthFlow, RequireRole } from './guards'
 import { ROUTE_PATHS } from './routePaths'
 
-const landingLinks = [
-  { href: ROUTE_PATHS.auth, label: 'Sign in' },
-  { href: ROUTE_PATHS.manualCodeEntry, label: 'Enter join code' },
-  { href: ROUTE_PATHS.home, label: 'My Rush' },
-  { href: ROUTE_PATHS.adminHome, label: 'Chapter recruiting' },
-  { href: ROUTE_PATHS.superHome, label: 'Campus setup' },
-  { href: ROUTE_PATHS.superUniversities, label: 'Setup tools' },
-]
-
-const LandingPage = () => (
-  <RouteSkeletonPage
-    title="Greek 360"
-    description="MVP shell is ready with public, student, chapter-admin, and super-admin route zones."
-    actions={
-      <div className="flex flex-wrap gap-2">
-        {landingLinks.map((item) => (
-          <Link
-            className="ui-btn-secondary min-h-[2.5rem] px-4 text-[0.85rem]"
-            key={item.href}
-            to={item.href}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
-    }
-  />
-)
-
 const NotFoundPage = () => (
   <RouteSkeletonPage title="Not found" description="The requested route does not exist in this environment." />
 )
@@ -59,10 +30,12 @@ export const appRouteObjects: RouteObject[] = [
     path: ROUTE_PATHS.landing,
     element: <AppShellLayout />,
     children: [
-      { index: true, element: <LandingPage /> },
       {
         element: <RequireAuthFlow />,
-        children: [{ path: ROUTE_PATHS.auth.slice(1), element: <AuthOnboardingPage /> }],
+        children: [
+          { index: true, element: <Navigate replace to={ROUTE_PATHS.auth} /> },
+          { path: ROUTE_PATHS.auth.slice(1), element: <AuthOnboardingPage /> },
+        ],
       },
       { path: ROUTE_PATHS.joinWithCode.slice(1), element: <JoinInterestPage mode="deep-link" /> },
       { path: ROUTE_PATHS.manualCodeEntry.slice(1), element: <JoinInterestPage mode="manual" /> },

@@ -38,7 +38,7 @@ export const PrivacySettingsPage = () => {
     [roles, userId]
   )
 
-  const [otpCode, setOtpCode] = useState('')
+  const [confirmationPhoneNumber, setConfirmationPhoneNumber] = useState('')
   const [latestExport, setLatestExport] = useState<PrivacyExportBundle | null>(null)
   const [deletionSuccessMessage, setDeletionSuccessMessage] = useState<string | null>(null)
 
@@ -58,11 +58,11 @@ export const PrivacySettingsPage = () => {
   const deletionMutation = useMutation({
     mutationFn: () =>
       privacyService.requestMyDeletion(actor, {
-        otpCode,
+        phoneNumber: confirmationPhoneNumber,
       }),
     onSuccess: async () => {
       setDeletionSuccessMessage('Deletion request submitted.')
-      setOtpCode('')
+      setConfirmationPhoneNumber('')
       await deletionRequestQuery.refetch()
     },
   })
@@ -89,7 +89,7 @@ export const PrivacySettingsPage = () => {
         <p className="ui-page-eyebrow">Privacy</p>
         <h1 className="ui-page-title">Privacy settings</h1>
         <p className="ui-page-description">
-          Export your personal data package or request account deletion with OTP re-auth.
+          Export your personal data package or request account deletion with phone confirmation.
         </p>
       </header>
 
@@ -122,21 +122,21 @@ export const PrivacySettingsPage = () => {
       <section className="ui-panel space-y-3">
         <h2 className="text-base font-semibold tracking-[-0.01em] text-ui-heading">Delete account</h2>
         <p className="text-sm text-ui-muted">
-          Re-enter your OTP code to create a deletion request. Processing is handled asynchronously.
+          Re-enter your phone number to create a deletion request.
+          Processing is handled asynchronously.
         </p>
         <form className="space-y-3" onSubmit={onRequestDeletion}>
           <div className="space-y-2">
-            <label className="ui-label" htmlFor="deletion-otp-code">
-              One-time passcode
+            <label className="ui-label" htmlFor="deletion-phone-confirmation">
+              Confirm phone number
             </label>
             <input
               className="ui-input"
-              id="deletion-otp-code"
-              inputMode="numeric"
-              maxLength={6}
-              onChange={(event) => setOtpCode(event.target.value)}
-              placeholder="123456"
-              value={otpCode}
+              id="deletion-phone-confirmation"
+              inputMode="tel"
+              onChange={(event) => setConfirmationPhoneNumber(event.target.value)}
+              placeholder="+1 (555) 123-4567"
+              value={confirmationPhoneNumber}
             />
           </div>
           <button

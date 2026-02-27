@@ -20,7 +20,7 @@ This checklist captures the MVP launch gates from Phase 8 in `spec.md`.
 
 ## 2) Security Hardening
 
-- [x] OTP re-auth is required before deletion request creation.
+- [x] Phone confirmation is required before deletion request creation.
 - [x] Deletion re-auth invalid-attempt rate limiting enforced.
 - [x] Unauthorized deletion processing attempts are denied by tests.
 - [x] Deleted users lose access to authenticated routes.
