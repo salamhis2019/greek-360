@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   superAdminService,
@@ -70,7 +71,9 @@ export const SuperUniversitiesPage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Campus setup</p>
-        <h1 className="ui-page-title">Universities</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.superAdmin.universitiesHeading}>
+          Universities
+        </h1>
         <p className="ui-page-description">
           Create and activate universities before configuring chapters and cycles.
         </p>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { renderAppAtRoute } from '@/test/utils/renderAppAtRoute'
 
 describe('Phase 0 app shell smoke tests', () => {
@@ -7,7 +8,7 @@ describe('Phase 0 app shell smoke tests', () => {
     renderAppAtRoute('/')
 
     expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument()
-    expect(screen.getByTestId('app-environment')).toBeInTheDocument()
+    expect(screen.getByTestId(TEST_IDS.app.environment)).toBeInTheDocument()
   })
 
   it('redirects unauthenticated visitors away from authenticated routes', () => {

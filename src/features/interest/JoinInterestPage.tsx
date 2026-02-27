@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { interestService, InterestServiceError, type ResolvedJoinCodeRecord } from './interestService'
 import { normalizeJoinCodeInput } from './joinCode'
@@ -146,7 +147,9 @@ export const JoinInterestPage = ({ mode }: JoinInterestPageProps) => {
         <header className="ui-page-header">
           <p className="ui-page-brand">Greek 360</p>
           <p className="ui-page-eyebrow">Completed</p>
-          <h1 className="ui-page-title">Interest submitted</h1>
+          <h1 className="ui-page-title" data-testid={TEST_IDS.joinInterest.submittedHeading}>
+            Interest submitted
+          </h1>
           <p className="ui-page-description">
             We shared your interest with the chapter and saved your place in the current cycle.
           </p>
@@ -178,7 +181,9 @@ export const JoinInterestPage = ({ mode }: JoinInterestPageProps) => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Join flow</p>
-        <h1 className="ui-page-title">Join a chapter</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.joinInterest.heading}>
+          Join a chapter
+        </h1>
         <p className="ui-page-description">
           Confirm your join code and submit interest. You can join multiple chapters across cycles.
         </p>

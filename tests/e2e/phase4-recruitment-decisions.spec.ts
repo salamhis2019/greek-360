@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { TEST_IDS, TEST_ID_PATTERNS } from '../../src/app/testing/testIds'
 
 const writeSession = async (
   page: Page,
@@ -46,11 +47,11 @@ const submitInterestAsStudent = async (page: Page, studentUserId: string, joinCo
   })
 
   await navigateInApp(page, '/home')
-  await expect(page.getByRole('heading', { name: /student home/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.student.homeHeading)).toBeVisible()
   await navigateInApp(page, `/join/${joinCode}`)
-  await expect(page.getByRole('heading', { name: /join a chapter/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.joinInterest.heading)).toBeVisible()
   await page.getByRole('button', { name: /i'm interested/i }).click()
-  await expect(page.getByRole('heading', { name: /interest submitted/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.joinInterest.submittedHeading)).toBeVisible()
 }
 
 const navigateInApp = async (page: Page, path: string) => {
@@ -61,9 +62,20 @@ const navigateInApp = async (page: Page, path: string) => {
 }
 
 test('admin triage supports rapid decisions and optimistic rollback recovery', async ({ page }) => {
+  const projectTag = test.info().project.name.includes('mobile') ? 'm' : 'd'
+  const superAdminUserId = `phase4-super-admin-${projectTag}`
+  const universityName = `Phase Four University ${projectTag.toUpperCase()}`
+  const universitySlug = `phase-four-university-${projectTag}`
+  const organizationName = `Phase Four Chapter ${projectTag.toUpperCase()}`
+  const organizationSlug = `phase-four-chapter-${projectTag}`
+  const joinCode = `P4${projectTag.toUpperCase()}FLOW`
+  const studentOneId = `phase4-student-1-${projectTag}`
+  const studentTwoId = `phase4-student-2-${projectTag}`
+  const studentThreeId = `phase4-student-3-${projectTag}`
+
   await setInitialSession(page, {
     isAuthenticated: true,
-    userId: 'super-admin-user',
+    userId: superAdminUserId,
     phoneE164: '+14155550123',
     displayName: 'Super Admin',
     needsOnboarding: false,
@@ -71,16 +83,16 @@ test('admin triage supports rapid decisions and optimistic rollback recovery', a
   })
 
   await page.goto('/super/universities')
-  await page.getByLabel('University name').fill('Phase Four University')
-  await page.getByLabel('University slug').fill('phase-four-university')
+  await page.getByLabel('University name').fill(universityName)
+  await page.getByLabel('University slug').fill(universitySlug)
   await page.getByRole('button', { name: 'Create university' }).click()
-  await expect(page.getByText('Phase Four University')).toBeVisible()
+  await expect(page.getByText(universityName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Organizations' }).click()
-  await page.getByLabel('Organization name').fill('Phase Four Chapter')
-  await page.getByLabel('Organization slug').fill('phase-four-chapter')
+  await page.getByLabel('Organization name').fill(organizationName)
+  await page.getByLabel('Organization slug').fill(organizationSlug)
   await page.getByRole('button', { name: 'Create organization' }).click()
-  await expect(page.getByText('Phase Four Chapter')).toBeVisible()
+  await expect(page.getByText(organizationName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Recruitment cycles' }).click()
   await page.getByLabel('Term').fill('fall')
@@ -88,17 +100,17 @@ test('admin triage supports rapid decisions and optimistic rollback recovery', a
   await page.getByRole('button', { name: 'Create cycle' }).click()
   await expect(page.getByRole('listitem').filter({ hasText: 'fall 2026' })).toBeVisible()
 
-  await page.getByLabel('Join code').fill('P4FLOW26')
+  await page.getByLabel('Join code').fill(joinCode)
   await page.getByRole('button', { name: 'Create join link' }).click()
-  await expect(page.getByText('Code: P4FLOW26')).toBeVisible()
+  await expect(page.getByText(`Code: ${joinCode}`)).toBeVisible()
 
-  await submitInterestAsStudent(page, 'phase4-student-1', 'P4FLOW26')
-  await submitInterestAsStudent(page, 'phase4-student-2', 'P4FLOW26')
-  await submitInterestAsStudent(page, 'phase4-student-3', 'P4FLOW26')
+  await submitInterestAsStudent(page, studentOneId, joinCode)
+  await submitInterestAsStudent(page, studentTwoId, joinCode)
+  await submitInterestAsStudent(page, studentThreeId, joinCode)
 
   await writeSession(page, {
     isAuthenticated: true,
-    userId: 'super-admin-user',
+    userId: superAdminUserId,
     phoneE164: '+14155550123',
     displayName: 'Super Admin',
     needsOnboarding: false,
@@ -106,26 +118,26 @@ test('admin triage supports rapid decisions and optimistic rollback recovery', a
   })
 
   await navigateInApp(page, '/super/cycles')
-  await page.getByRole('link', { name: /open stage 1/i }).first().click()
+  await page.getByTestId(TEST_ID_PATTERNS.superCycles.cycleStage1Link).first().click()
 
-  await expect(page.getByRole('heading', { name: /stage 1 queue/i })).toBeVisible()
-  await expect(page.getByText('phase4-student-1')).toBeVisible()
-  await expect(page.getByText('phase4-student-2')).toBeVisible()
-  await expect(page.getByText('phase4-student-3')).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.recruitment.stage1Heading)).toBeVisible()
+  await expect(page.getByText(studentOneId)).toBeVisible()
+  await expect(page.getByText(studentTwoId)).toBeVisible()
+  await expect(page.getByText(studentThreeId)).toBeVisible()
 
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase4-student-1' })
+    .filter({ hasText: studentOneId })
     .getByRole('button', { name: 'Shortlist' })
     .click()
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase4-student-2' })
+    .filter({ hasText: studentTwoId })
     .getByRole('button', { name: 'No' })
     .click()
 
-  await expect(page.getByText('phase4-student-1')).not.toBeVisible()
-  await expect(page.getByText('phase4-student-2')).not.toBeVisible()
+  await expect(page.getByText(studentOneId)).not.toBeVisible()
+  await expect(page.getByText(studentTwoId)).not.toBeVisible()
 
   await page.evaluate(() => {
     window.sessionStorage.setItem(
@@ -136,16 +148,16 @@ test('admin triage supports rapid decisions and optimistic rollback recovery', a
 
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase4-student-3' })
+    .filter({ hasText: studentThreeId })
     .getByRole('button', { name: 'Shortlist' })
     .click()
 
   await expect(page.getByText('Decision write failed. Please retry.')).toBeVisible()
-  await expect(page.getByText('phase4-student-3')).toBeVisible()
+  await expect(page.getByText(studentThreeId)).toBeVisible()
 
-  await page.getByRole('link', { name: /^stage 2$/i }).click()
-  await expect(page.getByRole('heading', { name: /stage 2 decisions/i })).toBeVisible()
-  await expect(page.getByText('phase4-student-1')).toBeVisible()
-  await expect(page.getByText('phase4-student-2')).not.toBeVisible()
-  await expect(page.getByText('phase4-student-3')).not.toBeVisible()
+  await page.getByTestId(TEST_IDS.recruitment.navStage2Link).click()
+  await expect(page.getByTestId(TEST_IDS.recruitment.stage2Heading)).toBeVisible()
+  await expect(page.getByText(studentOneId)).toBeVisible()
+  await expect(page.getByText(studentTwoId)).not.toBeVisible()
+  await expect(page.getByText(studentThreeId)).not.toBeVisible()
 })

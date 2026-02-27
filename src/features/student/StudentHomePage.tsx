@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
@@ -64,7 +65,9 @@ export const StudentHomePage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">My rush</p>
-        <h1 className="ui-page-title">My Rush</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.student.homeHeading}>
+          My Rush
+        </h1>
         <p className="ui-page-description">
           Run your rush from one place: chapter codes, offers, and your current status.
         </p>

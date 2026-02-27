@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { renderAppAtRoute } from '@/test/utils/renderAppAtRoute'
 import { resetInterestServiceForTests, interestService } from '@/features/interest/interestService'
 import { resetOfferServiceForTests } from '@/features/offers/offerService'
@@ -76,7 +77,7 @@ describe('Chapter recruiting dashboard', () => {
     )
 
     expect(screen.getByText(/stage 1: 1/i)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^stage 1$/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^members$/i })).toBeInTheDocument()
+    expect(screen.getByTestId(TEST_IDS.admin.cycleStage1Link(cycle.id))).toBeInTheDocument()
+    expect(screen.getByTestId(TEST_IDS.admin.cycleMembersLink(cycle.id))).toBeInTheDocument()
   })
 })

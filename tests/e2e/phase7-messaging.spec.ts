@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { TEST_IDS, TEST_ID_PATTERNS } from '../../src/app/testing/testIds'
 
 interface TestSession {
   isAuthenticated: boolean
@@ -42,17 +43,27 @@ const submitInterestAsStudent = async (page: Page, studentUserId: string, joinCo
   })
 
   await navigateInApp(page, '/home')
-  await expect(page.getByRole('heading', { name: /student home/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.student.homeHeading)).toBeVisible()
   await navigateInApp(page, `/join/${joinCode}`)
-  await expect(page.getByRole('heading', { name: /join a chapter/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.joinInterest.heading)).toBeVisible()
   await page.getByRole('button', { name: /i'm interested/i }).click()
-  await expect(page.getByRole('heading', { name: /interest submitted/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.joinInterest.submittedHeading)).toBeVisible()
 }
 
 test('admin sends acceptance and optional rejection messages from composer', async ({ page }) => {
+  const projectTag = test.info().project.name.includes('mobile') ? 'm' : 'd'
+  const superAdminUserId = `phase7-super-admin-${projectTag}`
+  const universityName = `Phase Seven University ${projectTag.toUpperCase()}`
+  const universitySlug = `phase-seven-university-${projectTag}`
+  const organizationName = `Phase Seven Chapter ${projectTag.toUpperCase()}`
+  const organizationSlug = `phase-seven-chapter-${projectTag}`
+  const joinCode = `P7${projectTag.toUpperCase()}FLOW`
+  const studentYesId = `phase7-student-yes-${projectTag}`
+  const studentNoId = `phase7-student-no-${projectTag}`
+
   await setInitialSession(page, {
     isAuthenticated: true,
-    userId: 'phase7-super-admin',
+    userId: superAdminUserId,
     phoneE164: '+14155550123',
     displayName: 'Phase 7 Super Admin',
     needsOnboarding: false,
@@ -60,16 +71,16 @@ test('admin sends acceptance and optional rejection messages from composer', asy
   })
 
   await page.goto('/super/universities')
-  await page.getByLabel('University name').fill('Phase Seven University')
-  await page.getByLabel('University slug').fill('phase-seven-university')
+  await page.getByLabel('University name').fill(universityName)
+  await page.getByLabel('University slug').fill(universitySlug)
   await page.getByRole('button', { name: 'Create university' }).click()
-  await expect(page.getByText('Phase Seven University')).toBeVisible()
+  await expect(page.getByText(universityName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Organizations' }).click()
-  await page.getByLabel('Organization name').fill('Phase Seven Chapter')
-  await page.getByLabel('Organization slug').fill('phase-seven-chapter')
+  await page.getByLabel('Organization name').fill(organizationName)
+  await page.getByLabel('Organization slug').fill(organizationSlug)
   await page.getByRole('button', { name: 'Create organization' }).click()
-  await expect(page.getByText('Phase Seven Chapter')).toBeVisible()
+  await expect(page.getByText(organizationName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Recruitment cycles' }).click()
   await page.getByLabel('Term').fill('fall')
@@ -77,16 +88,16 @@ test('admin sends acceptance and optional rejection messages from composer', asy
   await page.getByRole('button', { name: 'Create cycle' }).click()
   await expect(page.getByRole('listitem').filter({ hasText: 'fall 2026' })).toBeVisible()
 
-  await page.getByLabel('Join code').fill('P7FLOW26')
+  await page.getByLabel('Join code').fill(joinCode)
   await page.getByRole('button', { name: 'Create join link' }).click()
-  await expect(page.getByText('Code: P7FLOW26')).toBeVisible()
+  await expect(page.getByText(`Code: ${joinCode}`)).toBeVisible()
 
-  await submitInterestAsStudent(page, 'phase7-student-yes', 'P7FLOW26')
-  await submitInterestAsStudent(page, 'phase7-student-no', 'P7FLOW26')
+  await submitInterestAsStudent(page, studentYesId, joinCode)
+  await submitInterestAsStudent(page, studentNoId, joinCode)
 
   await writeSession(page, {
     isAuthenticated: true,
-    userId: 'phase7-super-admin',
+    userId: superAdminUserId,
     phoneE164: '+14155550123',
     displayName: 'Phase 7 Super Admin',
     needsOnboarding: false,
@@ -94,36 +105,36 @@ test('admin sends acceptance and optional rejection messages from composer', asy
   })
 
   await navigateInApp(page, '/super/cycles')
-  await page.getByRole('link', { name: /open stage 1/i }).first().click()
-  await expect(page.getByRole('heading', { name: /stage 1 queue/i })).toBeVisible()
+  await page.getByTestId(TEST_ID_PATTERNS.superCycles.cycleStage1Link).first().click()
+  await expect(page.getByTestId(TEST_IDS.recruitment.stage1Heading)).toBeVisible()
 
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase7-student-yes' })
+    .filter({ hasText: studentYesId })
     .getByRole('button', { name: /shortlist/i })
     .click()
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase7-student-no' })
+    .filter({ hasText: studentNoId })
     .getByRole('button', { name: /shortlist/i })
     .click()
 
-  await page.getByRole('link', { name: /^stage 2$/i }).click()
-  await expect(page.getByRole('heading', { name: /stage 2 decisions/i })).toBeVisible()
+  await page.getByTestId(TEST_IDS.recruitment.navStage2Link).click()
+  await expect(page.getByTestId(TEST_IDS.recruitment.stage2Heading)).toBeVisible()
 
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase7-student-yes' })
+    .filter({ hasText: studentYesId })
     .getByRole('button', { name: /^final yes$/i })
     .click()
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase7-student-no' })
+    .filter({ hasText: studentNoId })
     .getByRole('button', { name: /^final no$/i })
     .click()
 
-  await page.getByRole('link', { name: /^messages$/i }).click()
-  await expect(page.getByRole('heading', { name: /^messages$/i })).toBeVisible()
+  await page.getByTestId(TEST_IDS.recruitment.navMessagesLink).click()
+  await expect(page.getByTestId(TEST_IDS.messages.heading)).toBeVisible()
 
   await page.getByLabel('Template name').fill('Acceptance default')
   await page.getByLabel('Template subject').fill('Welcome {{ name }}')

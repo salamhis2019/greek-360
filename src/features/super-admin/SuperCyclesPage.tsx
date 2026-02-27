@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
@@ -150,7 +151,9 @@ export const SuperCyclesPage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Campus setup</p>
-        <h1 className="ui-page-title">Recruitment cycles</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.superAdmin.cyclesHeading}>
+          Recruitment cycles
+        </h1>
         <p className="ui-page-description">
           Configure recruitment cycles and generate static join codes.
         </p>
@@ -308,17 +311,20 @@ export const SuperCyclesPage = () => {
                         label: 'Open chapter recruiting',
                         hint: 'Jump to chapter-level cycle overview',
                         to: '/admin',
+                        testId: TEST_IDS.superCycles.cycleOpenAdminLink(cycle.id),
                       },
                       {
                         label: 'Review stage 1',
                         hint: 'Process initial shortlist decisions',
                         to: `/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-1`,
                         tone: 'primary',
+                        testId: TEST_IDS.superCycles.cycleStage1Link(cycle.id),
                       },
                       {
                         label: 'Review stage 2',
                         hint: 'Finalize yes and no decisions',
                         to: `/admin/recruitment/${cycle.organizationId}/${cycle.id}/stage-2`,
+                        testId: TEST_IDS.superCycles.cycleStage2Link(cycle.id),
                       },
                     ]}
                     title="Cycle shortcuts"

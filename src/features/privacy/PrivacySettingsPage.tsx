@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FormEvent, useMemo, useState } from 'react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   privacyService,
@@ -87,7 +88,9 @@ export const PrivacySettingsPage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Privacy</p>
-        <h1 className="ui-page-title">Privacy settings</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.privacy.settingsHeading}>
+          Privacy settings
+        </h1>
         <p className="ui-page-description">
           Export your personal data package or request account deletion with phone confirmation.
         </p>
@@ -132,6 +135,7 @@ export const PrivacySettingsPage = () => {
             </label>
             <input
               className="ui-input"
+              data-testid={TEST_IDS.privacy.deletePhoneInput}
               id="deletion-phone-confirmation"
               inputMode="tel"
               onChange={(event) => setConfirmationPhoneNumber(event.target.value)}

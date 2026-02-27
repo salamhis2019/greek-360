@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   offerService,
@@ -88,7 +89,9 @@ export const OffersInboxPage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Offers</p>
-        <h1 className="ui-page-title">Offers inbox</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.offers.inboxHeading}>
+          Offers inbox
+        </h1>
         <p className="ui-page-description">Review your pending offers and confirm accept or decline.</p>
       </header>
 

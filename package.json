@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
+    "lint": "eslint . && npm run testids:check",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -18,6 +18,7 @@
     "test:security": "vitest run src/test/security",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
+    "testids:check": "node ./scripts/check-testid-usage.mjs",
     "typecheck": "tsc --noEmit",
     "migration:verify": "node ./scripts/verify-migrations.mjs",
     "db:seed:test": "node ./scripts/seed-test-db.mjs",

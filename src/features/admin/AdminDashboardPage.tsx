@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { PageActionList } from '@/app/ui/PageActionList'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
@@ -84,21 +85,25 @@ export const AdminDashboardPage = () => {
                     hint: 'Sort first-look candidates quickly',
                     to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-1`,
                     tone: 'primary',
+                    testId: TEST_IDS.admin.cycleStage1Link(cycle.cycleId),
                   },
                   {
                     label: 'Review stage 2',
                     hint: 'Make final yes or no decisions',
                     to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/stage-2`,
+                    testId: TEST_IDS.admin.cycleStage2Link(cycle.cycleId),
                   },
                   {
                     label: 'Send chapter messages',
                     hint: 'Send accepted and rejected updates',
                     to: `/admin/recruitment/${cycle.organizationId}/${cycle.cycleId}/messages`,
+                    testId: TEST_IDS.admin.cycleMessagesLink(cycle.cycleId),
                   },
                   {
                     label: 'Manage members',
                     hint: 'View active members and contact rules',
                     to: `/admin/members/${cycle.organizationId}`,
+                    testId: TEST_IDS.admin.cycleMembersLink(cycle.cycleId),
                   },
                 ]}
                 title="Cycle actions"

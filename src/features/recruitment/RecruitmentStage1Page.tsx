@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   recruitmentService,
@@ -109,7 +110,9 @@ export const RecruitmentStage1Page = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Recruitment</p>
-        <h1 className="ui-page-title">Stage 1 queue</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.recruitment.stage1Heading}>
+          Stage 1 queue
+        </h1>
         <p className="ui-page-description">Review incoming interest and decide shortlist or no with one tap.</p>
       </header>
       <RecruitmentAdminNav cycleId={cycleId} organizationId={organizationId} />

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { AuthSessionProvider, useAuthSession } from '@/features/auth/AuthSessionProvider'
 
 const AuthSessionProbe = () => {
@@ -7,8 +8,8 @@ const AuthSessionProbe = () => {
 
   return (
     <div>
-      <p data-testid="auth-state">{isAuthenticated ? 'authenticated' : 'anonymous'}</p>
-      <p data-testid="auth-roles">{roles.join(',')}</p>
+      <p data-testid={TEST_IDS.auth.state}>{isAuthenticated ? 'authenticated' : 'anonymous'}</p>
+      <p data-testid={TEST_IDS.auth.roles}>{roles.join(',')}</p>
       <button
         onClick={() =>
           setSession({
@@ -41,7 +42,7 @@ describe('AuthSessionProvider', () => {
       </AuthSessionProvider>
     )
 
-    expect(screen.getByTestId('auth-state')).toHaveTextContent('anonymous')
+    expect(screen.getByTestId(TEST_IDS.auth.state)).toHaveTextContent('anonymous')
   })
 
   it('hydrates from initial session and persists updates', async () => {
@@ -60,11 +61,11 @@ describe('AuthSessionProvider', () => {
       </AuthSessionProvider>
     )
 
-    expect(screen.getByTestId('auth-state')).toHaveTextContent('authenticated')
-    expect(screen.getByTestId('auth-roles')).toHaveTextContent('student')
+    expect(screen.getByTestId(TEST_IDS.auth.state)).toHaveTextContent('authenticated')
+    expect(screen.getByTestId(TEST_IDS.auth.roles)).toHaveTextContent('student')
     fireEvent.click(screen.getByRole('button', { name: 'set-session' }))
     await waitFor(() =>
-      expect(screen.getByTestId('auth-roles')).toHaveTextContent('chapter_admin')
+      expect(screen.getByTestId(TEST_IDS.auth.roles)).toHaveTextContent('chapter_admin')
     )
 
     const persistedSession = window.sessionStorage.getItem('greek360.auth.session')

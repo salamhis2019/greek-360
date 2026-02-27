@@ -141,8 +141,13 @@ const createMockUserId = (phoneE164: string) => {
   return `mock-user-${digits.slice(-12)}`
 }
 
+const forceInMemoryFromSession =
+  typeof window !== 'undefined' &&
+  window.sessionStorage.getItem('greek360.dev.useInMemory') === 'true'
+
 const useInMemoryAuth =
   import.meta.env.MODE === 'test' ||
+  forceInMemoryFromSession ||
   environment.supabasePublishableKey === 'placeholder-publishable-key' ||
   environment.supabaseUrl.includes('placeholder-project-ref')
 

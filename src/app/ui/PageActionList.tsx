@@ -5,6 +5,7 @@ export interface PageActionItem {
   hint?: string
   to: string
   tone?: 'primary' | 'secondary'
+  testId?: string
 }
 
 interface PageActionListProps {
@@ -19,6 +20,7 @@ export const PageActionList = ({ title, actions }: PageActionListProps) => (
       {actions.map((action) => (
         <Link
           className={`ui-action-link ${action.tone === 'primary' ? 'ui-action-link-primary' : ''}`}
+          data-testid={action.testId}
           key={`${action.to}-${action.label}`}
           to={action.to}
         >

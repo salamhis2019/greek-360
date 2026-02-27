@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { TEST_IDS } from '@/app/testing/testIds'
 import {
   recruitmentService,
   RecruitmentServiceError,
@@ -107,7 +108,7 @@ describe('Recruitment stage flow integration', () => {
       expect(screen.queryByText(/stageflow-student-1/i)).not.toBeInTheDocument()
     )
 
-    fireEvent.click(screen.getByRole('link', { name: /^stage 2$/i }))
+    fireEvent.click(screen.getByTestId(TEST_IDS.recruitment.navStage2Link))
 
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: /stage 2 decisions/i })).toBeInTheDocument()

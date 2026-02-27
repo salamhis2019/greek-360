@@ -1,6 +1,7 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import {
   type MessageKind,
@@ -159,7 +160,9 @@ export const MessagesPage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Recruitment</p>
-        <h1 className="ui-page-title">Messages</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.messages.heading}>
+          Messages
+        </h1>
         <p className="ui-page-description">
           Create templates and send acceptance or optional rejection messages to targeted groups.
         </p>

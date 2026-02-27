@@ -12,6 +12,7 @@ const setSession = async (
   }
 ) => {
   await page.addInitScript((nextSession) => {
+    window.sessionStorage.setItem('greek360.dev.useInMemory', 'true')
     window.sessionStorage.setItem('greek360.auth.session', JSON.stringify(nextSession))
   }, session)
 }

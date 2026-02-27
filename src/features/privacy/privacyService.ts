@@ -220,6 +220,31 @@ const resolveProfileForUser = async (userId: string): Promise<UserProfileRecord>
     return matchedProfile
   }
 
+  if (typeof window !== 'undefined') {
+    const rawSession = window.sessionStorage.getItem('greek360.auth.session')
+
+    if (rawSession) {
+      try {
+        const parsedSession = JSON.parse(rawSession) as {
+          userId?: string | null
+          phoneE164?: string | null
+          displayName?: string | null
+        }
+
+        if (parsedSession.userId === userId && parsedSession.phoneE164) {
+          return {
+            userId,
+            phoneE164: parsedSession.phoneE164,
+            name: parsedSession.displayName ?? '',
+            email: null,
+          }
+        }
+      } catch {
+        // Fall through to empty fallback when session payload is invalid.
+      }
+    }
+  }
+
   return {
     userId,
     phoneE164: '',

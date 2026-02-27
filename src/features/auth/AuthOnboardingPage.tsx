@@ -1,5 +1,6 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { authService, AuthServiceError } from './authService'
 import { useAuthSession } from './AuthSessionProvider'
 import { resolveDefaultWorkspace, workspaceToDefaultPath } from '@/features/workspace/workspace'
@@ -163,6 +164,7 @@ export const AuthOnboardingPage = () => {
     return (
       <section
         className="mx-auto w-full max-w-[30rem] px-1 py-8 sm:py-12"
+        data-testid={TEST_IDS.auth.stepOtp}
         style={{ fontFamily: authFontStack }}
       >
         <div className="mb-7 border-b border-black/10 pb-5">
@@ -170,7 +172,10 @@ export const AuthOnboardingPage = () => {
           <p className="text-[0.69rem] font-semibold uppercase tracking-[0.2em] text-black/45">
             {stepContent.eyebrow}
           </p>
-          <h1 className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black">
+          <h1
+            className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black"
+            data-testid={TEST_IDS.auth.stepTitle}
+          >
             {stepContent.title}
           </h1>
           <p className="mt-2 text-[0.97rem] leading-relaxed text-black/65">{stepContent.description}</p>
@@ -213,6 +218,7 @@ export const AuthOnboardingPage = () => {
     return (
       <section
         className="mx-auto w-full max-w-[30rem] px-1 py-8 sm:py-12"
+        data-testid={TEST_IDS.auth.stepProfile}
         style={{ fontFamily: authFontStack }}
       >
         <div className="mb-7 border-b border-black/10 pb-5">
@@ -220,7 +226,10 @@ export const AuthOnboardingPage = () => {
           <p className="text-[0.69rem] font-semibold uppercase tracking-[0.2em] text-black/45">
             {stepContent.eyebrow}
           </p>
-          <h1 className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black">
+          <h1
+            className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black"
+            data-testid={TEST_IDS.auth.stepTitle}
+          >
             {stepContent.title}
           </h1>
           <p className="mt-2 text-[0.97rem] leading-relaxed text-black/65">{stepContent.description}</p>
@@ -255,6 +264,7 @@ export const AuthOnboardingPage = () => {
   return (
     <section
       className="mx-auto w-full max-w-[30rem] px-1 py-8 sm:py-12"
+      data-testid={TEST_IDS.auth.stepPhone}
       style={{ fontFamily: authFontStack }}
     >
       <div className="mb-7 border-b border-black/10 pb-5">
@@ -262,7 +272,10 @@ export const AuthOnboardingPage = () => {
         <p className="text-[0.69rem] font-semibold uppercase tracking-[0.2em] text-black/45">
           {stepContent.eyebrow}
         </p>
-        <h1 className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black">
+        <h1
+          className="mt-3 text-[2rem] font-semibold leading-tight tracking-[-0.03em] text-black"
+          data-testid={TEST_IDS.auth.stepTitle}
+        >
           {stepContent.title}
         </h1>
         <p className="mt-2 text-[0.97rem] leading-relaxed text-black/65">{stepContent.description}</p>

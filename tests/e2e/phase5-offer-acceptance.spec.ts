@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { TEST_IDS, TEST_ID_PATTERNS } from '../../src/app/testing/testIds'
 
 const writeSession = async (
   page: Page,
@@ -53,17 +54,27 @@ const submitInterestAsStudent = async (page: Page, studentUserId: string, joinCo
   })
 
   await navigateInApp(page, '/home')
-  await expect(page.getByRole('heading', { name: /student home/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.student.homeHeading)).toBeVisible()
   await navigateInApp(page, `/join/${joinCode}`)
-  await expect(page.getByRole('heading', { name: /join a chapter/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.joinInterest.heading)).toBeVisible()
   await page.getByRole('button', { name: /i'm interested/i }).click()
-  await expect(page.getByRole('heading', { name: /interest submitted/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.joinInterest.submittedHeading)).toBeVisible()
 }
 
 test('offer accept and decline outcomes update UI membership states', async ({ page }) => {
+  const projectTag = test.info().project.name.includes('mobile') ? 'm' : 'd'
+  const superAdminUserId = `phase5-super-admin-${projectTag}`
+  const universityName = `Phase Five University ${projectTag.toUpperCase()}`
+  const universitySlug = `phase-five-university-${projectTag}`
+  const organizationName = `Phase Five Chapter ${projectTag.toUpperCase()}`
+  const organizationSlug = `phase-five-chapter-${projectTag}`
+  const joinCode = `P5${projectTag.toUpperCase()}FLOW`
+  const acceptingStudentId = `phase5-student-accept-${projectTag}`
+  const decliningStudentId = `phase5-student-decline-${projectTag}`
+
   await setInitialSession(page, {
     isAuthenticated: true,
-    userId: 'super-admin-user',
+    userId: superAdminUserId,
     phoneE164: '+14155550123',
     displayName: 'Super Admin',
     needsOnboarding: false,
@@ -71,16 +82,16 @@ test('offer accept and decline outcomes update UI membership states', async ({ p
   })
 
   await page.goto('/super/universities')
-  await page.getByLabel('University name').fill('Phase Five University')
-  await page.getByLabel('University slug').fill('phase-five-university')
+  await page.getByLabel('University name').fill(universityName)
+  await page.getByLabel('University slug').fill(universitySlug)
   await page.getByRole('button', { name: 'Create university' }).click()
-  await expect(page.getByText('Phase Five University')).toBeVisible()
+  await expect(page.getByText(universityName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Organizations' }).click()
-  await page.getByLabel('Organization name').fill('Phase Five Chapter')
-  await page.getByLabel('Organization slug').fill('phase-five-chapter')
+  await page.getByLabel('Organization name').fill(organizationName)
+  await page.getByLabel('Organization slug').fill(organizationSlug)
   await page.getByRole('button', { name: 'Create organization' }).click()
-  await expect(page.getByText('Phase Five Chapter')).toBeVisible()
+  await expect(page.getByText(organizationName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Recruitment cycles' }).click()
   await page.getByLabel('Term').fill('fall')
@@ -88,16 +99,16 @@ test('offer accept and decline outcomes update UI membership states', async ({ p
   await page.getByRole('button', { name: 'Create cycle' }).click()
   await expect(page.getByRole('listitem').filter({ hasText: 'fall 2026' })).toBeVisible()
 
-  await page.getByLabel('Join code').fill('P5FLOW26')
+  await page.getByLabel('Join code').fill(joinCode)
   await page.getByRole('button', { name: 'Create join link' }).click()
-  await expect(page.getByText('Code: P5FLOW26')).toBeVisible()
+  await expect(page.getByText(`Code: ${joinCode}`)).toBeVisible()
 
-  await submitInterestAsStudent(page, 'phase5-student-accept', 'P5FLOW26')
-  await submitInterestAsStudent(page, 'phase5-student-decline', 'P5FLOW26')
+  await submitInterestAsStudent(page, acceptingStudentId, joinCode)
+  await submitInterestAsStudent(page, decliningStudentId, joinCode)
 
   await writeSession(page, {
     isAuthenticated: true,
-    userId: 'super-admin-user',
+    userId: superAdminUserId,
     phoneE164: '+14155550123',
     displayName: 'Super Admin',
     needsOnboarding: false,
@@ -105,37 +116,37 @@ test('offer accept and decline outcomes update UI membership states', async ({ p
   })
 
   await navigateInApp(page, '/super/cycles')
-  await page.getByRole('link', { name: /open stage 1/i }).first().click()
-  await expect(page.getByRole('heading', { name: /stage 1 queue/i })).toBeVisible()
+  await page.getByTestId(TEST_ID_PATTERNS.superCycles.cycleStage1Link).first().click()
+  await expect(page.getByTestId(TEST_IDS.recruitment.stage1Heading)).toBeVisible()
 
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase5-student-accept' })
+    .filter({ hasText: acceptingStudentId })
     .getByRole('button', { name: 'Shortlist' })
     .click()
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase5-student-decline' })
+    .filter({ hasText: decliningStudentId })
     .getByRole('button', { name: 'Shortlist' })
     .click()
 
-  await page.getByRole('link', { name: /^stage 2$/i }).click()
-  await expect(page.getByRole('heading', { name: /stage 2 decisions/i })).toBeVisible()
+  await page.getByTestId(TEST_IDS.recruitment.navStage2Link).click()
+  await expect(page.getByTestId(TEST_IDS.recruitment.stage2Heading)).toBeVisible()
 
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase5-student-accept' })
+    .filter({ hasText: acceptingStudentId })
     .getByRole('button', { name: 'Final Yes' })
     .click()
   await page
     .getByRole('listitem')
-    .filter({ hasText: 'phase5-student-decline' })
+    .filter({ hasText: decliningStudentId })
     .getByRole('button', { name: 'Final Yes' })
     .click()
 
   await writeSession(page, {
     isAuthenticated: true,
-    userId: 'phase5-student-accept',
+    userId: acceptingStudentId,
     phoneE164: '+14155550901',
     displayName: 'phase5-student-accept',
     needsOnboarding: false,
@@ -143,28 +154,28 @@ test('offer accept and decline outcomes update UI membership states', async ({ p
   })
 
   await navigateInApp(page, '/home')
-  await expect(page.getByRole('heading', { name: /student home/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.student.homeHeading)).toBeVisible()
   await navigateInApp(page, '/offers')
-  await expect(page.getByRole('heading', { name: /offers inbox/i })).toBeVisible()
-  await expect(page.getByText(/status: pending/i)).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.offers.inboxHeading)).toBeVisible()
+  await expect(page.getByText(/^pending$/i).first()).toBeVisible()
   await page.getByRole('button', { name: /^accept$/i }).click()
   await page.getByRole('button', { name: /confirm accept/i }).click()
-  await expect(page.getByText(/status: accepted/i)).toBeVisible()
+  await expect(page.getByText(/^accepted$/i).first()).toBeVisible()
   await expect(page.getByText(/membership active/i)).toBeVisible()
 
   await navigateInApp(page, '/profile')
-  await expect(page.getByRole('heading', { name: /profile/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.profile.heading)).toBeVisible()
   await expect(page.getByText(/active membership/i)).toBeVisible()
 
   await navigateInApp(page, '/directory')
-  await expect(page.getByRole('heading', { name: /directory/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.directory.heading)).toBeVisible()
   await expect(page.getByLabel(/search by name or organization/i)).toBeVisible()
-  await expect(page.getByText(/phase5-student-accept/i)).toBeVisible()
-  await expect(page.getByText(/phase five chapter/i)).toBeVisible()
+  await expect(page.getByText(acceptingStudentId)).toBeVisible()
+  await expect(page.getByText(new RegExp(organizationName, 'i'))).toBeVisible()
 
   await writeSession(page, {
     isAuthenticated: true,
-    userId: 'phase5-student-decline',
+    userId: decliningStudentId,
     phoneE164: '+14155550902',
     displayName: 'phase5-student-decline',
     needsOnboarding: false,
@@ -172,12 +183,12 @@ test('offer accept and decline outcomes update UI membership states', async ({ p
   })
 
   await navigateInApp(page, '/home')
-  await expect(page.getByRole('heading', { name: /student home/i })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.student.homeHeading)).toBeVisible()
   await navigateInApp(page, '/offers')
-  await expect(page.getByText(/status: pending/i)).toBeVisible()
+  await expect(page.getByText(/^pending$/i).first()).toBeVisible()
   await page.getByRole('button', { name: /^decline$/i }).click()
   await page.getByRole('button', { name: /confirm decline/i }).click()
-  await expect(page.getByText(/status: declined/i)).toBeVisible()
+  await expect(page.getByText(/^declined$/i).first()).toBeVisible()
 
   await navigateInApp(page, '/profile')
   await expect(page.getByText(/no active memberships yet/i)).toBeVisible()

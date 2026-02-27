@@ -1,8 +1,16 @@
 import { expect, test } from '@playwright/test'
+import { TEST_IDS } from '../../src/app/testing/testIds'
 
 test('super-admin can configure university, organization, cycle, join code, and admin assignment', async ({
   page,
 }) => {
+  const projectTag = test.info().project.name.includes('mobile') ? 'm' : 'd'
+  const universityName = `University of Pacific ${projectTag.toUpperCase()}`
+  const universitySlug = `university-of-pacific-${projectTag}`
+  const organizationName = `Gamma Eta ${projectTag.toUpperCase()}`
+  const organizationSlug = `gamma-eta-${projectTag}`
+  const adminUserId = `org-admin-user-1-${projectTag}`
+
   await page.addInitScript(() => {
     const session = {
       isAuthenticated: true,
@@ -13,26 +21,28 @@ test('super-admin can configure university, organization, cycle, join code, and 
       roles: ['super_admin'],
     }
 
+    window.sessionStorage.setItem('greek360.dev.useInMemory', 'true')
     window.sessionStorage.setItem('greek360.auth.session', JSON.stringify(session))
   })
 
   await page.goto('/super/universities')
 
-  await page.getByLabel('University name').fill('University of Pacific')
-  await page.getByLabel('University slug').fill('university-of-pacific')
+  await expect(page.getByTestId(TEST_IDS.superAdmin.universitiesHeading)).toBeVisible()
+  await page.getByLabel('University name').fill(universityName)
+  await page.getByLabel('University slug').fill(universitySlug)
   await page.getByRole('button', { name: 'Create university' }).click()
-  await expect(page.getByText('University of Pacific')).toBeVisible()
+  await expect(page.getByText(universityName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Organizations' }).click()
-  await expect(page.getByRole('heading', { name: /^Organizations$/ })).toBeVisible()
-  await page.getByLabel('Organization name').fill('Gamma Eta')
-  await page.getByLabel('Organization slug').fill('gamma-eta')
+  await expect(page.getByTestId(TEST_IDS.superAdmin.organizationsHeading)).toBeVisible()
+  await page.getByLabel('Organization name').fill(organizationName)
+  await page.getByLabel('Organization slug').fill(organizationSlug)
   await page.getByLabel('Organization type').selectOption('fraternity')
   await page.getByRole('button', { name: 'Create organization' }).click()
-  await expect(page.getByText('Gamma Eta')).toBeVisible()
+  await expect(page.getByText(organizationName)).toBeVisible()
 
   await page.getByRole('link', { name: 'Recruitment cycles' }).click()
-  await expect(page.getByRole('heading', { name: /^Recruitment cycles$/ })).toBeVisible()
+  await expect(page.getByTestId(TEST_IDS.superAdmin.cyclesHeading)).toBeVisible()
   await page.getByLabel('Term').fill('fall')
   await page.getByLabel('Year').fill('2026')
   await page.getByRole('button', { name: 'Create cycle' }).click()
@@ -43,8 +53,8 @@ test('super-admin can configure university, organization, cycle, join code, and 
   await expect(page.getByText(/Code:/)).toBeVisible()
 
   await page.getByRole('link', { name: 'Admin assignments' }).click()
-  await expect(page.getByRole('heading', { name: /^Admin assignments$/ })).toBeVisible()
-  await page.getByLabel('Admin user id').fill('org-admin-user-1')
+  await expect(page.getByTestId(TEST_IDS.superAdmin.adminsHeading)).toBeVisible()
+  await page.getByLabel('Admin user id').fill(adminUserId)
   await page.getByRole('button', { name: 'Assign admin' }).click()
-  await expect(page.getByText('org-admin-user-1')).toBeVisible()
+  await expect(page.getByText(adminUserId)).toBeVisible()
 })

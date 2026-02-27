@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ROUTE_PATHS } from '@/app/router/routePaths'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { authService } from '@/features/auth/authService'
 import {
@@ -47,6 +48,7 @@ export const AppShellLayout = () => {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Link
               className="text-[1.04rem] font-bold tracking-[-0.03em] text-ui-heading [font-family:'Sora',sans-serif]"
+              data-testid={TEST_IDS.app.brandLink}
               to="/"
             >
               Greek 360
@@ -54,7 +56,7 @@ export const AppShellLayout = () => {
             <div className="flex items-center gap-2">
               <span
                 className="rounded-full border border-ui-border bg-[color:rgb(21_63_106/0.08)] px-3 py-1 text-[0.64rem] font-bold uppercase tracking-[0.14em] text-[color:rgb(13_42_71/0.72)]"
-                data-testid="app-environment"
+                data-testid={TEST_IDS.app.environment}
               >
                 {environment.appEnv}
               </span>

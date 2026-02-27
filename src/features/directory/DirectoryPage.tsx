@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
+import { TEST_IDS } from '@/app/testing/testIds'
 import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { directoryService, DirectoryServiceError } from '@/features/directory/directoryService'
 
@@ -42,7 +43,9 @@ export const DirectoryPage = () => {
       <header className="ui-page-header">
         <p className="ui-page-brand">Greek 360</p>
         <p className="ui-page-eyebrow">Directory</p>
-        <h1 className="ui-page-title">Directory</h1>
+        <h1 className="ui-page-title" data-testid={TEST_IDS.directory.heading}>
+          Directory
+        </h1>
         <p className="ui-page-description">
           Search your campus directory by person or organization. Private contact details are only
           visible for shared chapter memberships.
