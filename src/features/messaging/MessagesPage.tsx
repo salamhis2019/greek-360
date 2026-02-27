@@ -111,6 +111,28 @@ export const MessagesPage = () => {
     },
   })
 
+  const renderLastSendSummary = () => {
+    if (!lastSendResult) {
+      return null
+    }
+
+    if (lastSendResult.wasDeduplicated) {
+      return 'Duplicate send prevented. Existing send result reused.'
+    }
+
+    if (
+      lastSendResult.job.status === 'queued' ||
+      lastSendResult.job.status === 'processing'
+    ) {
+      const queuedCount = lastSendResult.job.recipientCount
+      return `Queued ${queuedCount} recipients for delivery.`
+    }
+
+    const sentCount = lastSendResult.job.sentCount
+    const recipientCount = lastSendResult.job.recipientCount
+    return `Sent ${sentCount} of ${recipientCount} recipients.`
+  }
+
   const sendMessageMutation = useMutation({
     mutationFn: ({
       template,
@@ -364,13 +386,7 @@ export const MessagesPage = () => {
 
       {lastSendResult ? (
         <div className="ui-panel-soft space-y-2">
-          <p className="text-sm font-medium text-ui-heading">
-            {lastSendResult.wasDeduplicated
-              ? 'Duplicate send prevented. Existing send result reused.'
-              : `Sent ${lastSendResult.job.sentCount} of ${
-                  lastSendResult.job.recipientCount
-                } recipients.`}
-          </p>
+          <p className="text-sm font-medium text-ui-heading">{renderLastSendSummary()}</p>
           {lastSendResult.job.failedCount > 0 ? (
             <ul className="space-y-1">
               {lastSendResult.job.failureDetails.map((failure) => (

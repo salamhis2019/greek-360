@@ -41,7 +41,7 @@ export interface EmailFailureRecord {
   attempts: number
 }
 
-export type EmailJobStatus = 'sent' | 'partial' | 'failed'
+export type EmailJobStatus = 'queued' | 'processing' | 'sent' | 'partial' | 'failed'
 
 export interface EmailJobRecord {
   id: string
@@ -692,7 +692,7 @@ const mapJobRow = (row: Record<string, unknown> | null | undefined): EmailJobRec
   sentCount: Number(row?.sent_count ?? 0),
   failedCount: Number(row?.failed_count ?? 0),
   retriesUsed: Number(row?.retries_used ?? 0),
-  status: String(row?.status ?? 'sent') as EmailJobStatus,
+  status: String(row?.status ?? 'queued') as EmailJobStatus,
   dedupeKey: String(row?.dedupe_key ?? ''),
   failureDetails: (row?.failure_details as EmailFailureRecord[]) ?? [],
   sentBy: String(row?.sent_by ?? ''),
@@ -797,10 +797,21 @@ const createSupabaseMessagingService = (client: SupabaseClient): MessagingServic
 
     const row = (Array.isArray(data) ? data[0] : data) as Record<string, unknown> | null
     const job = mapJobRow(row)
+    const wasDeduplicated = Boolean(row?.was_deduplicated)
+
+    if (!wasDeduplicated && job.status === 'queued') {
+      void client.functions
+        .invoke('messages-deliver', {
+          body: {
+            jobId: job.id,
+          },
+        })
+        .catch(() => undefined)
+    }
 
     return {
       job,
-      wasDeduplicated: Boolean(row?.was_deduplicated),
+      wasDeduplicated,
     }
   },
 
@@ -813,7 +824,12 @@ const createSupabaseMessagingService = (client: SupabaseClient): MessagingServic
       .from('audit_logs')
       .select('id, actor_user_id, organization_id, action, entity_type, entity_id, metadata, created_at')
       .eq('organization_id', organizationId)
-      .in('action', ['messages_sent', 'messages_send_failed', 'message_template_created'])
+      .in('action', [
+        'messages_queued',
+        'messages_sent',
+        'messages_send_failed',
+        'message_template_created',
+      ])
       .order('created_at', { ascending: false })
 
     if (error) {

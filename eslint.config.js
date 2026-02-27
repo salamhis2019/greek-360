@@ -65,4 +65,14 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  {
+    // Supabase edge functions run in the Deno runtime.
+    files: ['supabase/functions/**/*.{js,ts}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        Deno: 'readonly',
+      },
+    },
+  },
 ])

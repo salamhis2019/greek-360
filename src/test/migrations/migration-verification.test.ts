@@ -339,4 +339,32 @@ describe('Phase 0 migration verification', () => {
     expect(downSql).toContain('drop function if exists public.list_my_admin_cycles')
     expect(downSql).toContain('drop function if exists public.list_my_student_home_summary')
   })
+
+  it('includes the phase 10 email delivery pipeline migration pair with queued jobs and recipient tracking', () => {
+    const phaseTenUpPath = path.join(
+      upMigrationsDirectory,
+      '000012_phase10_email_delivery_pipeline.up.sql'
+    )
+    const phaseTenDownPath = path.join(
+      downMigrationsDirectory,
+      '000012_phase10_email_delivery_pipeline.down.sql'
+    )
+
+    expect(fs.existsSync(phaseTenUpPath)).toBe(true)
+    expect(fs.existsSync(phaseTenDownPath)).toBe(true)
+
+    const upSql = fs.readFileSync(phaseTenUpPath, 'utf8').toLowerCase()
+    const downSql = fs.readFileSync(phaseTenDownPath, 'utf8').toLowerCase()
+
+    expect(upSql).toContain('create table if not exists public.email_job_recipients')
+    expect(upSql).toContain("status in ('queued', 'processing', 'sent', 'partial', 'failed')")
+    expect(upSql).toContain('recipient_user_ids')
+    expect(upSql).toContain('messages_queued')
+    expect(upSql).toContain('create or replace function public.claim_email_job_for_delivery')
+    expect(upSql).toContain('create or replace function public.apply_email_job_delivery_result')
+
+    expect(downSql).toContain('drop function if exists public.apply_email_job_delivery_result')
+    expect(downSql).toContain('drop function if exists public.claim_email_job_for_delivery')
+    expect(downSql).toContain('drop table if exists public.email_job_recipients')
+  })
 })
